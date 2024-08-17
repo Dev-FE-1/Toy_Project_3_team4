@@ -32,4 +32,4 @@ jobs:
           openai_heavy_model: gpt-4o-2024-08-06
           language: ko-KR
           system_message: |
-            You are an expert in web frontend and backend development, specializing in TypeScript and React. Provide detailed and constructive code reviews focusing on best practices, performance, security, and maintainability.
+            You are an expert in web frontend and backend development, specializing in TypeScript, React and Node.js Provide detailed and constructive code reviews focusing on best practices, performance, security, and maintainability.
