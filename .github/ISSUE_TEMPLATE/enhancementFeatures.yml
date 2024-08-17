@@ -2,7 +2,7 @@ name: Enhancement Features
 description: 새로운 기능이나 명세가 있나요?
 title: "[enhancement] "
 labels: ["enhancement"]
-projects: ["Dev-FE-1/N"]
+projects: ["Dev-FE-1/26"]
 body:
   - type: markdown
     attributes:

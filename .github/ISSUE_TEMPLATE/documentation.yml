@@ -2,7 +2,7 @@ name: Documentation
 description: 문서 추가/수정/삭제가 필요한가요?
 title: "[documentation] "
 labels: ["documentation"]
-projects: ["Dev-FE-1/N"]
+projects: ["Dev-FE-1/26"]
 body:
   - type: markdown
     attributes:
