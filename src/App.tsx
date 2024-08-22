@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import reactSvg from '@assets/react.svg';
+
 import './App.css';
 
 function App() {
@@ -8,9 +8,7 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactSvg} className="logo react" alt="React logo" />
-        </a>
+        <a href="https://react.dev" target="_blank"></a>
       </div>
       <h1>토이프로젝트3 4조</h1>
       <div className="card">
