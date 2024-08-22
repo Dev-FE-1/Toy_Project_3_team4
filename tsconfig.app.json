@@ -4,7 +4,12 @@
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "skipLibCheck": true,
+
+    /* Paths */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -13,6 +18,8 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "skipLibCheck": true, // 라이브러리 타입 검사 건너뜀
+    "forceConsistentCasingInFileNames": true, // 파일명 대소문자 일관성 강제
 
     /* Linting */
     "strict": true,
@@ -20,5 +27,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": [
+    "src/**/*", // src 디렉토리의 모든 파일 포함
+    "vite.config.ts" // Vite 설정 파일 포함
+  ]
 }

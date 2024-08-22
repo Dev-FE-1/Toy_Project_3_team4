@@ -2,11 +2,17 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],
-    "module": "ESNext",
+    "module": "CommonJS", // 모듈 시스템 (CommonJS)
     "skipLibCheck": true,
 
+    /* Paths */
+    "baseUrl": ".",
+    "paths": {
+      "@server/*": ["server/*"]
+    },
+
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "node", // 모듈 해석 방법 (Node.js)
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -18,5 +24,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "server/**/*", // server 디렉토리의 모든 파일 포함
+    "vite.config.ts" // Vite 설정 파일 포함
+  ],
+  "exclude": ["node_modules"]
 }
