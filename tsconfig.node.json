@@ -8,7 +8,7 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@server/*": ["server/*"]
+      "@server/*": ["functions/*"]
     },
 
     /* Bundler mode */
