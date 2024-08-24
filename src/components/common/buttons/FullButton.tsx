@@ -18,7 +18,6 @@ interface Theme {
   };
 }
 
-
 const FullButton: React.FC<FullButtonProps> = ({
   children,
   onClick,
@@ -44,8 +43,7 @@ const baseButtonStyle = css`
   align-items: center;
   gap: 4px;
   border-radius: 50px;
-  background: var(--primary);
-  border: none;
+  border: 0;
   cursor: pointer;
 `;
 

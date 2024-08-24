@@ -48,6 +48,7 @@ const baseButtonStyle = css`
   justify-content: center;
   align-items: center;
   gap: 10px;
+  border: 0;
   align-self: stretch;
   border-radius: 8px;
 `;
