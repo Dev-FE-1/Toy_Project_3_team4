@@ -22,8 +22,7 @@ pre-commit:
       glob: '*.{js,ts,jsx,tsx,json,yaml,md}'
       run: npm run prettier {staged_files}
     type-check:
-      glob: '*.{ts,tsx}'
-      run: npm run typecheck {staged_files}
+      run: npm run type-check
 #     rubocop:
 #       tags: backend style
 #       glob: "*.rb"
