@@ -16,11 +16,15 @@ function App() {
       <div style={{ width: '300px' }}>
         <LongButton children="추가하기" onClick={() => alert('Hello, world!')} color="primary" />
         <LongButton
-          children="구글로 계속하기"
+          children="추가하기"
           onClick={() => alert('Hello, world!')}
           color="lightestGray"
         />
-        <LongButton children="추가하기" onClick={() => alert('Hello, world!')} color="gray" />
+        <LongButton
+          children="구글로 계속하기"
+          onClick={() => alert('Hello, world!')}
+          color="lightestGray_black"
+        />
         <LongButton children="취소하기" onClick={() => alert('Hello, world!')} color="white" />
       </div>
       <div className="card">

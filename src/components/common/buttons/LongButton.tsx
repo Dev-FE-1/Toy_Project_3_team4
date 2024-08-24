@@ -5,7 +5,7 @@ interface LongButtonProps {
   children: ReactNode;
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
-  color: 'primary' | 'lightestGray' | 'gray' | 'white';
+  color: 'primary' | 'lightestGray' | 'lightestGray_black' | 'white';
   customStyle?: SerializedStyles;
 }
 
@@ -15,7 +15,7 @@ interface Theme {
     white: string;
     lightestGray: string;
     darkestGray: string;
-    gray: string;
+    black: string;
     darkGray: string;
   };
 }
@@ -62,9 +62,9 @@ const buttonStyle = (theme: Theme) => ({
     background-color: ${theme.colors.lightestGray};
     color: ${theme.colors.darkestGray};
   `,
-  gray: css`
-    background-color: ${theme.colors.gray};
-    color: ${theme.colors.white};
+  lightestGray_black: css`
+    background-color: ${theme.colors.lightestGray};
+    color: ${theme.colors.black};
   `,
   white: css`
     background-color: ${theme.colors.white};
