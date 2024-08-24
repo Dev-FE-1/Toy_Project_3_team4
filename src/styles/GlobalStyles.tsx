@@ -10,9 +10,11 @@ const baseStyles = css`
   *,
   *::before,
   *::after {
-    margin: 0;
     padding: 0;
+    margin: 0;
     border: 0;
+    line-height: 140%;
+    font-size: inherit;
     vertical-align: baseline;
     box-sizing: border-box;
   }
@@ -52,7 +54,8 @@ const baseStyles = css`
 
   body,
   input,
-  textarea {
+  textarea,
+  button {
     font-family:
       'Pretendard Variable',
       Pretendard,
@@ -70,7 +73,6 @@ const baseStyles = css`
       'Segoe UI Symbol',
       sans-serif;
     font-weight: 400;
-    line-height: 140%;
     letter-spacing: -0.015em;
     color: ${theme.colors.black};
   }
