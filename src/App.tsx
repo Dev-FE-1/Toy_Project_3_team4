@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import FullButton from './components/common/buttons/FullButton';
-import LongButton from './components/common/buttons/LongButton';
+import FullButton from '@/components/common/buttons/FullButton';
+import LongButton from '@/components/common/buttons/LongButton';
 
 function App() {
   const [count, setCount] = useState(0);

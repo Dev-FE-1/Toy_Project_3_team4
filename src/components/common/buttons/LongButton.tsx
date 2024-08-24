@@ -9,6 +9,17 @@ interface LongButtonProps {
   customStyle?: SerializedStyles;
 }
 
+interface Theme {
+  colors: {
+    primary: string;
+    white: string;
+    lightestGray: string;
+    darkestGray: string;
+    gray: string;
+    darkGray: string;
+  };
+}
+
 const LongButton: React.FC<LongButtonProps> = ({
   children,
   onClick,
@@ -41,7 +52,7 @@ const baseButtonStyle = css`
   border-radius: 8px;
 `;
 
-const buttonStyle = (theme: any) => ({
+const buttonStyle = (theme: Theme) => ({
   primary: css`
     background-color: ${theme.colors.primary};
     color: ${theme.colors.white};
