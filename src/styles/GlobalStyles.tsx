@@ -1,5 +1,6 @@
-import theme from '@/styles/theme';
 import { css, Global } from '@emotion/react';
+
+import theme from '@/styles/theme';
 
 const GlobalStyles = () => {
   return <Global styles={baseStyles} />;
