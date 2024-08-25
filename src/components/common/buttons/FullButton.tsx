@@ -21,14 +21,14 @@ const FullButton: React.FC<FullButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      css={[baseButtonStyle, buttonStyle(theme)[styleType], customStyle || []]}
+      css={[baseButtonStyle(theme), buttonStyle(theme)[styleType], customStyle || []]}
     >
       {children}
     </button>
   );
 };
 
-const baseButtonStyle = css`
+const baseButtonStyle = (theme: Theme) => css`
   display: flex;
   width: 100%;
   height: 50px;
@@ -40,7 +40,7 @@ const baseButtonStyle = css`
   border: 0;
   align-self: stretch;
   border-radius: 8px;
-  font-size: theme.fontSizes.base;
+  font-size: ${theme.fontSizes.base};
   font-style: normal;
   font-weight: 700;
   line-height: normal;

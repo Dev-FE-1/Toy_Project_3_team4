@@ -21,14 +21,14 @@ const FitButton: React.FC<FitButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      css={[baseButtonStyle, buttonStyle(theme)[styleType], customStyle || []]}
+      css={[baseButtonStyle(theme), buttonStyle(theme)[styleType], customStyle || []]}
     >
       {children}
     </button>
   );
 };
 
-const baseButtonStyle = css`
+const baseButtonStyle = (theme: Theme) => css`
   display: inline-flex;
   padding: 6px 14px;
   align-items: center;
@@ -36,7 +36,7 @@ const baseButtonStyle = css`
   border-radius: 50px;
   border: 0;
   cursor: pointer;
-  font-size: theme.fontSizes.micro;
+  font-size: ${theme.fontSizes.micro};
   font-style: normal;
   font-weight: 700;
   line-height: 140%;
