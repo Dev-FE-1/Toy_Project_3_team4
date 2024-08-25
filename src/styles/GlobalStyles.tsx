@@ -80,7 +80,7 @@ const baseStyles = css`
 
   body {
     font-size: ${theme.fontSizes.base};
-    background-color: ${theme.colors.white};
+    background-color: ${theme.colors.bgGray};
   }
 
   input,
