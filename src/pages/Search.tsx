@@ -1,14 +1,15 @@
-import Header from '@/components/layout/header/Header';
+import { useNavigate } from 'react-router-dom';
+import BackSearchHeader from '@/components/layout/header/BackSearchHeader';
 
 const SearchPage = () => {
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
   return (
     <>
-      <Header
-        showBackButton
-        onBackClick={() => console.log('Go Back')}
-        showSearchInput
-        // onSearchChange={(value) => setSearchTerm(value)}
-      />
+      <BackSearchHeader onBackClick={handleBackClick} onSearchChange={console.log}/>
       <div>SearchPage</div>
     </>
   );

@@ -1,15 +1,9 @@
-import Header from '@/components/layout/header/Header';
+import CloseTitleShareHeader from "@/components/layout/header/CloseTitleShareHeader";
 
 const AddPostPage = () => {
   return (
     <>
-      <Header
-        showCloseButton
-        onCloseClick={() => console.log('Close')}
-        title="동영상 링크"
-        showCompleteButton
-        onCompleteClick={() => console.log('완료')}
-      />
+      <CloseTitleShareHeader onCloseClick={console.log} title="새 포스트" onShareClick={console.log} />
       <div>AddPostPage</div>
     </>
   );

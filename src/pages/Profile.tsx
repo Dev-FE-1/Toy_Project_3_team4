@@ -1,9 +1,9 @@
-import Header from '@/components/layout/header/Header';
+import LogoSettingsHeader from "@/components/layout/header/LogoSettimgHeader";
 
 const ProfilePage = () => {
   return (
     <>
-      <Header showLogo showSettingButton onSettingClick={() => console.log('Setting')} />
+      <LogoSettingsHeader onSettingsClick={console.log}/>
       <div>ProfilePage</div>
     </>
   );

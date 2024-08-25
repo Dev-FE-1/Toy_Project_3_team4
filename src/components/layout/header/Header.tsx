@@ -1,98 +1,36 @@
-import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 import { HiArrowLeft, HiOutlineXMark, HiOutlineCog6Tooth } from 'react-icons/hi2';
-import { Link } from 'react-router-dom';
-
 import logoSrc from '@/assets/images/logo.svg';
+import IconButton from '@/utils/IconButton';
 
-interface HeaderProps {
-  showLogo?: boolean;
-  showBackButton?: boolean;
-  showCloseButton?: boolean;
-  showCompleteButton?: boolean;
-  showShareButton?: boolean; 
-  showSettingButton?: boolean;
-  showSearchInput?: boolean;
-  title?: string;
-  onBackClick?: () => void;
-  onCloseClick?: () => void;
-  onCompleteClick?: () => void;
-  onShareClick?: () => void;
-  onSettingClick?: () => void;
-  onSearchChange?: (value: string) => void;
-  customStyle?: SerializedStyles;
-}
+export const Logo = () => <img src={logoSrc} alt="Logo" />;
 
-const Header: React.FC<HeaderProps> = ({
-  showLogo = false,
-  showBackButton = false,
-  showCloseButton = false,
-  showCompleteButton = false,
-  showShareButton = false,
-  showSettingButton = false,
-  showSearchInput = false,
-  title,
-  onBackClick,
-  onCloseClick,
-  onCompleteClick,
-  onShareClick,
-  onSettingClick,
-  onSearchChange,
-  customStyle,
-}) => {
-  const theme = useTheme();
+export const BackButton = ({ onClick }: { onClick: () => void }) => (
+  <IconButton icon={<HiArrowLeft />} onClick={onClick} />
+);
 
-  return (
-    <header css={[baseHeaderStyle(theme), customStyle]}>
-      <div css={leftSectionStyle}>
-        {showBackButton && <HiArrowLeft onClick={onBackClick} css={iconStyle} />}
-        {showCloseButton && <HiOutlineXMark onClick={onCloseClick} css={iconStyle} />}
-        {showLogo && (
-          <Link to="/">
-            <img src={logoSrc} alt="Logo" />
-          </Link>
-        )}
-        {title && <h1 css={titleStyle(theme)}>{title}</h1>}
-      </div>
-      {showSearchInput && (
-        <input
-          type="text"
-          placeholder="키워드 또는 닉네임 검색"
-          onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
-          css={searchInputStyle(theme)}
-        />
-      )}
-      <div>
-        {showCompleteButton && (
-          <button onClick={onCompleteClick} css={[actionBtnStyle(theme)]}>
-            완료
-          </button>
-        )}
-        {showShareButton && (
-          <button onClick={onShareClick} css={[actionBtnStyle(theme)]}>
-            공유하기
-          </button>
-        )}
-        {showSettingButton && <HiOutlineCog6Tooth onClick={onSettingClick} css={iconStyle} />}
-      </div>
-    </header>
-  );
-};
+export const CloseButton = ({ onClick }: { onClick: () => void }) => (
+  <IconButton icon={<HiOutlineXMark />} onClick={onClick} />
+);
 
-const baseHeaderStyle = (theme: Theme) => css`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  height: 60px;
-  padding: 12px 16px;
-  background-color: ${theme.colors.white};
-`;
+export const SettingsButton = ({ onClick }: { onClick: () => void }) => (
+  <IconButton icon={<HiOutlineCog6Tooth />} onClick={onClick} />
+);
 
-const leftSectionStyle = css`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
+export const Title = ({ text }: { text: string }) => <h1 css={titleStyle}>{text}</h1>;
+
+export const SearchInput = ({ onChange }: { onChange: (value: string) => void }) => (
+  <input
+    type="text"
+    placeholder="키워드 또는 닉네임 검색"
+    onChange={(e) => onChange(e.target.value)}
+    css={searchInputStyle}
+  />
+);
+
+export const ActionButton = ({ text, onClick }: { text: string; onClick: () => void }) => (
+  <button onClick={onClick} css={actionButtonStyle}>{text}</button>
+);
 
 const titleStyle = (theme: Theme) => css`
   margin: 0;
@@ -102,7 +40,7 @@ const titleStyle = (theme: Theme) => css`
 `;
 
 const searchInputStyle = (theme: Theme) => css`
-  width: ${theme.width.max};
+  width: 100%;
   height: 36px;
   padding-left: 14px;
   border: 1px solid ${theme.colors.gray};
@@ -114,7 +52,7 @@ const searchInputStyle = (theme: Theme) => css`
   }
 `;
 
-const actionBtnStyle = (theme: Theme) => css`
+const actionButtonStyle = (theme: Theme) => css`
   color: ${theme.colors.darkGray};
   font-size: ${theme.fontSizes.small};
   font-weight: 700;
@@ -124,14 +62,3 @@ const actionBtnStyle = (theme: Theme) => css`
     color: ${theme.colors.primary};
   }
 `;
-
-const iconStyle = (theme: Theme) => css`
-  font-size: 24px;
-  cursor: pointer;
-  transition: 0.3s ease;
-  &:hover {
-    color: ${theme.colors.primary};
-  }
-`;
-
-export default Header;

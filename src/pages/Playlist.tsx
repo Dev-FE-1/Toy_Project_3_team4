@@ -1,9 +1,9 @@
-import Header from '@/components/layout/header/Header';
+import LogoHeader from '@/components/layout/header/LogoHeader';
 
 const PlaylistPage = () => {
   return (
     <>
-      <Header showLogo />
+      <LogoHeader />
       <div>PlaylistPage</div>
     </>
   );

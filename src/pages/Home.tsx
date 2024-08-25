@@ -1,9 +1,9 @@
-import Header from '@/components/layout/header/Header';
+import LogoHeader from '@/components/layout/header/LogoHeader';
 
 const HomePage = () => {
   return (
     <>
-      <Header showLogo />
+      <LogoHeader />
       <div>HomePage</div>
     </>
   );
