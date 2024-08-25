@@ -1,15 +1,15 @@
 import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
 import React, { ReactNode } from 'react';
 
-interface FullButtonProps {
+interface FitButtonProps {
   children: ReactNode;
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
-  styleType: 'primary' | 'disabled' | 'signin' | 'cancel';
+  styleType: 'primary' | 'secondary';
   customStyle?: SerializedStyles;
 }
 
-const FullButton: React.FC<FullButtonProps> = ({
+const FitButton: React.FC<FitButtonProps> = ({
   children,
   onClick,
   type = 'button',
@@ -29,22 +29,18 @@ const FullButton: React.FC<FullButtonProps> = ({
 };
 
 const baseButtonStyle = css`
-  display: flex;
-  width: 100%;
-  height: 50px;
-  padding: 3px 70px;
-  flex-direction: column;
-  justify-content: center;
+  display: inline-flex;
+  padding: 6px 14px;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
+  border-radius: 50px;
   border: 0;
-  align-self: stretch;
-  border-radius: 8px;
-  font-size: 16px;
+  cursor: pointer;
+  font-size: 12px;
   font-style: normal;
   font-weight: 700;
-  line-height: normal;
-  letter-spacing: -0.24px;
+  line-height: 140%;
+  letter-spacing: -0.18px;
 `;
 
 const buttonStyle = (theme: Theme) => ({
@@ -52,18 +48,10 @@ const buttonStyle = (theme: Theme) => ({
     background-color: ${theme.colors.primary};
     color: ${theme.colors.white};
   `,
-  disabled: css`
+  secondary: css`
     background-color: ${theme.colors.lightestGray};
     color: ${theme.colors.darkestGray};
   `,
-  signin: css`
-    background-color: ${theme.colors.lightestGray};
-    color: ${theme.colors.black};
-  `,
-  cancel: css`
-    background-color: ${theme.colors.white};
-    color: ${theme.colors.darkGray};
-  `,
 });
 
-export default FullButton;
+export default FitButton;
