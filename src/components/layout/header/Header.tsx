@@ -1,5 +1,5 @@
 import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
-import { HiArrowLeft, HiMiniXMark, HiOutlineCog6Tooth } from 'react-icons/hi2';
+import { HiArrowLeft, HiOutlineXMark, HiOutlineCog6Tooth } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
 import logoSrc from '@/assets/images/logo.svg';
@@ -40,8 +40,8 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header css={[baseHeaderStyle(theme), customStyle]}>
       <div css={leftSectionStyle}>
-        {showBackButton && <HiArrowLeft onClick={onBackClick} size={24} />}
-        {showCloseButton && <HiMiniXMark onClick={onCloseClick} size={24} />}
+        {showBackButton && <HiArrowLeft onClick={onBackClick} css={iconStyle} />}
+        {showCloseButton && <HiOutlineXMark onClick={onCloseClick} css={iconStyle} />}
         {showLogo && (
           <Link to="/">
             <img src={logoSrc} alt="Logo" />
@@ -58,8 +58,8 @@ const Header: React.FC<HeaderProps> = ({
         />
       )}
       <div>
-        {showCompleteButton && <button onClick={onCompleteClick}>완료</button>}
-        {showSettingButton && <HiOutlineCog6Tooth onClick={onSettingClick} size={24} />}
+        {showCompleteButton && <button onClick={onCompleteClick} css={[completeBtnStyle(theme)]}>완료</button>}
+        {showSettingButton && <HiOutlineCog6Tooth onClick={onSettingClick} css={iconStyle} />}
       </div>
     </header>
   );
@@ -95,7 +95,30 @@ const searchInputStyle = (theme: Theme) => css`
   border: 1px solid ${theme.colors.gray};
   border-radius: 8px;
   font-size: ${theme.fontSizes.base};
-  color: ${theme.colors.darkGray};
+  color: ${theme.colors.black}
+  &::placeholder {
+    color: ${theme.colors.darkGray};
+  }
 `;
+
+const completeBtnStyle = (theme: Theme) => css`
+  color: ${theme.colors.darkGray};
+  font-size: ${theme.fontSizes.small};
+  font-weight: 700;
+  background: ${theme.colors.white};
+  transition: .3s ease;
+  &:hover {
+    color: ${theme.colors.primary};
+  }
+`
+
+const iconStyle = (theme: Theme) => css`
+  font-size: 24px;
+  cursor: pointer;
+  transition: .3s ease;
+  &:hover {
+    color: ${theme.colors.primary};
+  }
+`
 
 export default Header;
