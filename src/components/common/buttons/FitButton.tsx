@@ -36,7 +36,7 @@ const baseButtonStyle = css`
   border-radius: 50px;
   border: 0;
   cursor: pointer;
-  font-size: 12px;
+  font-size: theme.fontSizes.micro;
   font-style: normal;
   font-weight: 700;
   line-height: 140%;

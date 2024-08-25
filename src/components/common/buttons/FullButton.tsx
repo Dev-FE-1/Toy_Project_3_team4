@@ -40,7 +40,7 @@ const baseButtonStyle = css`
   border: 0;
   align-self: stretch;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: theme.fontSizes.base;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
