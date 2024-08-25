@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts,.tsx --fix",
     "preview": "vite preview",
     "prettier": "prettier --write",
-    "type-check": "tsc -b"
+    "type-check": "tsc --noEmit -p ./tsconfig.app.json"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
