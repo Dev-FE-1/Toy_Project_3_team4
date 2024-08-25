@@ -1,5 +1,6 @@
-import { ThemeProvider } from '@emotion/react';
 import { StrictMode } from 'react';
+
+import { ThemeProvider } from '@emotion/react';
 import { createRoot } from 'react-dom/client';
 
 import GlobalStyles from '@/styles/GlobalStyles';
