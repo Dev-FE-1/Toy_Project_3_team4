@@ -21,6 +21,7 @@
     "firebase": "^10.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
@@ -30,7 +31,6 @@
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
-    "typescript-eslint": "^7.17.0",
     "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
@@ -46,9 +46,10 @@
     "lefthook": "^1.7.14",
     "playwright": "^1.46.1",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.3",
     "rollup-plugin-visualizer": "^5.12.0",
-    "vite-tsconfig-paths": "^5.0.1",
-    "vite": "^5.4.1"
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^7.17.0",
+    "vite": "^5.4.1",
+    "vite-tsconfig-paths": "^5.0.1"
   }
 }
