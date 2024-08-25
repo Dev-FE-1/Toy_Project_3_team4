@@ -1,6 +1,7 @@
-import { auth, db } from '@/api/firebaseApp';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+
+import { auth, db } from '@/api/firebaseApp';
 
 export async function googleLogin() {
   const provider = new GoogleAuthProvider();

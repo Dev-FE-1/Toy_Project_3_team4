@@ -8,7 +8,8 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@server/*": ["functions/*"]
     },
 
     /* Bundler mode */
@@ -29,7 +30,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "src/**/*", // src 디렉토리의 모든 파일 포함
+    "src", // src 디렉토리의 모든 파일 포함
     "vite.config.ts" // Vite 설정 파일 포함
   ]
 }

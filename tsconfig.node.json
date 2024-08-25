@@ -8,6 +8,7 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
+      "@/*": ["src/*"],
       "@server/*": ["functions/*"]
     },
 
@@ -25,7 +26,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "server/**/*", // server 디렉토리의 모든 파일 포함
+    "functions/", // server 디렉토리의 모든 파일 포함
     "vite.config.ts" // Vite 설정 파일 포함
   ],
   "exclude": ["node_modules"]

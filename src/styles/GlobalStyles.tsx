@@ -1,5 +1,6 @@
-import theme from '@/styles/theme';
 import { css, Global } from '@emotion/react';
+
+import theme from '@/styles/theme';
 
 const GlobalStyles = () => {
   return <Global styles={baseStyles} />;
@@ -79,7 +80,7 @@ const baseStyles = css`
 
   body {
     font-size: ${theme.fontSizes.base};
-    background-color: ${theme.colors.white};
+    background-color: ${theme.colors.bgGray};
   }
 
   input,
