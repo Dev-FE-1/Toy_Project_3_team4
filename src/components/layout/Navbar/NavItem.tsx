@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { IconType } from 'react-icons';
+import { NavLink } from 'react-router-dom';
 
 import theme from '@/styles/theme';
 
@@ -12,9 +13,9 @@ interface NavItemProps {
 const NavItem: React.FC<NavItemProps> = ({ Icon, stroke, path }) => {
   return (
     <li css={itemStyle}>
-      <a href={path}>
+      <NavLink to={path} className={({ isActive }) => (isActive ? 'active' : undefined)}>
         <Icon css={stroke && iconStyle(stroke)} />
-      </a>
+      </NavLink>
     </li>
   );
 };

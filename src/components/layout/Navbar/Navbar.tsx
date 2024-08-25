@@ -31,10 +31,16 @@ const navStyle = css`
   left: 50%;
   bottom: 0;
   width: 100vw;
+  max-width: ${theme.width.max};
   height: 70px;
   border-top: 1px solid ${theme.colors.lightGray};
   background-color: ${theme.colors.white};
   transform: translateX(-50%);
+
+  @media screen and (min-width: ${theme.width.max}) {
+    border: 1px solid ${theme.colors.lightGray};
+    border-bottom: 0;
+  }
 
   .nav-list {
     display: flex;
