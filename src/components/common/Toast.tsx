@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-
 import { css, Theme } from '@emotion/react';
 
 interface ToastProps {
   message: string;
   isActive: boolean;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 const Toast: React.FC<ToastProps> = ({ message, isActive, onClose }) => {
@@ -16,14 +15,19 @@ const Toast: React.FC<ToastProps> = ({ message, isActive, onClose }) => {
       setVisible(true);
       const timer = setTimeout(() => {
         setVisible(false);
-        if (onClose) onClose();
+        onClose();
       }, 2000);
       return () => clearTimeout(timer);
     }
   }, [isActive, onClose]);
 
   return (
-    <div css={(theme) => [baseToastStyle(theme), visible ? activeToastStyle : inactiveToastStyle]}>
+    <div
+      css={(theme: Theme) => [
+        baseToastStyle(theme),
+        visible ? activeToastStyle : inactiveToastStyle,
+      ]}
+    >
       <p>{message}</p>
     </div>
   );
