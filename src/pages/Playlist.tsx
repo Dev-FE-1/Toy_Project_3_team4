@@ -1,5 +1,12 @@
+import Header from '@/components/layout/header/Header';
+
 const PlaylistPage = () => {
-  return <div>PlaylistPage</div>;
+  return (
+    <>
+      <Header showLogo />
+      <div>PlaylistPage</div>
+    </>
+  );
 };
 
 export default PlaylistPage;

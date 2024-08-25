@@ -1,5 +1,8 @@
-import { Link } from 'react-router-dom';
 import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
+import { HiArrowLeft, HiMiniXMark, HiOutlineCog6Tooth } from 'react-icons/hi2';
+import { Link } from 'react-router-dom';
+
+import logoSrc from '@/assets/images/logo.svg';
 
 interface HeaderProps {
   showLogo?: boolean;
@@ -37,11 +40,11 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header css={[baseHeaderStyle(theme), customStyle]}>
       <div css={leftSectionStyle}>
-        {showBackButton && <button onClick={onBackClick}>←</button>}
-        {showCloseButton && <button onClick={onCloseClick}>x</button>}
+        {showBackButton && <HiArrowLeft onClick={onBackClick} size={24} />}
+        {showCloseButton && <HiMiniXMark onClick={onCloseClick} size={24} />}
         {showLogo && (
-          <Link to="/" css={logoStyle(theme)}>
-            <img src="@assets/images/logo.svg" alt="Logo" />
+          <Link to="/">
+            <img src={logoSrc} alt="Logo" />
           </Link>
         )}
         {title && <h1 css={titleStyle(theme)}>{title}</h1>}
@@ -56,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({
       )}
       <div>
         {showCompleteButton && <button onClick={onCompleteClick}>완료</button>}
-        {showSettingButton && <button onClick={onSettingClick}>설정아이콘</button>}
+        {showSettingButton && <HiOutlineCog6Tooth onClick={onSettingClick} size={24} />}
       </div>
     </header>
   );
@@ -66,7 +69,9 @@ const baseHeaderStyle = (theme: Theme) => css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  gap: 1rem;
+  height: 60px;
+  padding: 12px 16px;
   background-color: ${theme.colors.white};
 `;
 
@@ -76,24 +81,21 @@ const leftSectionStyle = css`
   gap: 1rem;
 `;
 
-const logoStyle = (theme: Theme) => css`
-  text-decoration: none;
-  color: ${theme.colors.primary};
-  font-size: ${theme.fontSizes.large};
-  font-weight: bold;
-`;
-
 const titleStyle = (theme: Theme) => css`
   margin: 0;
-  font-size: ${theme.fontSizes.medium};
+  font-size: ${theme.fontSizes.base};
+  font-weight: 700;
   color: ${theme.colors.black};
 `;
 
 const searchInputStyle = (theme: Theme) => css`
-  padding: 0.5rem;
-  border: 1px solid ${theme.colors.lightGray};
-  border-radius: 4px;
+  width: ${theme.width.max};
+  height: 36px;
+  padding-left: 14px;
+  border: 1px solid ${theme.colors.gray};
+  border-radius: 8px;
   font-size: ${theme.fontSizes.base};
+  color: ${theme.colors.darkGray};
 `;
 
 export default Header;

@@ -1,5 +1,17 @@
+import Header from '@/components/layout/header/Header';
+
 const SearchPage = () => {
-  return <div>SearchPage</div>;
+  return (
+    <>
+      <Header
+        showBackButton
+        onBackClick={() => console.log('Go Back')}
+        showSearchInput
+        // onSearchChange={(value) => setSearchTerm(value)}
+      />
+      <div>SearchPage</div>
+    </>
+  );
 };
 
 export default SearchPage;
