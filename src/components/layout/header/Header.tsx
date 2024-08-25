@@ -9,12 +9,14 @@ interface HeaderProps {
   showBackButton?: boolean;
   showCloseButton?: boolean;
   showCompleteButton?: boolean;
+  showShareButton?: boolean; 
   showSettingButton?: boolean;
   showSearchInput?: boolean;
   title?: string;
   onBackClick?: () => void;
   onCloseClick?: () => void;
   onCompleteClick?: () => void;
+  onShareClick?: () => void;
   onSettingClick?: () => void;
   onSearchChange?: (value: string) => void;
   customStyle?: SerializedStyles;
@@ -25,12 +27,14 @@ const Header: React.FC<HeaderProps> = ({
   showBackButton = false,
   showCloseButton = false,
   showCompleteButton = false,
+  showShareButton = false,
   showSettingButton = false,
   showSearchInput = false,
   title,
   onBackClick,
   onCloseClick,
   onCompleteClick,
+  onShareClick,
   onSettingClick,
   onSearchChange,
   customStyle,
@@ -58,7 +62,16 @@ const Header: React.FC<HeaderProps> = ({
         />
       )}
       <div>
-        {showCompleteButton && <button onClick={onCompleteClick} css={[completeBtnStyle(theme)]}>완료</button>}
+        {showCompleteButton && (
+          <button onClick={onCompleteClick} css={[actionBtnStyle(theme)]}>
+            완료
+          </button>
+        )}
+        {showShareButton && (
+          <button onClick={onShareClick} css={[actionBtnStyle(theme)]}>
+            공유하기
+          </button>
+        )}
         {showSettingButton && <HiOutlineCog6Tooth onClick={onSettingClick} css={iconStyle} />}
       </div>
     </header>
@@ -101,24 +114,24 @@ const searchInputStyle = (theme: Theme) => css`
   }
 `;
 
-const completeBtnStyle = (theme: Theme) => css`
+const actionBtnStyle = (theme: Theme) => css`
   color: ${theme.colors.darkGray};
   font-size: ${theme.fontSizes.small};
   font-weight: 700;
   background: ${theme.colors.white};
-  transition: .3s ease;
+  transition: 0.3s ease;
   &:hover {
     color: ${theme.colors.primary};
   }
-`
+`;
 
 const iconStyle = (theme: Theme) => css`
   font-size: 24px;
   cursor: pointer;
-  transition: .3s ease;
+  transition: 0.3s ease;
   &:hover {
     color: ${theme.colors.primary};
   }
-`
+`;
 
 export default Header;
