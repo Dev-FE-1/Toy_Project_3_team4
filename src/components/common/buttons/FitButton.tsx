@@ -21,7 +21,7 @@ const FitButton: React.FC<FitButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      css={[baseButtonStyle, buttonStyle(theme)[styleType], customStyle]}
+      css={[baseButtonStyle, buttonStyle(theme)[styleType], customStyle || []]}
     >
       {children}
     </button>
