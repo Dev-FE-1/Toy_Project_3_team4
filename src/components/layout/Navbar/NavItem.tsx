@@ -13,7 +13,7 @@ interface NavItemProps {
 const NavItem: React.FC<NavItemProps> = ({ Icon, stroke, path }) => {
   return (
     <li css={itemStyle}>
-      <NavLink to={path} className={({ isActive }) => (isActive ? 'active' : undefined)}>
+      <NavLink to={path} className={({ isActive }) => (isActive ? 'active' : '')}>
         <Icon css={stroke && iconStyle(stroke)} />
       </NavLink>
     </li>
