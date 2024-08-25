@@ -20,17 +20,24 @@ const fontSizes = {
   large: '20px',
 };
 
+const width = {
+  max: '600px',
+};
+
 export type ColorsType = typeof colors;
 export type FontSizeType = typeof fontSizes;
+export type WidthType = typeof width;
 
 interface Theme {
   colors: ColorsType;
   fontSizes: FontSizeType;
+  width: WidthType;
 }
 
 const theme: Theme = {
   colors,
   fontSizes,
+  width,
 };
 
 export default theme;
