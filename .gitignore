@@ -149,3 +149,6 @@ stats.html
 *.njsproj
 *.sln
 *.sw?
+
+
+.firebase
