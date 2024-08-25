@@ -1,19 +1,24 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+// import * as logger from "firebase-functions/logger";
+import * as cors from 'cors';
+import * as express from 'express';
+import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
 
-// import { onRequest } from 'firebase-functions/v2/https';
-// import * as logger from 'firebase-functions/logger';
+import * as serviceAccount from '../lib/serviceAccountKey.json';
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+// Firebase Admin SDK init
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+});
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+// const db = admin.firestore();
+const app = express();
+
+app.use(express.json());
+app.use(cors({ origin: true }));
+
+app.get('/', (req, res) => {
+  return res.status(200).send('Hello World!');
+});
+
+export const api = functions.https.onRequest(app);
