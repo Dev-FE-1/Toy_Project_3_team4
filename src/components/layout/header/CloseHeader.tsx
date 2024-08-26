@@ -3,7 +3,7 @@ import { HiOutlineXMark } from 'react-icons/hi2';
 
 import IconButton from '@/utils/IconButton';
 
-import BaseHeader from './BaseHeader';
+import BaseHeader from './base/BaseHeader';
 
 interface BackHeaderProps {
   title: string;

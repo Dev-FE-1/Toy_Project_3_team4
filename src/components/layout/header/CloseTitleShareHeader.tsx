@@ -1,5 +1,5 @@
-import BaseHeader from './BaseHeader';
-import { ActionButton, CloseButton, Title } from './Header';
+import BaseHeader from './base/BaseHeader';
+import { ActionButton, CloseButton, Title } from './base/Header';
 
 const CloseTitleShareHeader = ({
   onCloseClick,

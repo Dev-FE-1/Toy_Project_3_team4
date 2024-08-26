@@ -1,5 +1,5 @@
-import BaseHeader from './BaseHeader';
-import { BackButton, SearchInput } from './Header';
+import BaseHeader from './base/BaseHeader';
+import { BackButton, SearchInput } from './base/Header';
 
 const BackSearchHeader = ({
   onBackClick,
