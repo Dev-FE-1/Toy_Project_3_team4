@@ -1,5 +1,6 @@
 import { css, Theme } from '@emotion/react';
 import { HiArrowLeft, HiOutlineXMark, HiOutlineCog6Tooth } from 'react-icons/hi2';
+
 import logoSrc from '@/assets/images/logo.svg';
 import IconButton from '@/utils/IconButton';
 
@@ -29,7 +30,9 @@ export const SearchInput = ({ onChange }: { onChange: (value: string) => void })
 );
 
 export const ActionButton = ({ text, onClick }: { text: string; onClick: () => void }) => (
-  <button onClick={onClick} css={actionButtonStyle}>{text}</button>
+  <button onClick={onClick} css={actionButtonStyle}>
+    {text}
+  </button>
 );
 
 const titleStyle = (theme: Theme) => css`
@@ -40,7 +43,7 @@ const titleStyle = (theme: Theme) => css`
 `;
 
 const searchInputStyle = (theme: Theme) => css`
-  width: 100%;
+  width: ${theme.width.max};
   height: 36px;
   padding-left: 14px;
   border: 1px solid ${theme.colors.gray};

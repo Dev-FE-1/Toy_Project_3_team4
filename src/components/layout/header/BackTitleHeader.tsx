@@ -1,5 +1,5 @@
-import BaseHeader from "./BaseHeader";
-import { BackButton, Title } from "./Header";
+import BaseHeader from './BaseHeader';
+import { BackButton, Title } from './Header';
 
 const BackTitleHeader = ({ onBackClick, title }: { onBackClick: () => void; title: string }) => (
   <BaseHeader
@@ -8,4 +8,4 @@ const BackTitleHeader = ({ onBackClick, title }: { onBackClick: () => void; titl
   />
 );
 
-export default BackTitleHeader
+export default BackTitleHeader;

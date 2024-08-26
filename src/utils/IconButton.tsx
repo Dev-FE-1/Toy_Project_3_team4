@@ -1,6 +1,9 @@
 import { css, Theme } from '@emotion/react';
 
-const IconButton: React.FC<{ icon: React.ReactNode; onClick: () => void }> = ({ icon, onClick }) => (
+const IconButton: React.FC<{ icon: React.ReactNode; onClick: () => void }> = ({
+  icon,
+  onClick,
+}) => (
   <button onClick={onClick} css={iconButtonStyle}>
     {icon}
   </button>

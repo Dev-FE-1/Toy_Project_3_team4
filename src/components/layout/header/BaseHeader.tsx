@@ -1,11 +1,11 @@
 import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
+import { createPortal } from 'react-dom';
 
 interface BaseHeaderProps {
   leftSection?: React.ReactNode;
   centerSection?: React.ReactNode;
   rightSection?: React.ReactNode;
   customStyle?: SerializedStyles;
-
 }
 
 const BaseHeader: React.FC<BaseHeaderProps> = ({
@@ -15,27 +15,28 @@ const BaseHeader: React.FC<BaseHeaderProps> = ({
   customStyle,
 }) => {
   const theme = useTheme();
+  const headerRoot = document.getElementById('header');
 
-  return (
-    <header css={[baseHeaderStyle(theme), customStyle]}>
+  if (!headerRoot) return null;
+
+  return createPortal(
+    <div css={[baseHeaderStyle(theme), customStyle]}>
       <div css={sectionStyle}>{leftSection}</div>
       <div css={sectionStyle}>{centerSection}</div>
       <div css={sectionStyle}>{rightSection}</div>
-    </header>
-  )
+    </div>,
+    headerRoot,
+  );
 };
-
 
 const baseHeaderStyle = (theme: Theme) => css`
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  height: 60px;
   padding: 12px 16px;
   background-color: ${theme.colors.white};
 `;
-
 const sectionStyle = css`
   display: flex;
   align-items: center;

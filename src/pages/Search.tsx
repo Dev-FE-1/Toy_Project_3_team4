@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+
 import BackSearchHeader from '@/components/layout/header/BackSearchHeader';
 
 const SearchPage = () => {
@@ -9,7 +10,7 @@ const SearchPage = () => {
   };
   return (
     <>
-      <BackSearchHeader onBackClick={handleBackClick} onSearchChange={console.log}/>
+      <BackSearchHeader onBackClick={handleBackClick} onSearchChange={console.log} />
       <div>SearchPage</div>
     </>
   );
