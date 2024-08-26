@@ -1,7 +1,8 @@
+import { useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 import BackHeader from '@/components/layout/header/BackHeader';
-import { useState } from 'react';
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -17,10 +18,7 @@ const SearchPage = () => {
 
   return (
     <>
-      <BackHeader 
-        onBackClick={handleBackClick}
-        showSearch
-        onSearchChange={handleSearchChange} />
+      <BackHeader onBackClick={handleBackClick} showSearch onSearchChange={handleSearchChange} />
       <div>SearchPage</div>
       {searchTerm && <p>현재 검색어: {searchTerm}</p>}
     </>

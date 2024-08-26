@@ -1,8 +1,9 @@
 import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
 import { HiOutlineXMark } from 'react-icons/hi2';
 
-import BaseHeader from './BaseHeader';
 import IconButton from '@/components/common/buttons/IconButton';
+
+import BaseHeader from './Header';
 
 interface CloseHeaderProps {
   onCloseClick: () => void;
@@ -12,21 +13,20 @@ interface CloseHeaderProps {
   customStyle?: SerializedStyles;
 }
 
-const CloseHeader: React.FC<CloseHeaderProps> = ({ 
-  title, 
-  onCloseClick, 
-  rightButtonText, 
-  onrightButtonClick, 
-  customStyle, 
+const CloseHeader: React.FC<CloseHeaderProps> = ({
+  title,
+  onCloseClick,
+  rightButtonText,
+  onrightButtonClick,
+  customStyle,
 }) => {
   return (
     <BaseHeader
       leftSection={<CloseButton onClick={onCloseClick} />}
       centerSection={title && <Title text={title} />}
       rightSection={
-        rightButtonText && onrightButtonClick && (
-          <ActionButton text={rightButtonText} onClick={onrightButtonClick} />
-        )
+        rightButtonText &&
+        onrightButtonClick && <ActionButton text={rightButtonText} onClick={onrightButtonClick} />
       }
       customStyle={customStyle}
     />

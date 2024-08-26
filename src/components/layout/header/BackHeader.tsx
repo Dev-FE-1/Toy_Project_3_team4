@@ -1,7 +1,9 @@
 import { css, Theme } from '@emotion/react';
 import { HiArrowLeft } from 'react-icons/hi2';
-import BaseHeader from './BaseHeader';
+
 import IconButton from '@/components/common/buttons/IconButton';
+
+import BaseHeader from './Header';
 
 interface BackHeaderProps {
   onBackClick: () => void;
@@ -19,7 +21,7 @@ const BackHeader: React.FC<BackHeaderProps> = ({
   // customStyle,
 }) => {
   return (
-    <BaseHeader 
+    <BaseHeader
       leftSection={<BackButton onClick={onBackClick} />}
       centerSection={
         showSearch ? (
@@ -28,18 +30,15 @@ const BackHeader: React.FC<BackHeaderProps> = ({
           <Title text={title} />
         ) : null
       }
-      
     />
-  )
-}
+  );
+};
 
 const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
   <IconButton icon={<HiArrowLeft />} onClick={onClick} />
 );
 
-const Title: React.FC<{ text: string }> = ({ text }) => (
-  <h1 css={titleStyle}>{text}</h1>
-);
+const Title: React.FC<{ text: string }> = ({ text }) => <h1 css={titleStyle}>{text}</h1>;
 
 interface SearchInputProps {
   onChange?: (value: string) => void;

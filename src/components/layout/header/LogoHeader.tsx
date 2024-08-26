@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
-import { Link } from 'react-router-dom';
 import { HiOutlineCog6Tooth } from 'react-icons/hi2';
+import { Link } from 'react-router-dom';
 
-import BaseHeader from './BaseHeader';
-import IconButton from '@/components/common/buttons/IconButton';
 import logoSrc from '@/assets/images/logo.svg';
+import IconButton from '@/components/common/buttons/IconButton';
+
+import BaseHeader from './Header';
 
 interface LogoHeaderProps {
   showSettings?: boolean;
@@ -20,9 +21,7 @@ const LogoHeader: React.FC<LogoHeaderProps> = ({
   return (
     <BaseHeader
       leftSection={<Logo />}
-      rightSection={showSettings && onSettingsClick && (
-        <SettingsButton onClick={onSettingsClick} />
-      )}
+      rightSection={showSettings && onSettingsClick && <SettingsButton onClick={onSettingsClick} />}
       // customStyle={css`
       //   ${customStyle}
       // `}
