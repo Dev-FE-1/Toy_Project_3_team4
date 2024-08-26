@@ -48,7 +48,7 @@ const titleStyle = (theme: Theme) => css`
 `;
 
 const searchInputStyle = (theme: Theme) => css`
-  max-width: 510px;
+  width: 100%;
   height: 36px;
   padding-left: 14px;
   border: 1px solid ${theme.colors.gray};
