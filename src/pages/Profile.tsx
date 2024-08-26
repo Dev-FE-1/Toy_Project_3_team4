@@ -1,5 +1,12 @@
+import LogoHeader from '@/components/layout/header/LogoHeader';
+
 const ProfilePage = () => {
-  return <div>ProfilePage</div>;
+  return (
+    <>
+      <LogoHeader showSettings onSettingsClick={() => {}} />
+      <div>ProfilePage</div>
+    </>
+  );
 };
 
 export default ProfilePage;
