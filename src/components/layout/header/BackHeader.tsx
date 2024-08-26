@@ -3,7 +3,7 @@ import { HiArrowLeft } from 'react-icons/hi2';
 
 import IconButton from '@/components/common/buttons/IconButton';
 
-import BaseHeader from './Header';
+import Header from './Header';
 
 interface BackHeaderProps {
   onBackClick: () => void;
@@ -20,7 +20,7 @@ const BackHeader: React.FC<BackHeaderProps> = ({
   onSearchChange,
 }) => {
   return (
-    <BaseHeader
+    <Header
       leftSection={<BackButton onClick={onBackClick} />}
       centerSection={
         showSearch ? (

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import logoSrc from '@/assets/images/logo.svg';
 import IconButton from '@/components/common/buttons/IconButton';
 
-import BaseHeader from './Header';
+import Header from './Header';
 
 interface LogoHeaderProps {
   showSettings?: boolean;
@@ -13,12 +13,9 @@ interface LogoHeaderProps {
   customStyle?: React.CSSProperties;
 }
 
-const LogoHeader: React.FC<LogoHeaderProps> = ({
-  showSettings = false,
-  onSettingsClick,
-}) => {
+const LogoHeader: React.FC<LogoHeaderProps> = ({ showSettings = false, onSettingsClick }) => {
   return (
-    <BaseHeader
+    <Header
       leftSection={<Logo />}
       rightSection={showSettings && onSettingsClick && <SettingsButton onClick={onSettingsClick} />}
     />

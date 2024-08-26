@@ -3,7 +3,7 @@ import { HiOutlineXMark } from 'react-icons/hi2';
 
 import IconButton from '@/components/common/buttons/IconButton';
 
-import BaseHeader from './Header';
+import Header from './Header';
 
 interface CloseHeaderProps {
   onCloseClick: () => void;
@@ -21,7 +21,7 @@ const CloseHeader: React.FC<CloseHeaderProps> = ({
   customStyle,
 }) => {
   return (
-    <BaseHeader
+    <Header
       leftSection={<CloseButton onClick={onCloseClick} />}
       centerSection={title && <Title text={title} />}
       rightSection={
