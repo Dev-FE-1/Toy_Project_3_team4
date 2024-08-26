@@ -6,19 +6,18 @@ import theme from '@/styles/theme';
 
 interface ModalProps {
   isOpen: boolean;
-  onClose?: () => void;
   title?: React.ReactNode;
   children: React.ReactNode;
-  height?: string;
+  fullScreen?: boolean;
   animated?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, animated = true }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, title, children, animated = true, fullScreen }) => {
   return (
-    <Dialog.Root open={isOpen} onOpenChange={onClose}>
+    <Dialog.Root open={isOpen}>
       <Dialog.Portal>
         <Dialog.Overlay css={overlayStyle} />
-        <div css={modalContainerStyle(animated)}>
+        <div css={modalContainerStyle(animated, fullScreen)}>
           <Dialog.Content className="dialog__content">
             {title && <Dialog.Title className="dialog__title">{title}</Dialog.Title>}
             <VisuallyHidden>
@@ -49,51 +48,66 @@ const overlayStyle = css`
   animation: ${fadeIn} 0.2s ease-out;
 `;
 
-const modalContainerStyle = (animated: boolean) => css`
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  z-index: 500;
-  max-width: ${theme.width.max};
-  height: 100vh;
-  pointer-events: none;
-
-  .dialog__content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    background-color: white;
-    border-radius: 20px 20px 0 0;
-
-    ${animated &&
+const modalContainerStyle = (animated: boolean, fullScreen?: boolean) => {
+  const fullScreenStyle =
+    fullScreen &&
+    css`
+      height: 100%;
+    `;
+  const borderRadius =
+    fullScreen ||
+    css`
+      border-radius: 20px;
+    `;
+  const animatedStyle =
+    animated &&
     css`
       animation: ${slideUp} 0.3s ease-out;
-    `}
+    `;
+  return css`
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 500;
+    max-width: ${theme.width.max};
+    height: 100vh;
+    pointer-events: none;
+
+    .dialog__content {
+      width: 100%;
+      ${fullScreenStyle}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      background-color: white;
+
+      ${borderRadius}
+      ${animatedStyle}
     pointer-events: auto;
 
-    .dialog__title {
-      width: 100%;
-      display: flex;
-      padding: 20px 0px;
-      justify-content: center;
-      align-items: center;
-      font-weight: 500;
+      .dialog__title {
+        width: 100%;
+        display: flex;
+        padding: 20px 0px;
+        justify-content: center;
+        align-items: center;
+        font-weight: 500;
 
-      color: ${theme.colors.black};
-      border-bottom: 1px solid ${theme.colors.lightGray};
-      font-size: ${theme.fontSizes.small};
-      font-weight: 700;
-      line-height: 140%;
+        color: ${theme.colors.black};
+        border-bottom: 1px solid ${theme.colors.lightGray};
+        font-size: ${theme.fontSizes.small};
+        font-weight: 700;
+        line-height: 140%;
+      }
     }
-  }
-`;
+  `;
+};
 
 export default Modal;

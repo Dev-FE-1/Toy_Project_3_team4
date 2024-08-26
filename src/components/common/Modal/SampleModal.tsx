@@ -6,13 +6,7 @@ const SampleModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title={'모달 타이틀'}
-        height="50%"
-        animated={true}
-      >
+      <Modal isOpen={isModalOpen} title={'모달 타이틀'} animated={true} fullScreen={false}>
         <h1>this is 헤딩</h1>
         <p>모달 컨텐츠1 !</p>
         <p>모달 컨텐츠2 !</p>
