@@ -22,6 +22,13 @@ export const commonInputContainerStyle = css`
   .error {
     padding-left: 8px;
   }
+
+  input,
+  textarea {
+    &:focus {
+      border-color: ${theme.colors.darkGray};
+    }
+  }
 `;
 
 export const errorMessageStyle = css`
