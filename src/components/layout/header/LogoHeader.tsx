@@ -16,15 +16,11 @@ interface LogoHeaderProps {
 const LogoHeader: React.FC<LogoHeaderProps> = ({
   showSettings = false,
   onSettingsClick,
-  // customStyle,
 }) => {
   return (
     <BaseHeader
       leftSection={<Logo />}
       rightSection={showSettings && onSettingsClick && <SettingsButton onClick={onSettingsClick} />}
-      // customStyle={css`
-      //   ${customStyle}
-      // `}
     />
   );
 };

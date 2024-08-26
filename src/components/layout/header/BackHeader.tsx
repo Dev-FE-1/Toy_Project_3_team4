@@ -18,7 +18,6 @@ const BackHeader: React.FC<BackHeaderProps> = ({
   title,
   showSearch = false,
   onSearchChange,
-  // customStyle,
 }) => {
   return (
     <BaseHeader

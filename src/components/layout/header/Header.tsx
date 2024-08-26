@@ -10,7 +10,7 @@ interface BaseHeaderProps {
   customStyle?: SerializedStyles;
 }
 
-const BaseHeader: React.FC<BaseHeaderProps> = ({
+const Header: React.FC<BaseHeaderProps> = ({
   leftSection,
   centerSection,
   rightSection,
@@ -56,4 +56,4 @@ const rightSectionStyle = css`
   flex: 0 0 auto;
 `;
 
-export default BaseHeader;
+export default Header;
