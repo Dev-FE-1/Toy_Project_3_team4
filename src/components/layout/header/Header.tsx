@@ -1,10 +1,15 @@
 import { css, Theme } from '@emotion/react';
 import { HiArrowLeft, HiOutlineXMark, HiOutlineCog6Tooth } from 'react-icons/hi2';
-import logoSrc from '@/assets/images/logo.svg';
-import IconButton from '@/utils/IconButton';
 import { Link } from 'react-router-dom';
 
-export const Logo = () => <Link to="/"><img src={logoSrc} alt="Logo" /></Link>;
+import logoSrc from '@/assets/images/logo.svg';
+import IconButton from '@/utils/IconButton';
+
+export const Logo = () => (
+  <Link to="/">
+    <img src={logoSrc} alt="Logo" />
+  </Link>
+);
 
 export const BackButton = ({ onClick }: { onClick: () => void }) => (
   <IconButton icon={<HiArrowLeft />} onClick={onClick} />
@@ -43,7 +48,7 @@ const titleStyle = (theme: Theme) => css`
 `;
 
 const searchInputStyle = (theme: Theme) => css`
-  width: ${theme.width.max};
+  max-width: 510px;
   height: 36px;
   padding-left: 14px;
   border: 1px solid ${theme.colors.gray};

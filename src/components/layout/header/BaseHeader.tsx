@@ -1,4 +1,5 @@
 import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 interface BaseHeaderProps {
@@ -15,8 +16,14 @@ const BaseHeader: React.FC<BaseHeaderProps> = ({
   customStyle,
 }) => {
   const theme = useTheme();
-  const headerRoot = document.getElementById('header');
+  // const headerRoot = document.getElementById('header');
 
+  // if (!headerRoot) return null;
+  const [headerRoot, setHeaderRoot] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setHeaderRoot(document.getElementById('header'));
+  }, []);
   if (!headerRoot) return null;
 
   return createPortal(
