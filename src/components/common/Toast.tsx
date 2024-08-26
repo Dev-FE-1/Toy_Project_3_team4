@@ -1,35 +1,64 @@
 import { useEffect, useState } from 'react';
 import { css, Theme } from '@emotion/react';
+import { useToast, type Toast } from '@/hooks/useToast';
 
-interface ToastProps {
-  message: string;
-  isActive: boolean;
-  onClose: () => void;
-}
+const MAX_VISIBLE_TOASTS = 3;
+const TOAST_SPACING = 56;
+const TOAST_BOTTOM_OFFSET = 86;
 
-const Toast: React.FC<ToastProps> = ({ message, isActive, onClose }) => {
-  const [visible, setVisible] = useState(isActive);
+const Toast: React.FC = () => {
+  const { toasts } = useToast();
+  const [visibleToasts, setVisibleToasts] = useState(toasts);
 
   useEffect(() => {
-    if (isActive) {
-      setVisible(true);
-      const timer = setTimeout(() => {
-        setVisible(false);
-        onClose();
-      }, 2000);
-      return () => clearTimeout(timer);
+    const newToasts = toasts.slice(-MAX_VISIBLE_TOASTS).map((toast, index) => ({
+      ...toast,
+      positionIndex: index,
+    }));
+
+    setVisibleToasts(newToasts);
+
+    const activateTransition = setTimeout(() => {
+      setVisibleToasts((prevToasts) =>
+        prevToasts.map((toast) => ({ ...toast, transitionToActive: true })),
+      );
+    }, 30);
+
+    return () => clearTimeout(activateTransition);
+  }, [toasts]);
+
+  const removeToast = () => {
+    const lowestToast = visibleToasts[0];
+
+    if (lowestToast && !lowestToast.show) {
+      setVisibleToasts((prevToasts) => {
+        const updatedToasts = prevToasts.slice(1);
+        return updatedToasts.map((toast, index) => ({
+          ...toast,
+          positionIndex: index,
+        }));
+      });
     }
-  }, [isActive, onClose]);
+  };
+
+  useEffect(() => {
+    removeToast();
+  }, [visibleToasts]);
+
+  const getToastStyle = (toast: Toast) => {
+    return toast.transitionToActive
+      ? activeToastStyle(toast.positionIndex)
+      : initialToastStyle(toast.positionIndex);
+  };
 
   return (
-    <div
-      css={(theme: Theme) => [
-        baseToastStyle(theme),
-        visible ? activeToastStyle : inactiveToastStyle,
-      ]}
-    >
-      <p>{message}</p>
-    </div>
+    <>
+      {visibleToasts.map((toast) => (
+        <div key={toast.id} css={(theme: Theme) => [baseToastStyle(theme), getToastStyle(toast)]}>
+          {toast.message}
+        </div>
+      ))}
+    </>
   );
 };
 
@@ -52,19 +81,20 @@ const baseToastStyle = (theme: Theme) => css`
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.7s ease-in-out;
-  opacity: 0;
+  transition:
+    bottom 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
   z-index: 1000;
 `;
 
-const activeToastStyle = css`
-  bottom: 20px;
-  opacity: 1;
+const initialToastStyle = (index: number) => css`
+  bottom: ${20 + index * TOAST_SPACING}px;
+  opacity: 0;
 `;
 
-const inactiveToastStyle = css`
-  bottom: -20px;
-  opacity: 0;
+const activeToastStyle = (index: number) => css`
+  bottom: ${TOAST_BOTTOM_OFFSET + index * TOAST_SPACING}px;
+  opacity: 1;
 `;
 
 export default Toast;
