@@ -1,49 +1,51 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+
 import { css, Theme } from '@emotion/react';
-import { useToast, type Toast } from '@/hooks/useToast';
+
+import { useToastStore, type Toast } from '@/store/toastStore';
 
 const MAX_VISIBLE_TOASTS = 3;
 const TOAST_SPACING = 56;
 const TOAST_BOTTOM_OFFSET = 86;
 
 const Toast: React.FC = () => {
-  const { toasts } = useToast();
-  const [visibleToasts, setVisibleToasts] = useState(toasts);
+  const { toasts, setToasts } = useToastStore((state) => state);
+  const [visibleToasts, setVisibleToasts] = useState<Toast[]>([]);
+  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    const newToasts = toasts.slice(-MAX_VISIBLE_TOASTS).map((toast, index) => ({
+  const updateVisibleToasts = (newToasts: Toast[]) => {
+    const updatedToasts = newToasts.map((toast) => ({
       ...toast,
-      positionIndex: index,
+      transitionToActive: true,
     }));
 
-    setVisibleToasts(newToasts);
+    setVisibleToasts(updatedToasts);
 
-    const activateTransition = setTimeout(() => {
-      setVisibleToasts((prevToasts) =>
-        prevToasts.map((toast) => ({ ...toast, transitionToActive: true })),
-      );
-    }, 30);
-
-    return () => clearTimeout(activateTransition);
-  }, [toasts]);
-
-  const removeToast = () => {
-    const lowestToast = visibleToasts[0];
-
-    if (lowestToast && !lowestToast.show) {
-      setVisibleToasts((prevToasts) => {
-        const updatedToasts = prevToasts.slice(1);
-        return updatedToasts.map((toast, index) => ({
-          ...toast,
-          positionIndex: index,
-        }));
-      });
+    if (JSON.stringify(updatedToasts) !== JSON.stringify(toasts)) {
+      setToasts(updatedToasts);
     }
   };
 
   useEffect(() => {
-    removeToast();
-  }, [visibleToasts]);
+    if (toasts.length >= 0) {
+      const newToasts = toasts.slice(-MAX_VISIBLE_TOASTS).map((toast: Toast, index: number) => ({
+        ...toast,
+        positionIndex: index,
+      }));
+
+      setVisibleToasts(newToasts);
+
+      transitionTimeoutRef.current = setTimeout(() => {
+        updateVisibleToasts(newToasts);
+      }, 30);
+
+      return () => {
+        if (transitionTimeoutRef.current) {
+          clearTimeout(transitionTimeoutRef.current);
+        }
+      };
+    }
+  }, [toasts, setToasts]);
 
   const getToastStyle = (toast: Toast) => {
     return toast.transitionToActive

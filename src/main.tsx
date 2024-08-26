@@ -1,8 +1,10 @@
 import { StrictMode } from 'react';
+
 import { ThemeProvider } from '@emotion/react';
 import { createRoot } from 'react-dom/client';
+
 import App from '@/App.tsx';
-import Toast from '@/components/common/Toast.tsx';
+import Toast from '@/components/common/Toast';
 import GlobalStyles from '@/styles/GlobalStyles';
 import theme from '@/styles/theme.ts';
 
