@@ -7,6 +7,7 @@ import {
   HiOutlineUserCircle,
 } from 'react-icons/hi2';
 
+import NavButtonItem from '@/components/layout/Navbar/NavButtonItem';
 import NavItem from '@/components/layout/Navbar/NavItem';
 import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
@@ -17,7 +18,7 @@ const Navbar = () => {
       <ul className="nav-list">
         <NavItem Icon={HiOutlineHome} path={PATH.HOME} />
         <NavItem Icon={HiMagnifyingGlass} path={PATH.SEARCH} />
-        <NavItem Icon={CiSquarePlus} path={PATH.ADD_POST} stroke={0.5} />
+        <NavButtonItem Icon={CiSquarePlus} onClick={() => {}} stroke={0.5} />
         <NavItem Icon={HiOutlineRectangleStack} path={PATH.PLAYLIST} />
         <NavItem Icon={HiOutlineUserCircle} path={PATH.PROFILE} />
       </ul>
@@ -46,6 +47,29 @@ const navStyle = css`
     display: flex;
     flex-basis: 0;
     height: 100%;
+
+    li {
+      flex-grow: 1;
+      font-size: 24px;
+
+      a,
+      button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        height: 100%;
+        padding-top: 10px;
+        color: ${theme.colors.darkGray};
+        text-decoration: none;
+
+        &.active {
+          svg {
+            color: ${theme.colors.primary};
+          }
+        }
+      }
+    }
   }
 `;
 

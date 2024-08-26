@@ -152,3 +152,6 @@ stats.html
 
 
 .firebase
+
+premissions.json
+serviceAccountKey.json

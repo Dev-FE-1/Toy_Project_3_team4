@@ -85,10 +85,19 @@ const baseStyles = css`
 
   input,
   textarea {
+    width: 100%;
+    font-size: ${theme.fontSizes.base};
+    border: 0;
+    outline: none;
+
     &::placeholder {
       color: ${theme.colors.darkGray};
       opacity: 1; /* Firefox */
     }
+  }
+
+  textarea {
+    resize: none;
   }
 `;
 
