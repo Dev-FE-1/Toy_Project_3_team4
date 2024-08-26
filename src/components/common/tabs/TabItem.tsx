@@ -11,7 +11,7 @@ interface TabItemProps {
 
 const TabItem: React.FC<TabItemProps> = ({ id, label, icon, isActive, onClick, customStyle }) => (
   <button onClick={() => onClick(id)} css={[tabStyle, isActive && activeTabStyle, customStyle]}>
-    <span css={iconStyle}>{icon}</span>
+    <span css={[iconStyle, isActive && activeIconStyle]}>{icon}</span>
     {label}
   </button>
 );
@@ -55,9 +55,20 @@ const activeTabStyle = (theme: Theme) => css`
   }
 `;
 
-const iconStyle = css`
-  width: 16px;
+const iconStyle = (theme: Theme) => css`
+  font-size: ${theme.fontSizes.base};
   margin-right: 8px;
+  position: relative;
+  right: 1px;
+  top: 2px;
+`;
+
+const activeIconStyle = (theme: Theme) => css`
+  background: ${theme.colors.primaryGradient};
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: ${theme.colors.primary};
 `;
 
 export default TabItem;

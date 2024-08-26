@@ -1,15 +1,16 @@
 import { useState } from 'react';
 
-import { FaRegNewspaper, FaRegHeart } from 'react-icons/fa';
-import { MdPlaylistAdd } from 'react-icons/md';
+import { FaRegHeart } from 'react-icons/fa';
+import { FiPlay } from 'react-icons/fi';
+import { HiOutlinePencil } from 'react-icons/hi2';
 
 import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
 
 const ProfilePage = () => {
   const tabs = [
-    { id: 'tab1', label: '포스트', icon: <FaRegNewspaper /> },
-    { id: 'tab2', label: '플리', icon: <MdPlaylistAdd /> },
+    { id: 'tab1', label: '포스트', icon: <HiOutlinePencil /> },
+    { id: 'tab2', label: '플리', icon: <FiPlay /> },
     { id: 'tab3', label: '좋아요', icon: <FaRegHeart /> },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].id);
