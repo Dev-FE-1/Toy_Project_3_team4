@@ -1,12 +1,16 @@
 import { useState } from 'react';
 
+import { FaRegNewspaper, FaRegHeart } from 'react-icons/fa';
+import { MdPlaylistAdd } from 'react-icons/md';
+
 import TabMenu from '@/components/common/tabs/TabMenu';
+import LogoHeader from '@/components/layout/header/LogoHeader';
 
 const ProfilePage = () => {
   const tabs = [
-    { id: 'tab1', label: '포스트' },
-    { id: 'tab2', label: '플리' },
-    { id: 'tab3', label: '좋아요' },
+    { id: 'tab1', label: '포스트', icon: <FaRegNewspaper /> },
+    { id: 'tab2', label: '플리', icon: <MdPlaylistAdd /> },
+    { id: 'tab3', label: '좋아요', icon: <FaRegHeart /> },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].id);
 
@@ -28,16 +32,19 @@ const ProfilePage = () => {
   };
 
   return (
-    <div>
-      <TabMenu
-        tabs={tabs}
-        onTabChange={handleTabChange}
-        defaultTabId={tabs[0].id}
-        // customStyle={tabMenuCustomStyle}
-      />
+    <>
+      <LogoHeader showSettings onSettingsClick={() => {}} />
+      <div>
+        <TabMenu
+          tabs={tabs}
+          onTabChange={handleTabChange}
+          defaultTabId={tabs[0].id}
+          // customStyle={tabMenuCustomStyle}
+        />
 
-      <div>{renderTabContent()}</div>
-    </div>
+        <div>{renderTabContent()}</div>
+      </div>
+    </>
   );
 };
 

@@ -1,5 +1,12 @@
+import LogoHeader from '@/components/layout/header/LogoHeader';
+
 const HomePage = () => {
-  return <div>HomePage</div>;
+  return (
+    <>
+      <LogoHeader />
+      <div>HomePage</div>
+    </>
+  );
 };
 
 export default HomePage;

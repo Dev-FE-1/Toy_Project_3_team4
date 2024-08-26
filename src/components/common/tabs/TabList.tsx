@@ -1,10 +1,11 @@
-import { css, SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles, Theme } from '@emotion/react';
 
 import TabItem from './TabItem';
 
 export interface TabItemData {
   id: string;
   label: string;
+  icon: React.ReactNode;
 }
 
 interface TabListProps {
@@ -21,6 +22,7 @@ const TabList: React.FC<TabListProps> = ({ tabs, activeTabId, onTabChange, custo
         key={tab.id}
         id={tab.id}
         label={tab.label}
+        icon={tab.icon}
         isActive={activeTabId === tab.id}
         onClick={onTabChange}
       />
@@ -28,9 +30,13 @@ const TabList: React.FC<TabListProps> = ({ tabs, activeTabId, onTabChange, custo
   </div>
 );
 
-const tabListStyle = css`
-  display: flex;
-  border-bottom: 1px solid #e0e0e0;
+const tabListStyle = (theme: Theme) => css`
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: ${theme.colors.lightestGray};
+  border-radius: 25px;
+  position: relative;
 `;
 
 export default TabList;

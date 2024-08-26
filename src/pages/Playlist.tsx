@@ -1,5 +1,12 @@
+import LogoHeader from '@/components/layout/header/LogoHeader';
+
 const PlaylistPage = () => {
-  return <div>PlaylistPage</div>;
+  return (
+    <>
+      <LogoHeader />
+      <div>PlaylistPage</div>
+    </>
+  );
 };
 
 export default PlaylistPage;
