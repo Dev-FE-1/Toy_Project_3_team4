@@ -1,5 +1,6 @@
+import { ReactNode } from 'react';
+
 import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
-import React, { ReactNode } from 'react';
 
 interface FitButtonProps {
   children: ReactNode;
