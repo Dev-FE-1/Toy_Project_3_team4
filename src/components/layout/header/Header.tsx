@@ -1,10 +1,10 @@
 import { css, Theme } from '@emotion/react';
 import { HiArrowLeft, HiOutlineXMark, HiOutlineCog6Tooth } from 'react-icons/hi2';
-
 import logoSrc from '@/assets/images/logo.svg';
 import IconButton from '@/utils/IconButton';
+import { Link } from 'react-router-dom';
 
-export const Logo = () => <img src={logoSrc} alt="Logo" />;
+export const Logo = () => <Link to="/"><img src={logoSrc} alt="Logo" /></Link>;
 
 export const BackButton = ({ onClick }: { onClick: () => void }) => (
   <IconButton icon={<HiArrowLeft />} onClick={onClick} />
