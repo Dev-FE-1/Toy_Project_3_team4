@@ -7,11 +7,13 @@ import HomePage from '@/pages/Home';
 import PlaylistPage from '@/pages/Playlist';
 import ProfilePage from '@/pages/Profile';
 import SearchPage from '@/pages/Search';
+import SignInPage from '@/pages/SignIn';
 
 const router = createBrowserRouter([
   {
     path: PATH.HOME,
     children: [
+      { path: PATH.SIGN_IN, element: <SignInPage /> },
       {
         path: '/',
         element: <RootLayout />,
