@@ -1,9 +1,9 @@
-import LogoSettingsHeader from '@/components/layout/header/LogoSettimgHeader';
+import LogoSettingsHeader from '@/components/layout/header/LogoHeader';
 
 const ProfilePage = () => {
   return (
     <>
-      <LogoSettingsHeader onSettingsClick={console.log} />
+      <LogoSettingsHeader showSettings onSettingsClick={() => {}} />
       <div>ProfilePage</div>
     </>
   );

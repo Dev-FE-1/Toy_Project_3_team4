@@ -1,12 +1,13 @@
-import CloseTitleShareHeader from '@/components/layout/header/CloseTitleShareHeader';
+import CloseHeader from '@/components/layout/header/CloseHeader';
 
 const AddPostPage = () => {
   return (
     <>
-      <CloseTitleShareHeader
-        onCloseClick={console.log}
+      <CloseHeader
+        onCloseClick={() => {}}
         title="새 포스트"
-        onShareClick={console.log}
+        rightButtonText="공유하기"
+        onrightButtonClick={() => {}}
       />
       <div>AddPostPage</div>
     </>
