@@ -2,18 +2,19 @@ import { useEffect, useState, useRef } from 'react';
 
 import { css, Theme } from '@emotion/react';
 
-import { useToastStore, type Toast } from '@/store/toastStore';
+import { useToastStore, type ToastModel } from '@/store/toastStore';
 
 const MAX_VISIBLE_TOASTS = 3;
 const TOAST_SPACING = 56;
 const TOAST_BOTTOM_OFFSET = 86;
 
 const Toast: React.FC = () => {
-  const { toasts, setToasts } = useToastStore((state) => state);
-  const [visibleToasts, setVisibleToasts] = useState<Toast[]>([]);
-  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const toasts = useToastStore((state) => state.toasts);
+  const setToasts = useToastStore((state) => state.setToasts);
+  const [visibleToasts, setVisibleToasts] = useState<ToastModel[]>([]);
+  const transitionTimeoutRef = useRef<number | null>(null);
 
-  const updateVisibleToasts = (newToasts: Toast[]) => {
+  const updateVisibleToasts = (newToasts: ToastModel[]) => {
     const updatedToasts = newToasts.map((toast) => ({
       ...toast,
       transitionToActive: true,
@@ -28,14 +29,16 @@ const Toast: React.FC = () => {
 
   useEffect(() => {
     if (toasts.length >= 0) {
-      const newToasts = toasts.slice(-MAX_VISIBLE_TOASTS).map((toast: Toast, index: number) => ({
-        ...toast,
-        positionIndex: index,
-      }));
+      const newToasts = toasts
+        .slice(-MAX_VISIBLE_TOASTS)
+        .map((toast: ToastModel, index: number) => ({
+          ...toast,
+          positionIndex: index,
+        }));
 
       setVisibleToasts(newToasts);
 
-      transitionTimeoutRef.current = setTimeout(() => {
+      transitionTimeoutRef.current = window.setTimeout(() => {
         updateVisibleToasts(newToasts);
       }, 30);
 
@@ -47,7 +50,7 @@ const Toast: React.FC = () => {
     }
   }, [toasts, setToasts]);
 
-  const getToastStyle = (toast: Toast) => {
+  const getToastStyle = (toast: ToastModel) => {
     return toast.transitionToActive
       ? activeToastStyle(toast.positionIndex)
       : initialToastStyle(toast.positionIndex);
@@ -72,7 +75,7 @@ const baseToastStyle = (theme: Theme) => css`
   align-items: center;
   gap: 4px;
   border-radius: 8px;
-  background: ${theme.colors.black};
+  background: rgba(30, 41, 59, 0.9);
   color: ${theme.colors.white};
   font-family: Pretendard;
   font-size: ${theme.fontSizes.base};
@@ -84,8 +87,8 @@ const baseToastStyle = (theme: Theme) => css`
   left: 50%;
   transform: translateX(-50%);
   transition:
-    bottom 0.5s ease-in-out,
-    opacity 0.5s ease-in-out;
+    bottom 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
   z-index: 1000;
 `;
 

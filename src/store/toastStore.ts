@@ -1,6 +1,6 @@
 import { createWithEqualityFn, useStoreWithEqualityFn } from 'zustand/traditional';
 
-export interface Toast {
+export interface ToastModel {
   id: string;
   message: string;
   show: boolean;
@@ -9,11 +9,11 @@ export interface Toast {
 }
 
 interface ToastStore {
-  toasts: Toast[];
+  toasts: ToastModel[];
   addToast: (message: string) => void;
   removeToast: (id: string) => void;
   transitionToast: (id: string) => void;
-  setToasts: (toasts: Toast[]) => void;
+  setToasts: (toasts: ToastModel[]) => void;
 }
 
 const TOAST_REMOVE_DELAY = 3000;
@@ -21,8 +21,8 @@ const TOAST_REMOVE_DELAY = 3000;
 const toastStore = createWithEqualityFn<ToastStore>((set, get) => ({
   toasts: [],
   addToast: (message: string) => {
-    const id = genId();
-    const newToast: Toast = {
+    const id = generateToastId();
+    const newToast: ToastModel = {
       id,
       message,
       show: true,
@@ -51,7 +51,7 @@ const toastStore = createWithEqualityFn<ToastStore>((set, get) => ({
       ),
     }));
   },
-  setToasts: (toasts: Toast[]) => {
+  setToasts: (toasts: ToastModel[]) => {
     set({ toasts });
   },
 }));
@@ -59,7 +59,7 @@ const toastStore = createWithEqualityFn<ToastStore>((set, get) => ({
 export const useToastStore = <T>(selector: (state: ToastStore) => T) =>
   useStoreWithEqualityFn(toastStore, selector);
 
-const genId = (() => {
+const generateToastId = (() => {
   let count = 0;
   return () => {
     count = (count + 1) % Number.MAX_SAFE_INTEGER;
