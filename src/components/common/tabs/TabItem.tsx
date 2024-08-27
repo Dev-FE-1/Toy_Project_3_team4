@@ -48,14 +48,6 @@ const tabStyle = (isActive: boolean) => (theme: Theme) => css`
   }
 `;
 
-// const activeTabStyle = (theme: Theme) => css`
-//   color: ${theme.colors.black};
-//   &::before {
-//     opacity: 1;
-//     box-shadow: 0 4px 4px rgba(23, 23, 23, 0.06);
-//   }
-// `;
-
 const iconStyle = (isActive: boolean) => (theme: Theme) => css`
   font-size: ${theme.fontSizes.base};
   margin-right: 8px;
@@ -63,7 +55,8 @@ const iconStyle = (isActive: boolean) => (theme: Theme) => css`
   right: 1px;
   top: 2px;
 
-  ${isActive && `
+  ${isActive &&
+  `
     background: ${theme.colors.primaryGradient};
     background-clip: text;
     -webkit-background-clip: text;
@@ -71,13 +64,5 @@ const iconStyle = (isActive: boolean) => (theme: Theme) => css`
     color: ${theme.colors.primary};
   `}
 `;
-
-// const activeIconStyle = (theme: Theme) => css`
-//   background: ${theme.colors.primaryGradient};
-//   background-clip: text;
-//   -webkit-background-clip: text;
-//   -webkit-text-fill-color: transparent;
-//   color: ${theme.colors.primary};
-// `;
 
 export default TabItem;
