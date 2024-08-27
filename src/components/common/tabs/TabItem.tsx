@@ -10,13 +10,13 @@ interface TabItemProps {
 }
 
 const TabItem: React.FC<TabItemProps> = ({ id, label, icon, isActive, onClick, customStyle }) => (
-  <button onClick={() => onClick(id)} css={[tabStyle, isActive && activeTabStyle, customStyle]}>
-    <span css={[iconStyle, isActive && activeIconStyle]}>{icon}</span>
+  <button onClick={() => onClick(id)} css={[tabStyle(isActive), customStyle]}>
+    <span css={iconStyle(isActive)}>{icon}</span>
     {label}
   </button>
 );
 
-const tabStyle = (theme: Theme) => css`
+const tabStyle = (isActive: boolean) => (theme: Theme) => css`
   display: flex;
   align-items: center;
   padding: 8px 12px;
@@ -24,7 +24,7 @@ const tabStyle = (theme: Theme) => css`
   cursor: pointer;
   font-size: ${theme.fontSizes.small};
   font-weight: 700;
-  color: ${theme.colors.darkestGray};
+  color: ${isActive ? theme.colors.black : theme.colors.darkestGray};
   transition: 0.3s ease;
   position: relative;
   z-index: 1;
@@ -41,34 +41,43 @@ const tabStyle = (theme: Theme) => css`
     bottom: 0;
     background: ${theme.colors.white};
     border-radius: 18px;
-    opacity: 0;
+    opacity: ${isActive ? 1 : 0};
     transition: opacity 0.3s ease;
     z-index: -1;
+    ${isActive && `box-shadow: 0 4px 4px rgba(23, 23, 23, 0.06);`}
   }
 `;
 
-const activeTabStyle = (theme: Theme) => css`
-  color: ${theme.colors.black};
-  &::before {
-    opacity: 1;
-    box-shadow: 0 4px 4px rgba(23, 23, 23, 0.06);
-  }
-`;
+// const activeTabStyle = (theme: Theme) => css`
+//   color: ${theme.colors.black};
+//   &::before {
+//     opacity: 1;
+//     box-shadow: 0 4px 4px rgba(23, 23, 23, 0.06);
+//   }
+// `;
 
-const iconStyle = (theme: Theme) => css`
+const iconStyle = (isActive: boolean) => (theme: Theme) => css`
   font-size: ${theme.fontSizes.base};
   margin-right: 8px;
   position: relative;
   right: 1px;
   top: 2px;
+
+  ${isActive && `
+    background: ${theme.colors.primaryGradient};
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: ${theme.colors.primary};
+  `}
 `;
 
-const activeIconStyle = (theme: Theme) => css`
-  background: ${theme.colors.primaryGradient};
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: ${theme.colors.primary};
-`;
+// const activeIconStyle = (theme: Theme) => css`
+//   background: ${theme.colors.primaryGradient};
+//   background-clip: text;
+//   -webkit-background-clip: text;
+//   -webkit-text-fill-color: transparent;
+//   color: ${theme.colors.primary};
+// `;
 
 export default TabItem;
