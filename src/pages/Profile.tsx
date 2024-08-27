@@ -8,6 +8,8 @@ import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
 
+import ProfilePost from './profile/ProfileInfo';
+
 const ProfilePage = () => {
   const tabs = [
     { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
@@ -19,6 +21,7 @@ const ProfilePage = () => {
   return (
     <>
       <LogoHeader showSettings onSettingsClick={() => {}} />
+      <ProfilePost />
       <div>
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
           <TabContent id="post" activeTabId={activeTab}>
