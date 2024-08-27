@@ -52,7 +52,6 @@ const OnboardingSwiper = () => {
 
 const swiperStyle = css`
   width: 100%;
-  margin-top: 80px;
 
   .swiper-slide {
     display: flex;
