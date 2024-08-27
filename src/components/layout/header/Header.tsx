@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { createPortal } from 'react-dom';
+
+import { maxWidthStyle } from '@/styles/GlobalStyles';
 
 interface BaseHeaderProps {
   leftSection?: React.ReactNode;
@@ -16,7 +18,6 @@ const Header: React.FC<BaseHeaderProps> = ({
   rightSection,
   customStyle,
 }) => {
-  const theme = useTheme();
   const [headerRoot, setHeaderRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const Header: React.FC<BaseHeaderProps> = ({
   if (!headerRoot) return null;
 
   return createPortal(
-    <div css={[baseHeaderStyle(theme), customStyle]}>
+    <div css={[baseHeaderStyle, maxWidthStyle(true), customStyle]}>
       <div css={leftSectionStyle}>{leftSection}</div>
       <div css={centerSectionStyle}>{centerSection}</div>
       <div css={rightSectionStyle}>{rightSection}</div>
@@ -34,13 +35,13 @@ const Header: React.FC<BaseHeaderProps> = ({
   );
 };
 
-const baseHeaderStyle = (theme: Theme) => css`
+const baseHeaderStyle = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 12px 16px;
-  background-color: ${theme.colors.white};
+  height: 60px;
+  padding: 0 16px;
 `;
 
 const leftSectionStyle = css`

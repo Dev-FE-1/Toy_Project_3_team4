@@ -10,11 +10,12 @@ import {
 import NavButtonItem from '@/components/layout/Navbar/NavButtonItem';
 import NavItem from '@/components/layout/Navbar/NavItem';
 import { PATH } from '@/constants/path';
+import { maxWidthStyle } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 
 const Navbar = () => {
   return (
-    <nav css={navStyle}>
+    <nav css={[navStyle, maxWidthStyle(false)]}>
       <ul className="nav-list">
         <NavItem Icon={HiOutlineHome} path={PATH.HOME} />
         <NavItem Icon={HiMagnifyingGlass} path={PATH.SEARCH} />
@@ -27,16 +28,7 @@ const Navbar = () => {
 };
 
 const navStyle = css`
-  z-index: 100;
-  position: fixed;
-  left: 50%;
-  bottom: 0;
-  width: 100vw;
-  max-width: ${theme.width.max};
   height: 70px;
-  border-top: 1px solid ${theme.colors.lightGray};
-  background-color: ${theme.colors.white};
-  transform: translateX(-50%);
 
   @media screen and (min-width: ${theme.width.max}) {
     border: 1px solid ${theme.colors.lightGray};
