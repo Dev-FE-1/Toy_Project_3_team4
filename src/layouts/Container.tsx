@@ -1,11 +1,15 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { Outlet } from 'react-router-dom';
 
 import theme from '@/styles/theme';
 
-const ContainerLayout: React.FC = () => {
+interface ContainerLayoutProps {
+  customStyle?: SerializedStyles;
+}
+
+const ContainerLayout: React.FC<ContainerLayoutProps> = ({ customStyle }) => {
   return (
-    <main css={mainStyle}>
+    <main css={[mainStyle, customStyle]}>
       <Outlet />
     </main>
   );
@@ -14,8 +18,9 @@ const ContainerLayout: React.FC = () => {
 const mainStyle = css`
   width: 100%;
   max-width: ${theme.width.max};
-  height: 100vh;
-  padding: 0 16px;
+  height: 100%;
+  min-height: 100vh;
+  padding: 76px 16px 0;
   margin: 0 auto;
   background-color: ${theme.colors.white};
 

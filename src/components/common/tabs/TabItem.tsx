@@ -50,7 +50,7 @@ const tabStyle = (isActive: boolean) => (theme: Theme) => css`
 
 const iconStyle = (isActive: boolean) => (theme: Theme) => css`
   font-size: ${theme.fontSizes.base};
-  margin-right: 8px;
+  margin-right: 4px;
   display: flex;
   right: 1px;
   top: 2px;
@@ -63,6 +63,10 @@ const iconStyle = (isActive: boolean) => (theme: Theme) => css`
     -webkit-text-fill-color: transparent;
     color: ${theme.colors.primary};
   `}
+
+  svg {
+    stroke-width: 2;
+  }
 `;
 
 export default TabItem;
