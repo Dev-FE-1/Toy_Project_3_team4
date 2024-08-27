@@ -35,12 +35,16 @@ const Header: React.FC<BaseHeaderProps> = ({
 };
 
 const baseHeaderStyle = (theme: Theme) => css`
+  max-width: 600px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
   padding: 12px 16px;
   background-color: ${theme.colors.white};
+  border-left: 1px solid ${theme.colors.lightGray};
+  border-right: 1px solid ${theme.colors.lightGray};
 `;
 
 const leftSectionStyle = css`

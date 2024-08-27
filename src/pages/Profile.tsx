@@ -10,9 +10,9 @@ import LogoHeader from '@/components/layout/header/LogoHeader';
 
 const ProfilePage = () => {
   const tabs = [
-    { id: 'tab1', label: '포스트', icon: <HiOutlinePencil /> },
-    { id: 'tab2', label: '플리', icon: <FiPlay /> },
-    { id: 'tab3', label: '좋아요', icon: <FaRegHeart /> },
+    { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
+    { id: 'pli', label: '플리', icon: <FiPlay /> },
+    { id: 'likes', label: '좋아요', icon: <FaRegHeart /> },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].id);
 
@@ -21,13 +21,13 @@ const ProfilePage = () => {
       <LogoHeader showSettings onSettingsClick={() => {}} />
       <div>
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
-          <TabContent id="tab1" activeTabId={activeTab}>
+          <TabContent id="post" activeTabId={activeTab}>
             <div>포스트 내용</div>
           </TabContent>
-          <TabContent id="tab2" activeTabId={activeTab}>
+          <TabContent id="pli" activeTabId={activeTab}>
             <div>플리 내용</div>
           </TabContent>
-          <TabContent id="tab3" activeTabId={activeTab}>
+          <TabContent id="likes" activeTabId={activeTab}>
             <div>좋아요 내용</div>
           </TabContent>
         </TabMenu>
