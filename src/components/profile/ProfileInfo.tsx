@@ -7,25 +7,39 @@ import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { db, auth } from '@/api/firebaseApp';
 import FitButton from '@/components/common/buttons/FitButton';
 
-const ProfilePost = () => {
+interface ProfilePostProps {
+  profileUserId: string;
+  onEditClick?: () => void;
+}
+
+const ProfilePost: React.FC<ProfilePostProps> = ({ profileUserId, onEditClick }) => {
   const [user, setUser] = useState<DocumentData | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser: User | null) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
       if (currentUser) {
-        const userDoc = doc(db, 'users', currentUser.uid);
-        const docSnapshot = await getDoc(userDoc);
-        if (docSnapshot.exists()) {
-          setUser(docSnapshot.data());
-        }
+        setCurrentUserId(currentUser.uid);
       } else {
-        setUser(null);
+        setCurrentUserId(null);
       }
     });
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userDoc = doc(db, 'users', profileUserId);
+      const docSnapshot = await getDoc(userDoc);
+      if (docSnapshot.exists()) {
+        setUser(docSnapshot.data());
+      }
+    };
+
+    fetchUserData();
+  }, [profileUserId]);
 
   const handleFollowToggle = () => {
     setIsFollowing(!isFollowing);
@@ -35,6 +49,8 @@ const ProfilePost = () => {
   if (!user) {
     return <div>Loading...</div>;
   }
+
+  const isOwnProfile = currentUserId === profileUserId;
 
   return (
     <>
@@ -56,17 +72,21 @@ const ProfilePost = () => {
               </div>
             </div>
           </div>
-          <FitButton
-            styleType={isFollowing ? 'secondary' : 'primary'}
-            onClick={handleFollowToggle}
-            // customStyle={followButtonStyle}
-          >
-            {isFollowing ? '팔로잉' : '팔로우'}
-          </FitButton>
+          {isOwnProfile ? (
+            <FitButton styleType="secondary" onClick={onEditClick}>
+              프로필 수정
+            </FitButton>
+          ) : (
+            <FitButton
+              styleType={isFollowing ? 'secondary' : 'primary'}
+              onClick={handleFollowToggle}
+            >
+              {isFollowing ? '팔로잉' : '팔로우'}
+            </FitButton>
+          )}
         </div>
         <div css={introduceStyle}>
-          <p>고낙연의 오른팔 입니다.</p>
-          <p>고낙연의 왼팔은 누구일까요?</p>
+          <p>{user.bio}</p>
         </div>
       </div>
     </>
