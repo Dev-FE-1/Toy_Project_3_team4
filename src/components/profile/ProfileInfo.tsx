@@ -12,7 +12,6 @@ const ProfilePost = () => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
-    // const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (currentUser: User | null) => {
       if (currentUser) {
         const userDoc = doc(db, 'users', currentUser.uid);
