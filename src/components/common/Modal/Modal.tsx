@@ -1,23 +1,38 @@
+import { KeyboardEventHandler } from 'react';
+
 import { css, keyframes } from '@emotion/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 import theme from '@/styles/theme';
-
 interface ModalProps {
   isOpen: boolean;
   title?: React.ReactNode;
   children: React.ReactNode;
   fullScreen?: boolean;
   animated?: boolean;
+  onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, title, children, animated = true, fullScreen }) => {
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  title,
+  children,
+  animated = true,
+  fullScreen = false,
+  onClose,
+}) => {
+  const onEscapeKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog.Root open={isOpen}>
+    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay css={overlayStyle} />
-        <div css={modalContainerStyle(animated, fullScreen)}>
+        <Dialog.Overlay css={overlayStyle} onClick={onClose} />
+        <div css={modalContainerStyle(animated, fullScreen)} onKeyDown={onEscapeKeyDown}>
           <Dialog.Content className="dialog__content">
             {title && <Dialog.Title className="dialog__title">{title}</Dialog.Title>}
             <VisuallyHidden>
@@ -42,9 +57,14 @@ const slideUp = keyframes`
 `;
 
 const overlayStyle = css`
-  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  max-width: ${theme.width.max};
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  transform: translateX(-50%);
   animation: ${fadeIn} 0.2s ease-out;
 `;
 
