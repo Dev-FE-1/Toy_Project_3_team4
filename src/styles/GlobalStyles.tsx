@@ -101,4 +101,23 @@ const baseStyles = css`
   }
 `;
 
+export const maxWidthStyle = (isTop = false) => css`
+  z-index: 100;
+  position: ${isTop ? 'absolute' : 'fixed'};
+  left: 50%;
+  top: ${isTop && 0};
+  bottom: ${!isTop && 0};
+  width: 100vw;
+  max-width: ${theme.width.max};
+  border-top: 1px solid ${theme.colors.lightGray};
+  background-color: ${theme.colors.white};
+  transform: translateX(-50%);
+
+  @media screen and (min-width: ${theme.width.max}) {
+    border: 1px solid ${theme.colors.lightGray};
+    border-top: ${isTop && 0};
+    border-bottom: 0;
+  }
+`;
+
 export default GlobalStyles;
