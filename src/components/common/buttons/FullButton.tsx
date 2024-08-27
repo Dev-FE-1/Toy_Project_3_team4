@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
+import { css, SerializedStyles, Theme } from '@emotion/react';
 
 interface FullButtonProps {
   children: ReactNode;
@@ -17,12 +17,15 @@ const FullButton: React.FC<FullButtonProps> = ({
   styleType,
   customStyle,
 }) => {
-  const theme = useTheme();
   return (
     <button
       type={type}
       onClick={onClick}
-      css={[baseButtonStyle(theme), buttonStyle(theme)[styleType], customStyle || []]}
+      css={(theme: Theme) => [
+        baseButtonStyle(theme),
+        buttonStyle(theme)[styleType],
+        customStyle || [],
+      ]}
     >
       {children}
     </button>
