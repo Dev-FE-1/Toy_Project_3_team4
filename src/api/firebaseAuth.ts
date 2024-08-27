@@ -3,13 +3,12 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 import { auth, db } from '@/api/firebaseApp';
 
-export async function googleLogin() {
+export const signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
 
-    // 로그인 성공 후 Firestore에 사용자 정보 저장
+  try {
+    const { user } = await signInWithPopup(auth, provider);
+
     const userDoc = doc(db, 'users', user.uid);
     const docSnapshot = await getDoc(userDoc);
 
@@ -22,18 +21,26 @@ export async function googleLogin() {
       });
     }
 
-    console.log('구글 로그인 성공:', user);
+    return user;
   } catch (error) {
-    console.error('구글 로그인 실패:', error);
+    console.error('Google 로그인 실패', error);
+    throw error;
   }
-}
+};
 
-export function googleLogout() {
-  signOut(auth)
-    .then(() => {
-      console.log('로그아웃 성공');
-    })
-    .catch((error) => {
-      console.error('로그아웃 실패:', error);
-    });
-}
+export const signOutWithGoogle = async (
+  onSuccess?: () => void,
+  onError?: (error: Error) => void,
+) => {
+  try {
+    await signOut(auth);
+    if (onSuccess) {
+      onSuccess();
+    }
+  } catch (error) {
+    console.error('로그아웃 실패:', error);
+    if (onError && error instanceof Error) {
+      onError(error);
+    }
+  }
+};
