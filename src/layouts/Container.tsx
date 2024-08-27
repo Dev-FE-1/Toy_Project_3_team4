@@ -14,8 +14,9 @@ const ContainerLayout: React.FC = () => {
 const mainStyle = css`
   width: 100%;
   max-width: ${theme.width.max};
-  height: 100vh;
-  padding: 0 16px;
+  height: 100%;
+  min-height: 100vh;
+  padding: 76px 16px 0;
   margin: 0 auto;
   background-color: ${theme.colors.white};
 
