@@ -4,6 +4,7 @@ import { FaRegHeart } from 'react-icons/fa';
 import { FiPlay } from 'react-icons/fi';
 import { HiOutlinePencil } from 'react-icons/hi2';
 
+import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
 
@@ -15,35 +16,21 @@ const ProfilePage = () => {
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].id);
 
-  const handleTabChange = (tabId: string) => {
-    setActiveTab(tabId);
-  };
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'tab1':
-        return <div>포스트</div>;
-      case 'tab2':
-        return <div>플리</div>;
-      case 'tab3':
-        return <div>좋아요</div>;
-      default:
-        return <div>포스트</div>;
-    }
-  };
-
   return (
     <>
       <LogoHeader showSettings onSettingsClick={() => {}} />
       <div>
-        <TabMenu
-          tabs={tabs}
-          onTabChange={handleTabChange}
-          defaultTabId={tabs[0].id}
-          // customStyle={tabMenuCustomStyle}
-        />
-
-        <div>{renderTabContent()}</div>
+        <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
+          <TabContent id="tab1" activeTabId={activeTab}>
+            <div>포스트 내용</div>
+          </TabContent>
+          <TabContent id="tab2" activeTabId={activeTab}>
+            <div>플리 내용</div>
+          </TabContent>
+          <TabContent id="tab3" activeTabId={activeTab}>
+            <div>좋아요 내용</div>
+          </TabContent>
+        </TabMenu>
       </div>
     </>
   );

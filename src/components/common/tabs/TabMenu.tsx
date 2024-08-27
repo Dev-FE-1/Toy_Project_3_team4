@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode } from 'react';
 
 import { SerializedStyles } from '@emotion/react';
 
@@ -6,26 +6,29 @@ import TabList, { TabItemData } from './TabList';
 
 interface TabMenuProps {
   tabs: TabItemData[];
+  activeTabId: string;
   onTabChange: (tabId: string) => void;
-  defaultTabId?: string;
   customStyle?: SerializedStyles;
+  children: ReactNode;
 }
 
-const TabMenu: React.FC<TabMenuProps> = ({ tabs, onTabChange, defaultTabId, customStyle }) => {
-  const [activeTabId, setActiveTabId] = useState(defaultTabId || tabs[0]?.id);
-
-  const handleTabChange = (tabId: string) => {
-    setActiveTabId(tabId);
-    onTabChange(tabId);
-  };
-
+const TabMenu: React.FC<TabMenuProps> = ({
+  tabs,
+  activeTabId,
+  onTabChange,
+  customStyle,
+  children,
+}) => {
   return (
-    <TabList
-      tabs={tabs}
-      activeTabId={activeTabId}
-      onTabChange={handleTabChange}
-      customStyle={customStyle}
-    />
+    <>
+      <TabList
+        tabs={tabs}
+        activeTabId={activeTabId}
+        onTabChange={onTabChange}
+        customStyle={customStyle}
+      />
+      {children}
+    </>
   );
 };
 
