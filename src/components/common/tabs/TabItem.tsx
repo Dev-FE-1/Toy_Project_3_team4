@@ -40,7 +40,7 @@ const tabStyle = (isActive: boolean) => (theme: Theme) => css`
     right: 0;
     bottom: 0;
     background: ${theme.colors.white};
-    border-radius: 18px;
+    border-radius: 30px;
     opacity: ${isActive ? 1 : 0};
     transition: opacity 0.3s ease;
     z-index: -1;
@@ -51,7 +51,7 @@ const tabStyle = (isActive: boolean) => (theme: Theme) => css`
 const iconStyle = (isActive: boolean) => (theme: Theme) => css`
   font-size: ${theme.fontSizes.base};
   margin-right: 8px;
-  position: relative;
+  display: flex;
   right: 1px;
   top: 2px;
 
