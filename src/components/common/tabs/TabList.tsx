@@ -32,8 +32,8 @@ const TabList: React.FC<TabListProps> = ({ tabs, activeTabId, onTabChange, custo
 
 const tabListStyle = (theme: Theme) => css`
   display: inline-flex;
-  gap: 4px;
   padding: 4px;
+  margin-bottom: 20px;
   background: ${theme.colors.lightestGray};
   border-radius: 25px;
   position: relative;
