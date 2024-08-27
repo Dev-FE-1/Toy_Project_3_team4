@@ -12,23 +12,6 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-export { app, db, auth };
-
-// expmple of how to use this in a function
-//
-// import { db } from '../api/firebaseApp';
-// import { getDoc, doc } from 'firebase/firestore';
-// export const helloWorld = onRequest(async (request, response) => {
-//   const docRef = doc(db, 'users', 'alovelace');
-//   const docSnap = await getDoc(docRef);
-//   if (docSnap.exists()) {
-//     response.send(`Document data: ${JSON.stringify(docSnap.data())}`);
-//   } else {
-//     response.send('No such document!');
-//  }
+export const db = getFirestore(app);
+export const auth = getAuth(app);

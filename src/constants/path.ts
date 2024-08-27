@@ -5,4 +5,5 @@ export const PATH = {
   PLAYLIST: '/playlist',
   PROFILE: '/profile',
   SIGN_IN: '/signin',
+  SETTINGS: '/settings',
 } as const;
