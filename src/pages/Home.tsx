@@ -1,11 +1,11 @@
-import SampleModal from '@/components/common/Modal/SampleModal';
+import LogoHeader from '@/components/layout/header/LogoHeader';
 
 const HomePage = () => {
   return (
-    <div>
-      <SampleModal />
-      HomePage
-    </div>
+    <>
+      <LogoHeader />
+      <div>HomePage</div>
+    </>
   );
 };
 

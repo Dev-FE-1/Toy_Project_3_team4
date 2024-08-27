@@ -6,6 +6,7 @@ import theme from '@/styles/theme';
 
 const RootLayout = () => (
   <div css={wrapperStyle}>
+    <header id="header"></header>
     <Navbar />
     <main>
       <Outlet />

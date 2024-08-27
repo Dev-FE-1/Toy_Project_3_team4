@@ -8,7 +8,6 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
       "@server/*": ["functions/*"]
     },
 
@@ -20,10 +19,12 @@
     "noEmit": true,
 
     /* Linting */
+    "resolveJsonModule": true,
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true
   },
   "include": [
     "functions/", // server 디렉토리의 모든 파일 포함

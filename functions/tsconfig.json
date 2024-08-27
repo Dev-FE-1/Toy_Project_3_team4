@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "baseUrl": "./",
+    "paths": {
+      "@/server*": ["./src/*"]
+    },
+    "resolveJsonModule": true,
+    "module": "CommonJS",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "outDir": "lib",
@@ -9,7 +14,6 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src"],
+  "baseUrl": "."
 }
