@@ -1,7 +1,7 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Link } from 'react-router-dom';
 
-import PlaylistThumbnail from '@/components/playlist/PlaylistThumbnail';
+import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
@@ -17,7 +17,7 @@ const Playlists: React.FC<PlaylistListProps> = ({ playlists, customStyle }) => {
       {playlists.length > 0 &&
         playlists.map(({ playlistId, title, videos, isPublic }) => (
           <Link to={`${PATH.PLAYLIST}/${playlistId}`} key={playlistId} css={itemStyle}>
-            <PlaylistThumbnail url={videos[0]?.thumbnailUrl} isPublic={isPublic} />
+            <VideoThumbnail url={videos[0]?.thumbnailUrl} isPublic={isPublic} type="stack" />
             <div className="playlist-info">
               <h2>{title}</h2>
               <p>{videos.length}개의 비디오</p>
