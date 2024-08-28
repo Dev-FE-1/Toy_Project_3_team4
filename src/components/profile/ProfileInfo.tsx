@@ -13,43 +13,13 @@ interface ProfileInfoProps {
 }
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileUserId, userData, onEditClick }) => {
-  // const [user, setUser] = useState<DocumentData | null>(null);
-  // const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const currentUser = useAuth();
-
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
-  //     if (currentUser) {
-  //       setCurrentUserId(currentUser.uid);
-  //     } else {
-  //       setCurrentUserId(null);
-  //     }
-  //   });
-
-  //   return () => unsubscribe();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     const userDoc = doc(db, 'users', profileUserId);
-  //     const docSnapshot = await getDoc(userDoc);
-  //     if (docSnapshot.exists()) {
-  //       setUser(docSnapshot.data());
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, [profileUserId]);
 
   const handleFollowToggle = () => {
     setIsFollowing(!isFollowing);
     console.log(isFollowing ? '언팔로우' : '팔로우');
   };
-
-  // if (!user) {
-  //   return <div>Loading...</div>;
-  // }
 
   const isOwnProfile = currentUser?.uid === profileUserId;
 
