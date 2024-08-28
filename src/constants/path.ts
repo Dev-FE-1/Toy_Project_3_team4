@@ -3,7 +3,8 @@ export const PATH = {
   SEARCH: '/search',
   ADD_POST: '/post/add',
   PLAYLIST: '/playlist',
-  PROFILE: '/profile',
+  PROFILE: '/profile/:userId',
+  PROFILE_Edit: '/profile/:userId/edit',
   SIGN_IN: '/signin',
   SETTINGS: '/settings',
 } as const;

@@ -3,12 +3,11 @@ import { useState, useEffect } from 'react';
 import { FaRegHeart } from 'react-icons/fa';
 import { FiPlay } from 'react-icons/fi';
 import { HiOutlinePencil } from 'react-icons/hi2';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
-import ProfileEditModal from '@/components/profile/ProfileEditModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 
@@ -21,13 +20,11 @@ const tabs = [
 ];
 
 const ProfilePage: React.FC = () => {
+  const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
   const [activeTab, setActiveTab] = useState(tabs[0].id);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const currentUser = useAuth();
-  const { userData, updateUserData, toggleFollow } = useUserData(
-    userId || currentUser?.uid || null,
-  );
+  const { userData, toggleFollow } = useUserData(userId || currentUser?.uid || null);
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
@@ -37,34 +34,16 @@ const ProfilePage: React.FC = () => {
   }, [currentUser, userData]);
 
   const handleEditClick = () => {
-    setIsEditModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsEditModalOpen(false);
+    // setIsEditModalOpen(true);
+    if (currentUser && userData) {
+      navigate(`/profile/${currentUser.uid}/edit`, { state: { userData } });
+    }
   };
 
   const handleFollowToggle = async () => {
     if (currentUser && userId && currentUser.uid !== userId) {
       await toggleFollow(currentUser.uid, userId);
       setIsFollowing(!isFollowing);
-    }
-  };
-
-  // const profileUserId = currentUserId || '';
-
-  const handleSaveProfile = async (name: string, bio: string, photoURL: string) => {
-    if (!currentUser) return;
-
-    try {
-      await updateUserData({
-        displayName: name,
-        bio,
-        photoURL,
-      });
-      setIsEditModalOpen(false);
-    } catch (error) {
-      console.error('Error updating user data:', error);
     }
   };
 
@@ -98,14 +77,6 @@ const ProfilePage: React.FC = () => {
           </TabContent>
         </TabMenu>
       </div>
-      <ProfileEditModal
-        isOpen={isEditModalOpen}
-        onClose={handleCloseModal}
-        initialName={userData.displayName}
-        initialBio={userData.bio}
-        initialPhotoURL={userData.photoURL}
-        onSave={handleSaveProfile}
-      />
     </>
   );
 };
