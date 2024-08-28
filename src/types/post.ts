@@ -1,6 +1,7 @@
 export interface PostModel {
   postId: string;
   userId: string;
+  userImgUrl: string;
   playlistId: string;
   content: string;
   createdAt: string;

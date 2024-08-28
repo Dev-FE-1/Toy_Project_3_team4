@@ -28,7 +28,7 @@ const posts: React.FC<PostsProps> = ({ post }) => {
         <div css={metaInfoStyle}>
           <div css={metaWriterStyle}>
             <div>
-              <img src="" alt="Writer" />
+              <img src={post.userImgUrl} alt="Writer" />
             </div>
             <p>{post.userId}</p>
             <span>{post.createdAt}</span>
@@ -37,7 +37,7 @@ const posts: React.FC<PostsProps> = ({ post }) => {
         </div>
         <p css={contentStyle}>{post.content}</p>
         <p css={playlistStyle}>
-          <span>[Playlist]</span> 플레이리스트 이름
+          <span>[Playlist]</span> {post.playlistId}
         </p>
         <div css={metaInfoStyle}>
           <div css={buttonStyle}>
@@ -89,6 +89,7 @@ const metaWriterStyle = (theme: Theme) => css`
     width: 24px;
     height: 24px;
     border-radius: 50%;
+    overflow: hidden;
 
     img {
       width: 100%;

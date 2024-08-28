@@ -119,6 +119,7 @@ const posts: PostModel[] = [
   {
     postId: '1',
     userId: 'user1',
+    userImgUrl: 'https://s3-alpha-sig.figma.com/img/b858/1a3a/8f9a19b6eec05845c18e07081f487330?Expires=1725840000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=gZIwgKx~G0RhiG51~cYwCDYSw8F7kX5YtigutjXf7EZP9H5durQGwbj3VmNpJhf1gYfzyK2TaSTHloXFrgizf5HXla7NqIVnu3e2UwYX9q39WXxy32ijoZWOENgw48MfkF95alexzORzxg62q4TKTkVWN~ItjTXK86dlo~Ro-aArqURnbt6EBHZ0o2~uBtS3amtfKAz7rrkOmpsj4xrrHiHCXuNWI1nDTYbhOYwWtz3FtveWLx9Cm7Cib7uv2187XFdDkV26CNSQ9ItEtcHQMys9CMU7V7ha7otRIC6dKnuZHNWA6wlI4sWUxU7qw1oCXXLUT1AHiNpDeXkjeK~QZA__',
     playlistId: 'playlist1',
     content:
       '에센셜 들으면서 디자인 해야지...작업할 때 듣기 좋은 음악 재생목록에 넣어두고 나중에도 듣고 싶은 음악',
