@@ -7,6 +7,7 @@ export const initializeFirebase = () => {
   if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+      databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
     });
 
     const firestore = admin.firestore();
