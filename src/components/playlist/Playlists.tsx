@@ -32,7 +32,7 @@ const Playlists: React.FC<PlaylistListProps> = ({ playlists, customStyle }) => {
 const playlistStyle = css`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px 12px;
+  gap: 23px 12px;
 `;
 
 const itemStyle = css`
@@ -44,13 +44,25 @@ const itemStyle = css`
     margin-top: 4px;
 
     h2 {
-      font-size: ${theme.fontSizes.base};
+      font-size: ${theme.fontSizes.small};
       font-weight: 500;
     }
 
     p {
       color: ${theme.colors.darkGray};
-      font-size: ${theme.fontSizes.small};
+      font-size: ${theme.fontSizes.micro};
+    }
+
+    @media screen and (min-width: ${theme.width.large}) {
+      h2 {
+        font-size: ${theme.fontSizes.base};
+        font-weight: 500;
+      }
+
+      p {
+        color: ${theme.colors.darkGray};
+        font-size: ${theme.fontSizes.small};
+      }
     }
   }
 `;
