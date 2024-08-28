@@ -2,9 +2,15 @@
 import * as express from 'express';
 import { getRepository } from 'fireorm';
 
-import { Post } from '../models/post';
+import { Post } from '../models/models';
 
 const router = express.Router();
+
+export class CreatePostDto {
+  userId!: string;
+  playlistId!: string;
+  content!: string;
+}
 
 router.get('/', async (req, res) => {
   const postRepository = getRepository(Post);
@@ -25,9 +31,13 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const postRepository = getRepository(Post);
   const post = new Post();
-  post.title = req.body.title || 'Untitled';
-  post.content = req.body.content || '';
+  const { userId, playlistId, content } = req.body as CreatePostDto;
+
+  post.userId = userId;
+  post.playlistId = playlistId;
+  post.content = content;
   post.createdAt = new Date();
+
   const createdPost = await postRepository.create(post);
   res.status(201).json(createdPost);
 });
