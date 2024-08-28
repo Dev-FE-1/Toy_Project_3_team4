@@ -11,8 +11,11 @@ import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
 import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
+import Posts from '@/components/post/Posts';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
+import { PlaylistModel } from '@/types/playlist';
+import { PostModel } from '@/types/post';
 
 import ProfileInfo from '../components/profile/ProfileInfo';
 
@@ -112,6 +115,27 @@ const playlists: PlaylistModel[] = [
   },
 ];
 
+const posts: PostModel[] = [
+  {
+    postId: '1',
+    userId: 'user1',
+    playlistId: 'playlist1',
+    content:
+      '에센셜 들으면서 디자인 해야지...작업할 때 듣기 좋은 음악 재생목록에 넣어두고 나중에도 듣고 싶은 음악',
+    createdAt: '2024-08-22 12:16:55',
+    likes: ['user2', 'user3'],
+    comments: [
+      { commentId: 'comment1', userId: 'user2', content: 'Great video!', likes: '5' },
+      { commentId: 'comment2', userId: 'user3', content: 'Love NewJeans!', likes: '3' },
+    ],
+    video: {
+      videoId: 'video1',
+      title: 'NewJeans - OMG (Official MV)',
+      videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
+    },
+  },
+];
+
 const tabs = [
   { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
   { id: 'pli', label: '플리', icon: <FiPlay /> },
@@ -166,7 +190,9 @@ const ProfilePage: React.FC = () => {
       <div>
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
           <TabContent id="post" activeTabId={activeTab}>
-            <div>포스트 내용</div>
+            {posts.map((post) => (
+              <Posts key={post.postId} post={post} id={''} />
+            ))}
           </TabContent>
           <TabContent id="pli" activeTabId={activeTab}>
             <AddPlaylistButton customStyle={addPlaylistButtonStyle} />
