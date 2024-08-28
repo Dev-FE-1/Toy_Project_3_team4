@@ -40,7 +40,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
 
 const playlistInfoStyle = css`
   .info-container {
-    padding: 16px 8px 0;
+    padding: 12px 8px 0;
 
     .title {
       display: flex;
@@ -57,7 +57,7 @@ const playlistInfoStyle = css`
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-top: 8px;
+    margin-top: 4px;
     line-height: 100%;
     font-size: ${theme.fontSizes.small};
   }

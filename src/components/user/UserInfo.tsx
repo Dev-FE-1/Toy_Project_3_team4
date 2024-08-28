@@ -54,6 +54,23 @@ const userInfoStyle = (imageSize: string) => css`
       color: ${theme.colors.darkGray};
     }
   }
+
+  @media screen and (min-width: ${theme.width.max}) {
+    img {
+      width: ${imageSize === 'default' ? '32px' : '42px'};
+      height: ${imageSize === 'default' ? '32px' : '42px'};
+    }
+
+    .name-container {
+      span {
+        font-size: ${theme.fontSizes.base};
+      }
+
+      p {
+        font-size: ${theme.fontSizes.small};
+      }
+    }
+  }
 `;
 
 export default UserInfo;

@@ -20,10 +20,8 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({ video }) => 
 
   return (
     <li css={playlistItemStyle}>
+      <HiOutlineBars2 className="drag-bar" />
       <a href={videoUrl} target="_blank" rel="noopener noreferrer">
-        <div className="drag-bar">
-          <HiOutlineBars2 className="drag-bar" />
-        </div>
         <VideoThumbnail url={thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
         <div className="video-info">
           <div className="info-container">
@@ -43,6 +41,8 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({ video }) => 
 };
 
 const playlistItemStyle = css`
+  position: relative;
+
   a {
     position: relative;
     display: flex;
@@ -50,15 +50,13 @@ const playlistItemStyle = css`
   }
 
   .drag-bar {
-    svg {
-      position: absolute;
-      left: -10px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 20px;
-      color: ${theme.colors.darkGray};
-      stroke-width: 1.7;
-    }
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: ${theme.colors.darkGray};
+    stroke-width: 1.7;
   }
 
   .video-info {
@@ -101,13 +99,6 @@ const playlistItemStyle = css`
   }
 
   @media screen and (min-width: ${theme.width.large}) {
-    .drag-bar {
-      svg {
-        left: -13px;
-        font-size: 24px;
-      }
-    }
-
     .video-info {
       flex: 1 1 60%;
       padding-top: 8px;
@@ -132,6 +123,7 @@ const playlistItemStyle = css`
 
 const thumbnailStyle = css`
   flex: 1 1 50%;
+  margin-left: 4px;
 
   @media screen and (min-width: ${theme.width.max}) {
     flex: 1 1 40%;
