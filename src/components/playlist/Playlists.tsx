@@ -7,12 +7,11 @@ import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 
 interface PlaylistListProps {
-  id: string;
   playlists: PlaylistModel[];
   customStyle?: SerializedStyles;
 }
 
-const Playlists: React.FC<PlaylistListProps> = ({ id, playlists, customStyle }) => {
+const Playlists: React.FC<PlaylistListProps> = ({ playlists, customStyle }) => {
   return (
     <div css={[playlistStyle, customStyle]}>
       {playlists.length > 0 &&
@@ -25,9 +24,7 @@ const Playlists: React.FC<PlaylistListProps> = ({ id, playlists, customStyle }) 
             </div>
           </Link>
         ))}
-      {playlists.length === 0 && (
-        <p>{id === 'my' ? '새로운 플리를 추가해 보세요!' : '마음에 드는 플리를 구독해 보세요!'}</p>
-      )}
+      {playlists.length === 0 && <p>마음에 드는 플리를 구독해 보세요!</p>}
     </div>
   );
 };

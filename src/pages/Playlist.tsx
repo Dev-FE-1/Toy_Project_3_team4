@@ -121,10 +121,10 @@ const PlaylistPage = () => {
       <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
         <TabContent id="my" activeTabId={activeTab}>
           <AddPlaylistButton customStyle={addPlaylistButtonStyle} />
-          <Playlists id="my" playlists={playlists} />
+          <Playlists playlists={playlists} />
         </TabContent>
         <TabContent id="subscribe" activeTabId={activeTab}>
-          <Playlists id="subscribe" playlists={[]} />
+          <Playlists playlists={[]} />
         </TabContent>
       </TabMenu>
     </>
