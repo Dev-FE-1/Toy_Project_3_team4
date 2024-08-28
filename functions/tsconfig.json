@@ -7,13 +7,26 @@
     "resolveJsonModule": true,
     "module": "CommonJS",
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "noUnusedParameters": false,
+    "target": "es2017",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true
   },
   "compileOnSave": true,
   "include": ["src"],
-  "baseUrl": "."
+  "baseUrl": ".",
+  "exclude": [
+    "node_modules",
+    "/functions/lib",
+    "/functions/node_modules",
+    "node_modules",
+    "**/node_modules/*",
+    "node_modules/@types/react-router-dom"
+  ]
 }

@@ -23,7 +23,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['./tsconfig.json', './tsconfig.dev.json'],
+    project: ['tsconfig.json', 'tsconfig.dev.json'],
     sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
@@ -34,6 +34,10 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'import', 'prettier'],
   rules: {
+    indent: ['error', 2],
+    'new-cap': 'off',
+    // 'new-cap': ['error', { capIsNewExceptions: ['Router'] }],
+    'require-jsdoc': 'off',
     'import/no-unresolved': 0,
     'object-curly-spacing': ['error', 'always'],
     'import/order': [
