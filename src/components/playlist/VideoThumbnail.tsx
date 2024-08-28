@@ -37,11 +37,10 @@ const thumbnailStyle = (url: URLType) => css`
 
   .stack {
     position: absolute;
-    top: -4px;
+    top: -3px;
     left: 3%;
     width: 94%;
     height: 100%;
-    border: 1px solid ${theme.colors.lightGray};
     border-radius: 12px;
     background-color: ${url ? theme.colors.darkestGray : theme.colors.lightGray};
   }
