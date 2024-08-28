@@ -177,7 +177,7 @@ const imageChangeButton = (theme: Theme) => css`
   font-size: ${theme.fontSizes.small};
   color: ${theme.colors.darkestGray};
   background: none;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 `;
 
 const hiddenInputStyle = css`
