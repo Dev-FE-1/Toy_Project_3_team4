@@ -14,7 +14,7 @@ interface PlaylistInfoProps {
 }
 
 const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle }) => {
-  const { title, videos, isPublic, description } = playlist;
+  const { title, videos, isPublic } = playlist;
   const { displayName, photoURL } = user;
 
   return (
@@ -29,7 +29,6 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
           <h1>{title}</h1>
           <FitButton styleType="primary">구독</FitButton>
         </div>
-        {description !== '' && <p className="description">{description}</p>}
         <div className="info-footer">
           <UserInfo name={displayName} url={photoURL} />
           <span className="video-count">{videos.length}개의 동영상</span>
@@ -51,12 +50,6 @@ const playlistInfoStyle = css`
       h1 {
         font-size: ${theme.fontSizes.large};
       }
-    }
-
-    .description {
-      margin-top: 8px;
-      font-size: ${theme.fontSizes.small};
-      color: ${theme.colors.darkestGray};
     }
   }
 
