@@ -1,24 +1,20 @@
 import { css } from '@emotion/react';
-import { HiOutlineLockClosed } from 'react-icons/hi2';
 
+import PrivateLabel from '@/components/playlist/PrivateLabel';
 import theme from '@/styles/theme';
 
 interface PlaylistThumbnailProps {
   url?: string | null;
-  isPrivate?: boolean;
+  isPublic?: boolean;
 }
 
-const PlaylistThumbnail: React.FC<PlaylistThumbnailProps> = ({ url = null, isPrivate = false }) => {
+const PlaylistThumbnail: React.FC<PlaylistThumbnailProps> = ({ url = null, isPublic = true }) => {
   return (
     <div css={thumbnailStyle(url)}>
       <div className="image-container">
         <div className="image" />
       </div>
-      {isPrivate && (
-        <div className="private">
-          <HiOutlineLockClosed />
-        </div>
-      )}
+      {!isPublic && <PrivateLabel />}
     </div>
   );
 };
@@ -63,30 +59,6 @@ const thumbnailStyle = (url: string | null) => css`
       background-size: cover;
       background-position: center;
     `}
-  }
-
-  .private {
-    position: absolute;
-    top: 6%;
-    left: 5%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 15%;
-    height: 0;
-    padding-bottom: 15%;
-    border-radius: 50%;
-    background: rgba(30, 41, 59, 0.7);
-
-    svg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60%;
-      height: 60%;
-      color: ${theme.colors.white};
-    }
   }
 `;
 

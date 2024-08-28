@@ -17,7 +17,7 @@ const Playlists: React.FC<PlaylistListProps> = ({ playlists, customStyle }) => {
       {playlists.length > 0 &&
         playlists.map(({ playlistId, title, videos, isPublic }) => (
           <Link to={`${PATH.PLAYLIST}/${playlistId}`} key={playlistId} css={itemStyle}>
-            <PlaylistThumbnail url={videos[0]?.thumbnailUrl} isPrivate={!isPublic} />
+            <PlaylistThumbnail url={videos[0]?.thumbnailUrl} isPublic={isPublic} />
             <div className="playlist-info">
               <h2>{title}</h2>
               <p>{videos.length}개의 비디오</p>
