@@ -1,66 +1,67 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { css, Theme } from '@emotion/react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, DocumentData } from 'firebase/firestore';
 
-import { db, auth } from '@/api/firebaseApp';
 import FitButton from '@/components/common/buttons/FitButton';
+import { useAuth } from '@/hooks/useAuth';
+import { UserData } from '@/types/profile';
 
-interface ProfilePostProps {
+interface ProfileInfoProps {
   profileUserId: string;
+  userData: UserData;
   onEditClick?: () => void;
 }
 
-const ProfilePost: React.FC<ProfilePostProps> = ({ profileUserId, onEditClick }) => {
-  const [user, setUser] = useState<DocumentData | null>(null);
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileUserId, userData, onEditClick }) => {
+  // const [user, setUser] = useState<DocumentData | null>(null);
+  // const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
+  const currentUser = useAuth();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
-      if (currentUser) {
-        setCurrentUserId(currentUser.uid);
-      } else {
-        setCurrentUserId(null);
-      }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
+  //     if (currentUser) {
+  //       setCurrentUserId(currentUser.uid);
+  //     } else {
+  //       setCurrentUserId(null);
+  //     }
+  //   });
 
-    return () => unsubscribe();
-  }, []);
+  //   return () => unsubscribe();
+  // }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userDoc = doc(db, 'users', profileUserId);
-      const docSnapshot = await getDoc(userDoc);
-      if (docSnapshot.exists()) {
-        setUser(docSnapshot.data());
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const userDoc = doc(db, 'users', profileUserId);
+  //     const docSnapshot = await getDoc(userDoc);
+  //     if (docSnapshot.exists()) {
+  //       setUser(docSnapshot.data());
+  //     }
+  //   };
 
-    fetchUserData();
-  }, [profileUserId]);
+  //   fetchUserData();
+  // }, [profileUserId]);
 
   const handleFollowToggle = () => {
     setIsFollowing(!isFollowing);
     console.log(isFollowing ? '언팔로우' : '팔로우');
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  // if (!user) {
+  //   return <div>Loading...</div>;
+  // }
 
-  const isOwnProfile = currentUserId === profileUserId;
+  const isOwnProfile = currentUser?.uid === profileUserId;
 
   return (
     <>
       <div css={profileContainerStyle}>
         <div css={ProfileWrapStyle}>
           <div css={profileImageStyle}>
-            <img src={user.photoURL} alt="Profile" />
+            <img src={userData.photoURL} alt="Profile" />
           </div>
           <div css={profileInfoStyle}>
-            <p css={usernameStyle}>{user.displayName}</p>
+            <p css={usernameStyle}>{userData.displayName}</p>
             <div css={followInfoStyle}>
               <div>
                 <span css={followCountStyle}>12</span>
@@ -86,7 +87,7 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ profileUserId, onEditClick })
           )}
         </div>
         <div css={introduceStyle}>
-          <p>{user.bio}</p>
+          <p>{userData.bio}</p>
         </div>
       </div>
     </>
@@ -147,4 +148,4 @@ const introduceStyle = (theme: Theme) => css`
   font-size: ${theme.fontSizes.micro};
 `;
 
-export default ProfilePost;
+export default ProfileInfo;
