@@ -6,6 +6,7 @@ import RootLayout from '@/layouts/Root';
 import AddPostPage from '@/pages/AddPost';
 import HomePage from '@/pages/Home';
 import PlaylistPage from '@/pages/Playlist';
+import PlaylistDetailPage from '@/pages/PlaylistDetail';
 import ProfilePage from '@/pages/Profile';
 import SearchPage from '@/pages/Search';
 import SettingsPage from '@/pages/Settings';
@@ -47,7 +48,13 @@ const router = createBrowserRouter([
           },
           {
             path: PATH.PLAYLIST,
-            element: <PlaylistPage />,
+            children: [
+              { index: true, element: <PlaylistPage /> },
+              {
+                path: `${PATH.PLAYLIST}/:id`,
+                element: <PlaylistDetailPage />,
+              },
+            ],
           },
           {
             path: PATH.PROFILE,
