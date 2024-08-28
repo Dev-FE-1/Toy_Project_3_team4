@@ -23,6 +23,7 @@ const fontSizes = {
 
 const width = {
   max: '600px',
+  large: '500px',
 };
 
 export type ColorsType = typeof colors;
