@@ -1,7 +1,7 @@
 import { css, SerializedStyles } from '@emotion/react';
 
 import FitButton from '@/components/common/buttons/FitButton';
-import PrivateLabel from '@/components/playlist/PrivateLabel';
+import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import UserInfo from '@/components/user/UserInfo';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
@@ -19,10 +19,11 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
 
   return (
     <div css={[playlistInfoStyle, customStyle]}>
-      <div className="thumbnail-container">
-        <img src={videos[0]?.thumbnailUrl} alt={videos[0]?.title || ''} />
-        {!isPublic && <PrivateLabel customStyle={labelStyle} />}
-      </div>
+      <VideoThumbnail
+        url={videos[0]?.thumbnailUrl}
+        isPublic={isPublic}
+        customLabelStyle={labelStyle}
+      />
       <div className="info-container">
         <div className="title">
           <h1>{title}</h1>
@@ -39,18 +40,6 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
 };
 
 const playlistInfoStyle = css`
-  .thumbnail-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 16px;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-    }
-  }
-
   .info-container {
     padding: 16px 8px 0;
 
