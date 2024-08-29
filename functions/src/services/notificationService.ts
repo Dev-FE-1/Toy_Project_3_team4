@@ -1,8 +1,16 @@
+// NotificationService
 import { getRepository } from 'fireorm';
 
+import { getFirestore } from '../firebase';
 import { Notification } from '../models/models';
+
 export class NotificationService {
-  private notificationRepository = getRepository(Notification);
+  private notificationRepository: ReturnType<typeof getRepository<Notification>>;
+
+  constructor() {
+    getFirestore();
+    this.notificationRepository = getRepository(Notification);
+  }
 
   async createNotification(
     userId: string,

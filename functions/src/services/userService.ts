@@ -1,10 +1,15 @@
-// src/services/userService.ts
 import { getRepository } from 'fireorm';
 
+import { getFirestore } from '../firebase';
 import { User } from '../models/models';
 
 export class UserService {
-  private userRepository = getRepository(User);
+  private userRepository: ReturnType<typeof getRepository<User>>;
+
+  constructor() {
+    getFirestore();
+    this.userRepository = getRepository(User);
+  }
 
   async createUser(userData: {
     displayName: string;
@@ -66,5 +71,3 @@ export class UserService {
     await this.userRepository.update(targetUser);
   }
 }
-
-// src/services/videoService.ts

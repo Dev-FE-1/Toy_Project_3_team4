@@ -1,8 +1,15 @@
 import { getRepository } from 'fireorm';
 
+import { getFirestore } from '../firebase';
 import { Video } from '../models/models';
+
 export class VideoService {
-  private videoRepository = getRepository(Video);
+  private videoRepository: ReturnType<typeof getRepository<Video>>;
+
+  constructor() {
+    getFirestore();
+    this.videoRepository = getRepository(Video);
+  }
 
   async createVideo(
     userId: string,

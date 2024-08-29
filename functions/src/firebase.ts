@@ -3,6 +3,8 @@ import * as fireorm from 'fireorm';
 
 import * as serviceAccount from './serviceAccountKey.json';
 
+let firestore: admin.firestore.Firestore;
+
 export const initializeFirebase = () => {
   if (!admin.apps.length) {
     admin.initializeApp({
@@ -10,9 +12,16 @@ export const initializeFirebase = () => {
       databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
     });
 
-    const firestore = admin.firestore();
+    firestore = admin.firestore();
     fireorm.initialize(firestore);
   }
 
-  return admin.firestore();
+  return firestore;
+};
+
+export const getFirestore = () => {
+  if (firestore === undefined || firestore === null) {
+    initializeFirebase();
+  }
+  return firestore;
 };

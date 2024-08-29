@@ -1,8 +1,15 @@
 import { getRepository } from 'fireorm';
 
+import { getFirestore } from '../firebase';
 import { Playlist } from '../models/models';
+
 export class PlaylistService {
-  private playlistRepository = getRepository(Playlist);
+  private playlistRepository: ReturnType<typeof getRepository<Playlist>>;
+
+  constructor() {
+    getFirestore();
+    this.playlistRepository = getRepository(Playlist);
+  }
 
   async createPlaylist(
     userId: string,

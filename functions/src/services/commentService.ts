@@ -1,9 +1,15 @@
 import { getRepository } from 'fireorm';
 
+import { getFirestore } from '../firebase';
 import { Comment } from '../models/models';
 
 export class CommentService {
-  private commentRepository = getRepository(Comment);
+  private commentRepository: ReturnType<typeof getRepository<Comment>>;
+
+  constructor() {
+    getFirestore();
+    this.commentRepository = getRepository(Comment);
+  }
 
   async addComment(postId: string, userId: string, content: string): Promise<Comment> {
     const newComment = new Comment();
