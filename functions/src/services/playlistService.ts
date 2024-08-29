@@ -28,6 +28,22 @@ export class PlaylistService {
     return await this.playlistRepository.create(newPlaylist);
   }
 
+  async getPlaylist(limit = 100, lastPostId?: string): Promise<Playlist[]> {
+    let query = this.playlistRepository.orderByDescending('createdAt');
+
+    if (lastPostId) {
+      const lastPost = await this.playlistRepository.findById(lastPostId);
+      if (lastPost) {
+        query = query.whereGreaterThan('createdAt', lastPost.createdAt);
+      } else {
+        console.warn(`Last post with id ${lastPostId} not found.`);
+      }
+    }
+
+    query = query.limit(limit);
+    return await query.find();
+  }
+
   async addVideoToPlaylist(playlistId: string, videoId: string): Promise<void> {
     const playlist = await this.playlistRepository.findById(playlistId);
     if (!playlist) {
@@ -40,6 +56,10 @@ export class PlaylistService {
 
     playlist.videos.push(videoId);
     await this.playlistRepository.update(playlist);
+  }
+
+  async getPlaylistById(playlistId: string): Promise<Playlist> {
+    return await this.playlistRepository.findById(playlistId);
   }
 
   async getPlaylistsByUser(userId: string): Promise<Playlist[]> {

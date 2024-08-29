@@ -38,5 +38,8 @@ Content-Type: application/json
 ### 모든 플레이리스트 
 GET {{baseUrl}}/v1/playlists HTTP/1.1
 
-### 특정 플레이리스트
-GET {{baseUrl}}/v1/playlists/DwO4GeKn5wMilRVLqGbE HTTP/1.1
+### 특정 플레이리스트 아이디
+GET {{baseUrl}}/v1/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
+
+### 특정 사용자의 플레이리스트
+GET {{baseUrl}}/v1/playlists/user/user123 HTTP/1.1
