@@ -43,3 +43,25 @@ GET {{baseUrl}}/v1/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
 
 ### 특정 사용자의 플레이리스트
 GET {{baseUrl}}/v1/playlists/user/user123 HTTP/1.1
+
+### 플레이리스트 수정
+
+PUT {{baseUrl}}/v1/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "My Awesome Playlist234",
+  "userId": "user124",
+  "description": "This is a test playlist",
+  "isPublic": true,
+  "videos": ["video1Url", "video2URL", "video3URL"]
+}
+
+
+### 플레이리스트 삭제
+DELETE {{baseUrl}}/v1/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "user124"
+}

@@ -47,16 +47,45 @@ router.get('/user/:id', async (req, res) => {
   }
 });
 
-router.post('/:playlistId/videos', async (req, res) => {
+router.put('/:id', async (req, res) => {
+  const { title, description, isPublic } = req.body;
+  const playlistId = req.params.id;
+  const userId = req.body.userId;
   try {
-    const { playlistId } = req.params;
-    const { videoId } = req.body;
-
-    await playlistService.addVideoToPlaylist(playlistId, videoId);
-    res.status(200).json({ message: 'Video added to playlist successfully' });
+    const playlist = await playlistService.updatePlaylist({
+      id: playlistId,
+      userId,
+      title,
+      description,
+      isPublic,
+    });
+    res.status(200).json(playlist);
   } catch (error) {
-    res.status(500).json({ message: 'Error adding video to playlist' });
+    res.status(500).json({ message: 'Error updating playlist' });
   }
 });
+
+router.delete('/:id', async (req, res) => {
+  const playlistId = req.params.id;
+  const userId = req.body.userId;
+  try {
+    await playlistService.deletePlaylist(userId, playlistId);
+    res.status(200).json({ message: 'Playlist deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting playlist' });
+  }
+});
+
+// router.post('/:playlistId/videos', async (req, res) => {
+//   try {
+//     const { playlistId } = req.params;
+//     const { videoId } = req.body;
+
+//     await playlistService.addVideoToPlaylist(playlistId, videoId);
+//     res.status(200).json({ message: 'Video added to playlist successfully' });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error adding video to playlist' });
+//   }
+// });
 
 export default router;
