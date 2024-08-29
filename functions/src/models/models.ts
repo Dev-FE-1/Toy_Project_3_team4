@@ -63,4 +63,5 @@ export class Comment {
   content!: string;
   createdAt!: Date;
   likes!: string[];
+  postId!: string;
 }
