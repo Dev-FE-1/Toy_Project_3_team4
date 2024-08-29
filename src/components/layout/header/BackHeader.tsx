@@ -1,12 +1,13 @@
 import { css, Theme } from '@emotion/react';
 import { HiArrowLeft } from 'react-icons/hi2';
+import { useNavigate } from 'react-router-dom';
 
 import IconButton from '@/components/common/buttons/IconButton';
 
 import Header from './Header';
 
 interface BackHeaderProps {
-  onBackClick: () => void;
+  onBackClick?: () => void;
   title?: string;
   showSearch?: boolean;
   onSearchChange?: (value: string) => void;
@@ -19,9 +20,13 @@ const BackHeader: React.FC<BackHeaderProps> = ({
   showSearch = false,
   onSearchChange,
 }) => {
+  const navigate = useNavigate();
+
+  const onClick = () => onBackClick?.() || navigate(-1);
+
   return (
     <Header
-      leftSection={<BackButton onClick={onBackClick} />}
+      leftSection={<BackButton onClick={onClick} />}
       centerSection={
         showSearch ? (
           <SearchInput onChange={onSearchChange} />

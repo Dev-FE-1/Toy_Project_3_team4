@@ -34,16 +34,15 @@ const FitButton: React.FC<FitButtonProps> = ({
 
 const baseButtonStyle = (theme: Theme) => css`
   display: inline-flex;
-  padding: 6px 14px;
+  padding: 8px 14px;
   align-items: center;
   gap: 4px;
   border-radius: 50px;
   border: 0;
   cursor: pointer;
-  font-size: ${theme.fontSizes.micro};
-  font-style: normal;
-  font-weight: 700;
-  line-height: 140%;
+  font-size: ${theme.fontSizes.small};
+  font-weight: normal;
+  line-height: 100%;
   letter-spacing: -0.18px;
 `;
 
