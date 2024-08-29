@@ -75,7 +75,7 @@ const ProfileEditPage: React.FC = () => {
 
   return (
     <>
-      <BackHeader title="프로필 수정" onBackClick={handleCancel} />
+      <BackHeader title="프로필 수정" />
       <div css={pageContentStyle}>
         <div css={imageContainerStyle}>
           {photoURL ? (
