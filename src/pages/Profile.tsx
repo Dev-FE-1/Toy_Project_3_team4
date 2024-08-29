@@ -122,7 +122,8 @@ const posts: PostModel[] = [
     userName: 'user1',
     userImgUrl:
       'https://s3-alpha-sig.figma.com/img/b858/1a3a/8f9a19b6eec05845c18e07081f487330?Expires=1725840000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=gZIwgKx~G0RhiG51~cYwCDYSw8F7kX5YtigutjXf7EZP9H5durQGwbj3VmNpJhf1gYfzyK2TaSTHloXFrgizf5HXla7NqIVnu3e2UwYX9q39WXxy32ijoZWOENgw48MfkF95alexzORzxg62q4TKTkVWN~ItjTXK86dlo~Ro-aArqURnbt6EBHZ0o2~uBtS3amtfKAz7rrkOmpsj4xrrHiHCXuNWI1nDTYbhOYwWtz3FtveWLx9Cm7Cib7uv2187XFdDkV26CNSQ9ItEtcHQMys9CMU7V7ha7otRIC6dKnuZHNWA6wlI4sWUxU7qw1oCXXLUT1AHiNpDeXkjeK~QZA__',
-    playlistId: 'playlist1',
+    playlistId: '1',
+    playlistName: '내가 만든 플리',
     content:
       '00:00 NewJeans is loyal 01:54 NewJeans had a talk 🤍 15:17 NewJeans played Balance game 💛 20:38 NewJeans played a game 💚',
     createdAt: '2024-08-22 12:16:55',
@@ -143,7 +144,8 @@ const posts: PostModel[] = [
     userName: 'user2',
     userImgUrl:
       'https://s3-alpha-sig.figma.com/img/b858/1a3a/8f9a19b6eec05845c18e07081f487330?Expires=1725840000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=gZIwgKx~G0RhiG51~cYwCDYSw8F7kX5YtigutjXf7EZP9H5durQGwbj3VmNpJhf1gYfzyK2TaSTHloXFrgizf5HXla7NqIVnu3e2UwYX9q39WXxy32ijoZWOENgw48MfkF95alexzORzxg62q4TKTkVWN~ItjTXK86dlo~Ro-aArqURnbt6EBHZ0o2~uBtS3amtfKAz7rrkOmpsj4xrrHiHCXuNWI1nDTYbhOYwWtz3FtveWLx9Cm7Cib7uv2187XFdDkV26CNSQ9ItEtcHQMys9CMU7V7ha7otRIC6dKnuZHNWA6wlI4sWUxU7qw1oCXXLUT1AHiNpDeXkjeK~QZA__',
-    playlistId: 'playlist1',
+    playlistId: '2',
+    playlistName: '내가 만든 플리',
     content:
       '00:00 NewJeans is loyal 01:54 NewJeans had a talk 🤍 15:17 NewJeans played Balance game 💛 20:38 NewJeans played a game 💚',
     createdAt: '2024-08-22 12:16:55',
@@ -164,7 +166,8 @@ const posts: PostModel[] = [
     userName: '체언지용용',
     userImgUrl:
       'https://s3-alpha-sig.figma.com/img/b858/1a3a/8f9a19b6eec05845c18e07081f487330?Expires=1725840000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=gZIwgKx~G0RhiG51~cYwCDYSw8F7kX5YtigutjXf7EZP9H5durQGwbj3VmNpJhf1gYfzyK2TaSTHloXFrgizf5HXla7NqIVnu3e2UwYX9q39WXxy32ijoZWOENgw48MfkF95alexzORzxg62q4TKTkVWN~ItjTXK86dlo~Ro-aArqURnbt6EBHZ0o2~uBtS3amtfKAz7rrkOmpsj4xrrHiHCXuNWI1nDTYbhOYwWtz3FtveWLx9Cm7Cib7uv2187XFdDkV26CNSQ9ItEtcHQMys9CMU7V7ha7otRIC6dKnuZHNWA6wlI4sWUxU7qw1oCXXLUT1AHiNpDeXkjeK~QZA__',
-    playlistId: 'playlist1',
+    playlistId: '3',
+    playlistName: '내가 만든 플리',
     content:
       '00:00 NewJeans is loyal 01:54 NewJeans had a talk 🤍 15:17 NewJeans played Balance game 💛 20:38 NewJeans played a game 💚',
     createdAt: '2024-08-22 12:16:55',
@@ -203,7 +206,7 @@ const ProfilePage: React.FC = () => {
   }, [currentUser, userData]);
 
   useEffect(() => {
-    if (currentUser) {
+    if (userId) {
       const profilePosts = posts.filter((post) => post.userId === userId);
       setFilteredPosts(profilePosts);
     }

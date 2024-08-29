@@ -4,6 +4,7 @@ export interface PostModel {
   userName: string;
   userImgUrl: string;
   playlistId: string;
+  playlistName: string;
   content: string;
   createdAt: string;
   likes: string[];

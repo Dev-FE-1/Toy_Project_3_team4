@@ -12,13 +12,13 @@ import { Link } from 'react-router-dom';
 
 import { PostModel } from '@/types/post';
 
-interface PostsProps {
+interface PostProps {
   id: string;
   post: PostModel;
   customStyle?: SerializedStyles;
 }
 
-const Post: React.FC<PostsProps> = ({ post }) => {
+const Post: React.FC<PostProps> = ({ post }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes.length);
 
@@ -69,7 +69,7 @@ const Post: React.FC<PostsProps> = ({ post }) => {
             </button>
           </div>
           <p css={pliStyle}>
-            플리제목 (<span>비디오개수</span>)
+            {post.playlistName} (<span>비디오개수</span>)
           </p>
         </div>
       </div>
