@@ -1,6 +1,14 @@
+import { useState } from 'react';
+
 import { css, SerializedStyles, Theme } from '@emotion/react';
-import { HiOutlineHeart, HiOutlineChatBubbleOvalLeft } from 'react-icons/hi2';
+import {
+  HiOutlineHeart,
+  HiOutlineChatBubbleOvalLeft,
+  HiHeart,
+  HiChevronRight,
+} from 'react-icons/hi2';
 import { IoBookmarkOutline } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
 
 import { PostModel } from '@/types/post';
 
@@ -10,9 +18,17 @@ interface PostsProps {
   customStyle?: SerializedStyles;
 }
 
-const posts: React.FC<PostsProps> = ({ post }) => {
+const Post: React.FC<PostsProps> = ({ post }) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(post.likes.length);
+
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
+    setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
+  };
+
   return (
-    <div>
+    <div css={postContainerStyle}>
       <div css={videoContainerStyle}>
         <iframe
           width="100%"
@@ -30,22 +46,26 @@ const posts: React.FC<PostsProps> = ({ post }) => {
             <div>
               <img src={post.userImgUrl} alt="Writer" />
             </div>
-            <p>{post.userId}</p>
+            <p>{post.userName}</p>
             <span>{post.createdAt}</span>
           </div>
           <IoBookmarkOutline />
         </div>
         <p css={contentStyle}>{post.content}</p>
         <p css={playlistStyle}>
-          <span>[Playlist]</span> {post.playlistId}
+          <Link to={post.video.videoUrl}>
+            <span>[Playlist] {post.video.title}</span>
+            <HiChevronRight />
+          </Link>
         </p>
         <div css={metaInfoStyle}>
-          <div css={buttonStyle}>
-            <button css={buttonStyle}>
-              <HiOutlineHeart /> {post.likes.length}
+          <div css={buttonWrapStyle}>
+            <button css={likeButtonStyle(isLiked)} onClick={toggleLike}>
+              {isLiked ? <HiHeart /> : <HiOutlineHeart />} {likesCount}
             </button>
             <button css={buttonStyle}>
-              <HiOutlineChatBubbleOvalLeft /> {post.comments.length}
+              <HiOutlineChatBubbleOvalLeft style={{ position: 'relative', bottom: '1px' }} />{' '}
+              {post.comments.length}
             </button>
           </div>
           <p css={pliStyle}>
@@ -56,6 +76,10 @@ const posts: React.FC<PostsProps> = ({ post }) => {
     </div>
   );
 };
+
+const postContainerStyle = css`
+  padding-bottom: 32px;
+`;
 
 const videoContainerStyle = css`
   position: relative;
@@ -117,6 +141,18 @@ const playlistStyle = (theme: Theme) => css`
   font-size: ${theme.fontSizes.micro};
   color: ${theme.colors.darkGray};
   padding-bottom: 8px;
+
+  a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+`;
+
+const buttonWrapStyle = css`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const buttonStyle = css`
@@ -126,10 +162,19 @@ const buttonStyle = css`
   background: none;
 `;
 
+const likeButtonStyle = (isLiked: boolean) => (theme: Theme) => css`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  color: ${isLiked ? theme.colors.red : 'inherit'};
+  min-width: 40px;
+`;
+
 const pliStyle = (theme: Theme) => css`
   color: ${theme.colors.darkestGray};
   font-size: ${theme.fontSizes.micro};
   text-decoration: underline;
 `;
 
-export default posts;
+export default Post;
