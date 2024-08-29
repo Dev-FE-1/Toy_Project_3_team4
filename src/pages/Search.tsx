@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import { HiOutlinePencil, HiOutlineUser } from 'react-icons/hi2';
-import { useNavigate } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
-import BackHeader from '@/components/layout/header/BackHeader';
+import SearchHeader from '@/components/layout/header/SearchHeader';
 import { useDebounce } from '@/hooks/useDebounce';
 
 const tabs = [
@@ -14,13 +13,8 @@ const tabs = [
 ];
 
 const SearchPage = () => {
-  const navigate = useNavigate();
   const { value: searchTerm, debouncedValue: debouncedSearchTerm, onChange } = useDebounce();
   const [activeTab, setActiveTab] = useState(tabs[0].id);
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
 
   useEffect(() => {
     if (debouncedSearchTerm) {
@@ -31,7 +25,7 @@ const SearchPage = () => {
 
   return (
     <>
-      <BackHeader onBackClick={handleBackClick} showSearch onSearchChange={onChange} />
+      <SearchHeader onChange={onChange} />
       {searchTerm && (
         <TabMenu activeTabId={activeTab} tabs={tabs} onTabChange={setActiveTab}>
           <TabContent id="post" activeTabId={activeTab}>
