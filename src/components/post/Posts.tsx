@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { css, SerializedStyles, Theme } from '@emotion/react';
 import {
@@ -10,9 +10,13 @@ import {
 import { IoBookmarkOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
+import { useAuth } from '@/hooks/useAuth';
+import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
 import { formatRelativeDate } from '@/utils/date';
 
+import VideoPlayer from './VideoPlayer';
+import IconButton from '../common/buttons/IconButton';
 import UserInfo from '../user/UserInfo';
 
 interface PostProps {
@@ -24,6 +28,14 @@ interface PostProps {
 const Post: React.FC<PostProps> = ({ post }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes.length);
+  const currentUser = useAuth();
+  const { userData } = useUserData(post.userId);
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsLiked(post.likes.includes(currentUser.uid));
+    }
+  }, [currentUser, post.likes]);
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
@@ -32,36 +44,31 @@ const Post: React.FC<PostProps> = ({ post }) => {
 
   return (
     <div css={postContainerStyle}>
-      <div css={videoContainerStyle}>
-        <iframe
-          width="100%"
-          height="200"
-          src={`https://www.youtube.com/embed/${post.video.videoId}`}
-          title={post.video.title}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
+      <VideoPlayer video={post.video[0]} />
       <div>
         <div css={metaInfoStyle}>
           <div css={metaInfoStyle}>
-            <UserInfo name={post.userName} url={post.userImgUrl} imageSize="large" />
+            <UserInfo name={userData.displayName} url={userData.photoURL} imageSize="large" />
             <span css={createdAtStyle}>{formatRelativeDate(post.createdAt)}</span>
           </div>
-          <IoBookmarkOutline />
+          <IconButton icon={<IoBookmarkOutline size={20} />} onClick={() => {}} />
         </div>
         <p css={contentStyle}>{post.content}</p>
         <p css={playlistStyle}>
-          <Link to={post.video.videoUrl}>
-            <span>[Playlist] {post.video.title}</span>
+          <Link to={`/playlist/${post.playlistId}`}>
+            <span>[Playlist] {post.playlistName}</span>
             <HiChevronRight />
           </Link>
         </p>
         <div css={metaInfoStyle}>
           <div css={buttonWrapStyle}>
-            <button css={likeButtonStyle(isLiked)} onClick={toggleLike}>
-              {isLiked ? <HiHeart /> : <HiOutlineHeart />} {likesCount}
+            <button css={buttonStyle} onClick={toggleLike}>
+              {isLiked ? (
+                <HiHeart css={likeButtonStyle(isLiked)} />
+              ) : (
+                <HiOutlineHeart css={likeButtonStyle(isLiked)} />
+              )}{' '}
+              {likesCount}
             </button>
             <button css={buttonStyle}>
               <HiOutlineChatBubbleOvalLeft style={{ position: 'relative', bottom: '1px' }} />{' '}
@@ -69,7 +76,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
             </button>
           </div>
           <p css={pliStyle}>
-            {post.playlistName} (<span>비디오개수</span>)
+            {post.playlistName} (<span>{post.video.length}</span>)
           </p>
         </div>
       </div>
@@ -81,23 +88,6 @@ const postContainerStyle = css`
   padding-bottom: 32px;
 `;
 
-const videoContainerStyle = css`
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  border-radius: 16px;
-  overflow: hidden;
-  margin-bottom: 12px;
-
-  iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-`;
-
 const metaInfoStyle = css`
   display: flex;
   justify-content: space-between;
@@ -106,7 +96,7 @@ const metaInfoStyle = css`
 `;
 
 const createdAtStyle = (theme: Theme) => css`
-  font-size: ${theme.fontSizes.micro};
+  font-size: ${theme.fontSizes.small};
   color: ${theme.colors.darkGray};
   padding-left: 12px;
 `;
@@ -139,6 +129,7 @@ const buttonStyle = css`
   align-items: center;
   gap: 4px;
   background: none;
+  min-width: 40px;
 `;
 
 const likeButtonStyle = (isLiked: boolean) => (theme: Theme) => css`
@@ -147,7 +138,6 @@ const likeButtonStyle = (isLiked: boolean) => (theme: Theme) => css`
   gap: 4px;
   background: none;
   color: ${isLiked ? theme.colors.red : 'inherit'};
-  min-width: 40px;
 `;
 
 const pliStyle = (theme: Theme) => css`

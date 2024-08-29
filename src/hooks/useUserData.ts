@@ -76,5 +76,9 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
     }
   };
 
-  return { userData, updateUserData, toggleFollow };
+  return {
+    userData: userData || { displayName: 'Unknown', photoURL: 'default-avatar.png' },
+    updateUserData,
+    toggleFollow,
+  };
 };

@@ -1,15 +1,13 @@
 export interface PostModel {
   postId: string;
   userId: string;
-  userName: string;
-  userImgUrl: string;
   playlistId: string;
   playlistName: string;
   content: string;
   createdAt: string;
   likes: string[];
   comments: Comment[];
-  video: Video;
+  video: Video[];
 }
 
 export interface Comment {
