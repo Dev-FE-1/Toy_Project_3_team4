@@ -120,4 +120,34 @@ export const maxWidthStyle = (isTop = false) => css`
   }
 `;
 
+export const textEllipsis = (lineClamp: number) => css`
+  display: -webkit-box;
+  -webkit-line-clamp: ${lineClamp};
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  &::before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    background: white;
+  }
+
+  @supports (-webkit-line-clamp: ${lineClamp}) {
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+`;
+
 export default GlobalStyles;

@@ -2,7 +2,6 @@ export interface PlaylistModel {
   playlistId: string;
   userId: string;
   title: string;
-  description: string;
   createdAt: string;
   isPublic: boolean;
   videos: VideoModel[];
@@ -15,5 +14,6 @@ export interface VideoModel {
   videoUrl: string;
   uploadDate: string;
   thumbnailUrl: string;
-  views?: string;
+  views: string;
+  creator: string;
 }

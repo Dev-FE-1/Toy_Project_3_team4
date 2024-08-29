@@ -12,6 +12,8 @@ import { Link } from 'react-router-dom';
 
 import { PostModel } from '@/types/post';
 
+import UserInfo from '../user/UserInfo';
+
 interface PostProps {
   id: string;
   post: PostModel;
@@ -42,13 +44,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
       </div>
       <div>
         <div css={metaInfoStyle}>
-          <div css={metaWriterStyle}>
-            <div>
-              <img src={post.userImgUrl} alt="Writer" />
-            </div>
-            <p>{post.userName}</p>
-            <span>{post.createdAt}</span>
-          </div>
+          <UserInfo name={post.userName} url={post.userImgUrl} additionalInfo={post.createdAt} />
           <IoBookmarkOutline />
         </div>
         <p css={contentStyle}>{post.content}</p>
@@ -102,34 +98,6 @@ const metaInfoStyle = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const metaWriterStyle = (theme: Theme) => css`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  div {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  p {
-    font-size: ${theme.fontSizes.micro};
-  }
-
-  span {
-    font-size: ${theme.fontSizes.micro};
-    color: ${theme.colors.darkGray};
-  }
 `;
 
 const contentStyle = (theme: Theme) => css`

@@ -1,34 +1,28 @@
-import { css, Theme } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { HiArrowLeft } from 'react-icons/hi2';
+import { useNavigate } from 'react-router-dom';
 
 import IconButton from '@/components/common/buttons/IconButton';
+import theme from '@/styles/theme';
 
 import Header from './Header';
 
 interface BackHeaderProps {
-  onBackClick: () => void;
+  onBackClick?: () => void;
   title?: string;
-  showSearch?: boolean;
-  onSearchChange?: (value: string) => void;
-  customStyle?: React.CSSProperties;
+  customStyle?: SerializedStyles;
 }
 
-const BackHeader: React.FC<BackHeaderProps> = ({
-  onBackClick,
-  title,
-  showSearch = false,
-  onSearchChange,
-}) => {
+const BackHeader: React.FC<BackHeaderProps> = ({ onBackClick, title, customStyle }) => {
+  const navigate = useNavigate();
+
+  const onClick = () => onBackClick?.() || navigate(-1);
+
   return (
     <Header
-      leftSection={<BackButton onClick={onBackClick} />}
-      centerSection={
-        showSearch ? (
-          <SearchInput onChange={onSearchChange} />
-        ) : title ? (
-          <Title text={title} />
-        ) : null
-      }
+      leftSection={<BackButton onClick={onClick} />}
+      centerSection={title ? <Title text={title} /> : null}
+      customStyle={customStyle}
     />
   );
 };
@@ -39,37 +33,11 @@ const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
 
 const Title: React.FC<{ text: string }> = ({ text }) => <h1 css={titleStyle}>{text}</h1>;
 
-interface SearchInputProps {
-  onChange?: (value: string) => void;
-}
-
-const SearchInput: React.FC<SearchInputProps> = ({ onChange }) => (
-  <input
-    type="text"
-    placeholder="키워드 또는 닉네임 검색"
-    onChange={(e) => onChange && onChange(e.target.value)}
-    css={searchInputStyle}
-  />
-);
-
-const titleStyle = (theme: Theme) => css`
+const titleStyle = css`
   margin: 0;
   font-size: ${theme.fontSizes.base};
   font-weight: 700;
   color: ${theme.colors.black};
-`;
-
-const searchInputStyle = (theme: Theme) => css`
-  width: 100%;
-  height: 36px;
-  padding-left: 14px;
-  border: 1px solid ${theme.colors.gray};
-  border-radius: 8px;
-  font-size: ${theme.fontSizes.base};
-  color: ${theme.colors.black};
-  &::placeholder {
-    color: ${theme.colors.darkGray};
-  }
 `;
 
 export default BackHeader;

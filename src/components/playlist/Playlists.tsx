@@ -1,33 +1,30 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Link } from 'react-router-dom';
 
-import PlaylistThumbnail from '@/components/playlist/PlaylistThumbnail';
+import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 
 interface PlaylistListProps {
-  id: string;
   playlists: PlaylistModel[];
   customStyle?: SerializedStyles;
 }
 
-const Playlists: React.FC<PlaylistListProps> = ({ id, playlists, customStyle }) => {
+const Playlists: React.FC<PlaylistListProps> = ({ playlists, customStyle }) => {
   return (
     <div css={[playlistStyle, customStyle]}>
       {playlists.length > 0 &&
         playlists.map(({ playlistId, title, videos, isPublic }) => (
           <Link to={`${PATH.PLAYLIST}/${playlistId}`} key={playlistId} css={itemStyle}>
-            <PlaylistThumbnail url={videos[0]?.thumbnailUrl} isPrivate={!isPublic} />
+            <VideoThumbnail url={videos[0]?.thumbnailUrl} isPublic={isPublic} type="stack" />
             <div className="playlist-info">
               <h2>{title}</h2>
               <p>{videos.length}개의 비디오</p>
             </div>
           </Link>
         ))}
-      {playlists.length === 0 && (
-        <p>{id === 'my' ? '새로운 플리를 추가해 보세요!' : '마음에 드는 플리를 구독해 보세요!'}</p>
-      )}
+      {playlists.length === 0 && <p>마음에 드는 플리를 구독해 보세요!</p>}
     </div>
   );
 };
@@ -35,7 +32,7 @@ const Playlists: React.FC<PlaylistListProps> = ({ id, playlists, customStyle }) 
 const playlistStyle = css`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px 12px;
+  gap: 23px 12px;
 `;
 
 const itemStyle = css`
@@ -47,13 +44,25 @@ const itemStyle = css`
     margin-top: 4px;
 
     h2 {
-      font-size: ${theme.fontSizes.base};
+      font-size: ${theme.fontSizes.small};
       font-weight: 500;
     }
 
     p {
       color: ${theme.colors.darkGray};
-      font-size: ${theme.fontSizes.small};
+      font-size: ${theme.fontSizes.micro};
+    }
+
+    @media screen and (min-width: ${theme.width.large}) {
+      h2 {
+        font-size: ${theme.fontSizes.base};
+        font-weight: 500;
+      }
+
+      p {
+        color: ${theme.colors.darkGray};
+        font-size: ${theme.fontSizes.small};
+      }
     }
   }
 `;
