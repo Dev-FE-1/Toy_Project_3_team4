@@ -11,6 +11,7 @@ import { IoBookmarkOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
 import { PostModel } from '@/types/post';
+import { formatRelativeDate } from '@/utils/date';
 
 import UserInfo from '../user/UserInfo';
 
@@ -44,7 +45,10 @@ const Post: React.FC<PostProps> = ({ post }) => {
       </div>
       <div>
         <div css={metaInfoStyle}>
-          <UserInfo name={post.userName} url={post.userImgUrl} additionalInfo={post.createdAt} />
+          <div css={metaInfoStyle}>
+            <UserInfo name={post.userName} url={post.userImgUrl} imageSize="large" />
+            <span css={createdAtStyle}>{formatRelativeDate(post.createdAt)}</span>
+          </div>
           <IoBookmarkOutline />
         </div>
         <p css={contentStyle}>{post.content}</p>
@@ -98,6 +102,13 @@ const metaInfoStyle = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 5px;
+`;
+
+const createdAtStyle = (theme: Theme) => css`
+  font-size: ${theme.fontSizes.micro};
+  color: ${theme.colors.darkGray};
+  padding-left: 12px;
 `;
 
 const contentStyle = (theme: Theme) => css`
