@@ -1,10 +1,11 @@
 // src/routes/postRoutes.ts
 import * as express from 'express';
-import { getRepository } from 'fireorm';
 
-import { Post } from '../models/models';
+import { PostService } from '../services/postService';
 
 const router = express.Router();
+
+const postService = new PostService();
 
 export class CreatePostDto {
   userId!: string;
@@ -13,33 +14,31 @@ export class CreatePostDto {
 }
 
 router.get('/', async (req, res) => {
-  const postRepository = getRepository(Post);
-  const posts = await postRepository.find();
-  res.json(posts);
+  try {
+    const posts = await postService.getPosts();
+    res.json(posts);
+  } catch (error) {
+    res.status(500).send('Error fetching posts');
+  }
 });
 
 router.get('/:id', async (req, res) => {
-  const postRepository = getRepository(Post);
-  const post = await postRepository.findById(req.params.id);
-  if (post) {
+  try {
+    const post = await postService.getPostsByIds([req.params.id]);
     res.json(post);
-  } else {
-    res.status(404).send('Post not found');
+  } catch (error) {
+    res.status(400).send('Post not found');
   }
 });
 
 router.post('/', async (req, res) => {
-  const postRepository = getRepository(Post);
-  const post = new Post();
-  const { userId, playlistId, content } = req.body as CreatePostDto;
-
-  post.userId = userId;
-  post.playlistId = playlistId;
-  post.content = content;
-  post.createdAt = new Date();
-
-  const createdPost = await postRepository.create(post);
-  res.status(201).json(createdPost);
+  try {
+    const { userId, playlistId, content } = req.body as CreatePostDto;
+    const newPost = await postService.createPost(userId, playlistId, content);
+    res.json(newPost);
+  } catch (error) {
+    res.status(500).send('Error creating post');
+  }
 });
 
 export default router;

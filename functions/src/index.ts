@@ -1,4 +1,3 @@
-// import * as logger from "firebase-functions/logger";
 import * as cors from 'cors';
 import * as express from 'express';
 import * as functions from 'firebase-functions';
@@ -15,7 +14,7 @@ app.use(express.json());
 app.use(cors({ origin: true }));
 
 app.get('/', (_req, res) => {
-  return res.status(200).send('Hell World!');
+  return res.status(200).send('Hello World!');
 });
 
 app.use('/v1/posts', postRoutes);
