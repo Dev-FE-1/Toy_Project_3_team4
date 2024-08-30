@@ -27,7 +27,13 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const posts = await postService.getPosts();
+    const userId = req.query.userId as string | undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 10;
+    const lastPostId = req.query.lastPostId as string | undefined;
+    const posts = await postService.getPosts({ userId, limit, lastPostId });
+
+    console.log(req.query);
+    console.log(userId);
     res.json(posts);
   } catch (error) {
     console.error(error);
@@ -38,27 +44,61 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const post = await postService.getPostsByIds([req.params.id]);
-    res.json(post);
+    if (post) {
+      res.json(post);
+    } else {
+      res.status(404).send('Post not found');
+    }
   } catch (error) {
     console.error(error);
-    res.status(400).send('Post not found');
+    res.status(500).send('Error fetching post');
   }
 });
 
-// 포스트 수정 기능
 router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { userId, content, playlistId, video } = req.body;
+  console.log(req.body);
+
+  if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+    return res.status(400).send('Invalid userId');
+  }
+
+  if (!id || typeof id !== 'string' || id.trim() === '') {
+    return res.status(400).send('Invalid postId');
+  }
+
   try {
-    const updatedPost = await postService.updatePost(req.body);
+    const updatedPost = await postService.updatePost({
+      postId: id,
+      userId,
+      content,
+      playlistId,
+      video,
+    });
     res.json(updatedPost);
   } catch (error) {
-    console.error(error);
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'Invalid postId':
+        case 'Post not found':
+          return res.status(404).send(error.message);
+        case 'User is not the owner of the post':
+          return res.status(403).send(error.message);
+        default:
+          return res.status(500).send('Error updating post');
+      }
+    }
     res.status(500).send('Error updating post');
+    return;
   }
+  return;
 });
 
-// 포스트 삭제 기능
 router.delete('/:id', async (req, res) => {
   try {
+    console.log(req.body);
+    console.log(req.params);
     await postService.deletePost(req.params.id, req.body.userId);
     res.send('Post deleted');
   } catch (error) {
@@ -67,7 +107,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// 포스트 좋아요 기능
 router.post('/:id/like', async (req, res) => {
   try {
     await postService.likePost(req.params.id, req.body.userId);

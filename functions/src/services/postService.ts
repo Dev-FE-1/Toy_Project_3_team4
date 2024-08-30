@@ -70,8 +70,20 @@ export class PostService {
     return await query.find();
   }
 
-  async getPosts(limit = 100, lastPostId?: string): Promise<posts[]> {
+  // userId?: string, limit = 100, lastPostId?: string
+  async getPosts({
+    userId,
+    limit,
+    lastPostId,
+  }: {
+    userId?: string;
+    limit: number;
+    lastPostId?: string;
+  }): Promise<posts[]> {
     let query = this.postRepository.orderByDescending('createdAt');
+    if (userId) {
+      query = query.whereEqualTo('userId', userId);
+    }
 
     if (lastPostId) {
       const lastPost = await this.postRepository.findById(lastPostId);
@@ -156,28 +168,27 @@ export class PostService {
     playlistId?: string;
     video?: string;
   }): Promise<posts> {
+    console.log(postId, userId, content, playlistId, video);
+    if (!postId || typeof postId !== 'string' || postId.trim() === '') {
+      throw new Error('Invalid postId');
+    }
+
     const post = await this.postRepository.findById(postId);
     if (!post) {
       throw new Error('Post not found');
     }
-
+    console.log(post.userId, userId);
     if (post.userId !== userId) {
       throw new Error('User is not the owner of the post');
     }
 
-    if (!post.content) {
-      post.content = '';
-    }
-    if (!post.playlistId) {
-      post.playlistId = '';
-    }
-    if (!post.video) {
-      post.video = '';
-    }
+    post.content = post.content ?? '';
+    post.playlistId = post.playlistId ?? '';
+    post.video = post.video ?? '';
 
-    post.content = content || post.content;
-    post.playlistId = playlistId || post.playlistId;
-    post.video = video || post.video;
+    if (content !== undefined) post.content = content;
+    if (playlistId !== undefined) post.playlistId = playlistId;
+    if (video !== undefined) post.video = video;
 
     return await this.postRepository.update(post);
   }
@@ -187,7 +198,7 @@ export class PostService {
     if (!post) {
       throw new Error('Post not found');
     }
-
+    console.log(post.userId, userId);
     if (post.userId !== userId) {
       throw new Error('User is not the owner of the post');
     }

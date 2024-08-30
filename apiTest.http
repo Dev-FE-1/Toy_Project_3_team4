@@ -6,56 +6,74 @@ GET {{baseUrl}}/ HTTP/1.1
 
 ### BaseUrl = http://localhost:5001/toy-project-2-team-4-pizza/us-central1/api/v1
 
-### 사용자 API 테스트
+### 사용자 API 테스트 --------------------------------------------
 
 ### 새 사용자 생성
 POST {{baseUrl}}/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "userId": "user123",
   "displayName": "nakyeonko",
-  "email": "nakyeonko@example.com",
+  "email": "nakyeonko@example2.com",
   "photoURL": "https://example.com/photo.jpg",
   "bio": "I'm a mini software engineer"
 }
 
 ### 사용자 정보 조회
 # 아래의 {userId}를 실제 사용자 ID로 교체하세요
-GET {{baseUrl}}/users/{userId} HTTP/1.1
+# GET {{baseUrl}}/users/{userId} HTTP/1.1
+GET {{baseUrl}}/users/hK5m6TFYHXoR0moCOdxu   HTTP/1.1
 
 ### 사용자 정보 업데이트
-# 아래의 {userId}를 실제 사용자 ID로 교체하세요
-PUT {{baseUrl}}/users/{userId} HTTP/1.1
+# PUT {{baseUrl}}/users/{userId} HTTP/1.1
+PUT {{baseUrl}}/users/hK5m6TFYHXoR0moCOdxu HTTP/1.1
 Content-Type: application/json
 
 {
-  "displayName": "John Updated",
+  "displayName":"고길혐",
   "bio": "This is my updated bio"
 }
 
 ### 사용자 삭제
-# 아래의 {userId}를 실제 사용자 ID로 교체하세요
-DELETE {{baseUrl}}/users/{userId} HTTP/1.1
+# DELETE {{baseUrl}}/users/{userId} HTTP/1.1
+# !가능하면 임의로 생성한 유저를 삭제 할 것
+# !주의 함수는 사용자의 모든 데이터를 삭제함
+DELETE {{baseUrl}}/users/WAsRTT39K2std55alS7Y HTTP/1.1
 
 ### 사용자 팔로우
-# 아래의 {userId}와 {targetUserId}를 실제 사용자 ID로 교체하세요
-POST {{baseUrl}}/users/{userId}/follow HTTP/1.1
+# POST {{baseUrl}}/users/{userId}/follow HTTP/1.1
+# Content-Type: application/json
+# {
+#   "targetUserId": "{targetUserId}"
+# }
+POST {{baseUrl}}/users/hK5m6TFYHXoR0moCOdxu/follow HTTP/1.1
 Content-Type: application/json
 
 {
-  "targetUserId": "{targetUserId}"
+  "targetUserId": "LOqpUwROHvMHB2gJri49"
 }
 
+### 사용자 언팔로우
+# POST {{baseUrl}}/users/{userId}/unfollow HTTP/1.1
+# Content-Type: application/json
+# {
+#   "targetUserId": "{targetUserId}"
+# }
+POST {{baseUrl}}/users/hK5m6TFYHXoR0moCOdxu/unfollow HTTP/1.1
+Content-Type: application/json
 
+{
+  "targetUserId": "LOqpUwROHvMHB2gJri49"
+}
 
-### 포스트 API 테스트
+### 포스트 API 테스트 --------------------------------------------
 
 ### 새 포스트 생성
 POST {{baseUrl}}/posts HTTP/1.1
 Content-Type: application/json
 
 {
+  "userId": "LOqpUwROHvMHB2gJri49",
   "playlistId": "playlist123",
   "content": "게시물1",
   "video": "video1Url"
@@ -63,42 +81,65 @@ Content-Type: application/json
 
 ### 모든 포스트
 ### GET /api/posts
-### 포스트에는 사용자 정보, 댓글, 좋아요 정보가 포함되어 있습니다.
-### 10개의 포스트를 가져옵니다.
+### 포스트에는 사용자 정보, 댓글, 좋아요 정보가 포함되어 있음
+### 10개의 포스트를 가져옴
 GET {{baseUrl}}/posts HTTP/1.1
 
-
-### 무한 스크롤
-### GET /api/posts?lastId=1&UserId=3234234234&limit=10
-### lastId는 마지막으로 불러온 포스트의 아이디를 의미합니다.
-### limit은 한번에 가져올 포스트의 수를 의미합니다.
-### 포스트 우선 순위는 팔로우한 사용자의 포스트가 먼저 나오고, 그 다음에는 최신순으로 나옵니다.
-GET {{baseUrl}}/posts/timeline?lastId=1&UserId=QgFuw6lVmSXP51rGApWF4&limit=10 HTTP/1.1
-
-
 ### 포스트 좋아요 누르기
-### POST /api/posts/1/like
-POST {{baseUrl}}/posts/1/like HTTP/1.1
+### POST /api/posts/{postId}/like
+POST {{baseUrl}}/posts/cvlTVPhgTG1JJ3ZVPJ8u/like HTTP/1.1
 Content-Type: application/json
 
 {
   "userId": "bHp184r9uCUY8fXtMtkk"
 }
 
-
 ### 특정 사용자의 게시물
-### GET /api/posts?userId=123
-### respone example
-### 위와 동일
-GET {{baseUrl}}/posts?userId=bHp184r9uCUY8fXtMtkk HTTP/1.1
+### GET /api/posts?userId={userId}
+GET {{baseUrl}}/posts?userId=LOqpUwROHvMHB2gJri49 HTTP/1.1
 
-### 특정 게시물을 게시물 아이디로 가져오기
-### respone example 위와 동일
-### GET /api/posts/1
-GET {{baseUrl}}/posts/1 HTTP/1.1
+
+### 특정 포스트 가져오기, postId를 사용하여 특정 포스트 가져오기
+### GET /api/posts/{postId}
+GET {{baseUrl}}/posts/cvlTVPhgTG1JJ3ZVPJ8u HTTP/1.1
+
+
+### 포스트 수정
+### PUT /api/posts/{postId}
+PUT {{baseUrl}}/posts/cvlTVPhgTG1JJ3ZVPJ8u HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "LOqpUwROHvMHB2gJri49",
+  "playlistId": "playlist123",
+  "video": "video1Url",
+  "content": "수정 게시물"
+}
+
+### 포스트 삭제
+###! 주의 포스트 삭제시 댓글, 좋아요도 함께 삭제됨
+### DELETE /api/posts/{postId}
+DELETE {{baseUrl}}/posts/cvlTVPhgTG1JJ3ZVPJ8u HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "LOqpUwROHvMHB2gJri49"
+}
+
+
+
+### 타임라인 API 테스트 --------------------------------------------
+
+### 무한 스크롤
+### GET /api/timeline?lastId=1&UserId=3234234234&limit=10
+### lastId: 마지막으로 불러온 포스트의 아이디
+### limit: 한번에 가져올 포스트의 수
+### 포스트 우선 순위는 팔로우한 사용자의 포스트가 먼저 나오고, 그 다음에는 최신순으로 나옴
+GET {{baseUrl}}/timeline?&userId=LOqpUwROHvMHB2gJri49  HTTP/1.1
+
+
 
 #### 댓글
-
 
 ### 댓글 달기
 ### POST /api/comments
