@@ -31,6 +31,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
 
+  console.log(post);
   useEffect(() => {
     if (currentUser) {
       setIsLiked(post.likes.includes(currentUser.uid));
