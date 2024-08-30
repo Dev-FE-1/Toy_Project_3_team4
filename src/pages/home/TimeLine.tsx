@@ -2,76 +2,51 @@ import { useEffect, Fragment } from 'react';
 
 import { css } from '@emotion/react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useInView } from 'react-intersection-observer';
 
+import { fetchTimeline, LIMIT } from '@/api/fetchPosts';
 import Post from '@/components/post/Posts';
-import BASE_URL from '@/pages/home/baseURL';
 import theme from '@/styles/theme';
-import { PostModel } from '@/types/post';
-
-const LIMIT = 10;
-const USER_ID = 'LOqpUwROHvMHB2gJri49';
-
-interface TimelineResponse {
-  posts: PostModel[];
-}
-
-const api = axios.create({
-  baseURL: BASE_URL,
-});
-
-const fetchTimeline = async ({ pageParam = '' }): Promise<TimelineResponse> => {
-  const { data } = await api.get<PostModel[]>('/timeline', {
-    params: {
-      userId: USER_ID,
-      limit: LIMIT,
-      lastId: pageParam,
-    },
-  });
-
-  // 서버 응답을 PostModel 형식에 맞게 변환
-  const formattedData = data.map((post) => ({
-    ...post,
-    video: Array.isArray(post.video)
-      ? post.video
-      : [{ videoId: post.video, title: '', videoUrl: post.video }],
-    comments: post.comments || [],
-    playlistName: post.playlistName || '',
-  }));
-
-  return {
-    posts: formattedData,
-  };
-};
 
 const TimelineComponent: React.FC = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['timeline'],
     queryFn: fetchTimeline,
     getNextPageParam: (lastPage) =>
-      lastPage.posts.length === LIMIT
-        ? lastPage.posts[lastPage.posts.length - 1].postId
-        : undefined,
+      lastPage.posts.length === LIMIT ? lastPage.posts[lastPage.posts.length - 1].id : undefined,
     initialPageParam: '',
   });
 
   const { ref, inView } = useInView({
-    threshold: 0.5,
+    threshold: 0.95,
   });
+  console.log(inView);
 
   useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
+    if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [inView, hasNextPage, fetchNextPage]);
 
   return (
     <div css={timelineStyles}>
       {data?.pages.map((page, i) => (
         <Fragment key={i}>
           {page.posts.map((post) => (
-            <Post id={post.postId} post={post} />
+            <Post
+              id={post.id}
+              post={{
+                postId: post.id,
+                userId: post.userId,
+                playlistId: post.playlistId,
+                playlistName: post.playlistName,
+                content: post.content,
+                createdAt: post.createdAt,
+                likes: post.likes,
+                comments: post.comments,
+                video: post.video,
+              }}
+            />
           ))}
         </Fragment>
       ))}
@@ -89,7 +64,7 @@ const timelineStyles = css`
 
   .loading-trigger {
     text-align: center;
-    padding: 16px;
+    padding: 15px;
     color: ${theme.colors.darkGray};
   }
 `;

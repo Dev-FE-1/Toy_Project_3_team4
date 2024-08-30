@@ -73,8 +73,8 @@ Content-Type: application/json
 {
   "userId": "LOqpUwROHvMHB2gJri49",
   "playlistId": "playlist123",
-  "content": "게시물1",
-  "video": "video1Url"
+  "content": "넥스트js 왜 쓰는지 그만 알아보자",
+  "video": "https://www.youtube.com/watch?v=EGOkjmyfL6E"
 }
 
 ### 모든 포스트
@@ -134,6 +134,10 @@ Content-Type: application/json
 ### limit: 한번에 가져올 포스트의 수
 ### 포스트 우선 순위는 팔로우한 사용자의 포스트가 먼저 나오고, 그 다음에는 최신순으로 나옴
 GET {{baseUrl}}/timeline?&userId=LOqpUwROHvMHB2gJri49&limit=10  HTTP/1.1
+
+
+####
+GET {{baseUrl}}/timeline?&userId=LOqpUwROHvMHB2gJri49&limit=10&lastPostId=cvlTVPhgTG1JJ3ZVPJ8u  HTTP/1.1
 
 
 

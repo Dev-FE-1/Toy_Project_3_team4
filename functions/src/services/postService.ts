@@ -57,17 +57,20 @@ export class PostService {
   async getPostsByUser(limit = 10, userId: string, lastPostId?: string): Promise<posts[]> {
     let query = this.postRepository.whereEqualTo('userId', userId).orderByDescending('createdAt');
 
+    console.log('lastPostId', lastPostId);
     if (lastPostId) {
       const lastPost = await this.postRepository.findById(lastPostId);
       if (lastPost) {
-        query = query.whereGreaterThan('createdAt', lastPost.createdAt);
+        query = query.whereLessThan('createdAt', lastPost.createdAt);
       } else {
         console.warn(`Last post with id ${lastPostId} not found.`);
       }
     }
 
     query = query.limit(limit);
-    return await query.find();
+    const result = await query.find();
+    console.log('getPostsByUser result', result);
+    return result;
   }
 
   // userId?: string, limit = 100, lastPostId?: string

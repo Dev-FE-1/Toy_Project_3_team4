@@ -10,6 +10,7 @@ import {
 import { IoBookmarkOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
+import defaultProfile from '@/assets/images/default_profile.png';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
@@ -31,7 +32,6 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
 
-  console.log(post);
   useEffect(() => {
     if (currentUser) {
       setIsLiked(post.likes.includes(currentUser.uid));
@@ -51,7 +51,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
           <div css={metaInfoStyle}>
             <UserInfo
               name={userData?.displayName || 'UnKnown User'}
-              url={userData?.photoURL || '@assets/default-avatar.svg'}
+              url={userData?.photoURL || defaultProfile}
               imageSize="large"
             />
             <span css={createdAtStyle}>{formatRelativeDate(post.createdAt)}</span>
