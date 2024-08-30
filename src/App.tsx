@@ -8,6 +8,7 @@ import HomePage from '@/pages/Home';
 import PlaylistPage from '@/pages/Playlist';
 import PlaylistDetailPage from '@/pages/PlaylistDetail';
 import ProfilePage from '@/pages/Profile';
+import ProfileEditPage from '@/pages/ProfileEdit';
 import SearchPage from '@/pages/Search';
 import SettingsPage from '@/pages/Settings';
 import SignInPage from '@/pages/SignIn';
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
           {
             path: PATH.PROFILE,
             element: <ProfilePage />,
+          },
+          {
+            path: PATH.PROFILE_Edit,
+            element: <ProfileEditPage />,
           },
         ],
       },
