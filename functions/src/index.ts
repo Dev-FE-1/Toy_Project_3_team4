@@ -8,6 +8,7 @@ import playlistRoutes from './routes/playlistRoutes';
 import postRoutes from './routes/postRoutes';
 import timelineRoutes from './routes/timelineRoutes';
 import userRoutes from './routes/userRoutes';
+import videoRoutes from './routes/videoRoutes';
 
 initializeFirebase();
 
@@ -27,5 +28,6 @@ app.use(`/${version}/playlists`, playlistRoutes);
 app.use(`/${version}/users`, userRoutes);
 app.use(`/${version}/timeline`, timelineRoutes);
 app.use(`/${version}/comments`, commentRoutes);
+app.use(`/${version}/videos`, videoRoutes);
 
 export const api = functions.https.onRequest(app);

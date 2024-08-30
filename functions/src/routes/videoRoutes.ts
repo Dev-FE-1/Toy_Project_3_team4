@@ -37,3 +37,5 @@ router.get('/:id', async (req, res) => {
     res.status(500).send('Error fetching videos');
   }
 });
+
+export default router;
