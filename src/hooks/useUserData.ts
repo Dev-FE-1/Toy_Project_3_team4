@@ -77,8 +77,17 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
     }
   };
 
+  const defaultUserData: UserData = {
+    displayName: 'Unknown',
+    photoURL: 'default-avatar.png',
+    bio: '',
+    followers: [],
+    following: [],
+  };
+
   return {
-    userData: userData || { displayName: 'Unknown', photoURL: 'default-avatar.png' },
+    userData: userData || defaultUserData,
+    following: userData?.following || [],
     updateUserData,
     toggleFollow,
   };
