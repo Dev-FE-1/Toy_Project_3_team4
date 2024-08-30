@@ -48,7 +48,11 @@ const Post: React.FC<PostProps> = ({ post }) => {
       <div>
         <div css={metaInfoStyle}>
           <div css={metaInfoStyle}>
-            <UserInfo name={userData.displayName} url={userData.photoURL} imageSize="large" />
+            <UserInfo
+              name={userData?.displayName || 'UnKnown User'}
+              url={userData?.photoURL || '@assets/default-avatar.svg'}
+              imageSize="large"
+            />
             <span css={createdAtStyle}>{formatRelativeDate(post.createdAt)}</span>
           </div>
           <IconButton icon={<IoBookmarkOutline size={20} />} onClick={() => {}} />

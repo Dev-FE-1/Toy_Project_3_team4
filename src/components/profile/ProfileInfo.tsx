@@ -9,7 +9,10 @@ import { UserData } from '@/types/profile';
 interface ProfileInfoProps {
   profileUserId: string;
   userData: UserData;
+  isOwnProfile: boolean;
+  isFollowing: boolean;
   onEditClick?: () => void;
+  onFollowToggle: () => Promise<void>;
 }
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ profileUserId, userData, onEditClick }) => {
