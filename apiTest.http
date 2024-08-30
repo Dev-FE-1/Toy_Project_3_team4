@@ -1,30 +1,168 @@
-@baseUrl = {{$dotenv BASE_URL}}
+@baseUrl = {{$dotenv BASE_URL}}/v1
 
-
+### 신버전
 ### Hello, world!
 GET {{baseUrl}}/ HTTP/1.1
 
-### 새 게시물 생성
-POST {{baseUrl}}/v1/posts HTTP/1.1
+### BaseUrl = http://localhost:5001/toy-project-2-team-4-pizza/us-central1/api/v1
+
+### 사용자 API 테스트
+
+### 새 사용자 생성
+POST {{baseUrl}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "user123",
+  "displayName": "nakyeonko",
+  "email": "nakyeonko@example.com",
+  "photoURL": "https://example.com/photo.jpg",
+  "bio": "I'm a mini software engineer"
+}
+
+### 사용자 정보 조회
+# 아래의 {userId}를 실제 사용자 ID로 교체하세요
+GET {{baseUrl}}/users/{userId} HTTP/1.1
+
+### 사용자 정보 업데이트
+# 아래의 {userId}를 실제 사용자 ID로 교체하세요
+PUT {{baseUrl}}/users/{userId} HTTP/1.1
+Content-Type: application/json
+
+{
+  "displayName": "John Updated",
+  "bio": "This is my updated bio"
+}
+
+### 사용자 삭제
+# 아래의 {userId}를 실제 사용자 ID로 교체하세요
+DELETE {{baseUrl}}/users/{userId} HTTP/1.1
+
+### 사용자 팔로우
+# 아래의 {userId}와 {targetUserId}를 실제 사용자 ID로 교체하세요
+POST {{baseUrl}}/users/{userId}/follow HTTP/1.1
+Content-Type: application/json
+
+{
+  "targetUserId": "{targetUserId}"
+}
+
+
+
+### 포스트 API 테스트
+
+### 새 포스트 생성
+POST {{baseUrl}}/posts HTTP/1.1
+Content-Type: application/json
+
+{
+  "playlistId": "playlist123",
+  "content": "게시물1",
+  "video": "video1Url"
+}
+
+### 모든 포스트
+### GET /api/posts
+### 포스트에는 사용자 정보, 댓글, 좋아요 정보가 포함되어 있습니다.
+### 10개의 포스트를 가져옵니다.
+GET {{baseUrl}}/posts HTTP/1.1
+
+
+### 무한 스크롤
+### GET /api/posts?lastId=1&UserId=3234234234&limit=10
+### lastId는 마지막으로 불러온 포스트의 아이디를 의미합니다.
+### limit은 한번에 가져올 포스트의 수를 의미합니다.
+### 포스트 우선 순위는 팔로우한 사용자의 포스트가 먼저 나오고, 그 다음에는 최신순으로 나옵니다.
+GET {{baseUrl}}/posts/timeline?lastId=1&UserId=QgFuw6lVmSXP51rGApWF4&limit=10 HTTP/1.1
+
+
+### 포스트 좋아요 누르기
+### POST /api/posts/1/like
+POST {{baseUrl}}/posts/1/like HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "bHp184r9uCUY8fXtMtkk"
+}
+
+
+### 특정 사용자의 게시물
+### GET /api/posts?userId=123
+### respone example
+### 위와 동일
+GET {{baseUrl}}/posts?userId=bHp184r9uCUY8fXtMtkk HTTP/1.1
+
+### 특정 게시물을 게시물 아이디로 가져오기
+### respone example 위와 동일
+### GET /api/posts/1
+GET {{baseUrl}}/posts/1 HTTP/1.1
+
+#### 댓글
+
+
+### 댓글 달기
+### POST /api/comments
+POST {{baseUrl}}/comments HTTP/1.1
 Content-Type: application/json
 
 {
   "userId": "bHp184r9uCUY8fXtMtkk",
-  "playlistId": "playlist123",
-  "content": "게시물1"
+  "postId": "1",
+  "content": "댓글1"
 }
 
-### 모든 게시물 
-GET {{baseUrl}}/v1/posts HTTP/1.1
+### 댓글 가져오기
+### GET /api/comments?postId=1
+GET {{baseUrl}}/comments?postId=1 HTTP/1.1
+
+### 댓글 좋아요 누르기
+### POST /api/comments/1/like
+POST {{baseUrl}}/comments/1/like HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "bHp184r9uCUY8fXtMtkk"
+}
+
+### 댓글 삭제
+### DELETE /api/comments/1
+DELETE {{baseUrl}}/comments/1 HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "bHp184r9uCUY8fXtMtkk"
+}
 
 
-### 특정 사용자의 게시물
-GET {{baseUrl}}/v1/posts/bHp184r9uCUY8fXtMtkk HTTP/1.1
+### 댓글 수정
+### PUT /api/comments/1
+PUT {{baseUrl}}/comments/1 HTTP/1.1
+
+{
+  "userId": "bHp184r9uCUY8fXtMtkk",
+  "content": "수정된 댓글"
+}
+
+### 대댓글 달기
+### POST /api/comments/1/reply
+POST {{baseUrl}}/comments/1/reply HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "bHp184r9uCUY8fXtMtkk",
+  "content": "대댓글1"
+}
+
+### 대댓글 삭제
+### DELETE /api/comments/1/reply/1
+DELETE {{baseUrl}}/comments/1/reply/1 HTTP/1.1
 
 ### ------------------------------
 
+##### 플레이리스트
+
 ### 새 플레이리스트 생성
-POST {{baseUrl}}/v1/playlists HTTP/1.1
+POST {{baseUrl}}/playlists HTTP/1.1
 Content-Type: application/json
 
 {
@@ -36,17 +174,18 @@ Content-Type: application/json
 }
 
 ### 모든 플레이리스트 
-GET {{baseUrl}}/v1/playlists HTTP/1.1
+GET {{baseUrl}}/playlists HTTP/1.1
 
-### 특정 플레이리스트 아이디
-GET {{baseUrl}}/v1/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
+### 특정 플레이리스트 아이디로 플레이리스트 가져오기
+### GET /api/playlists/playlist123
+GET {{baseUrl}}/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
+
 
 ### 특정 사용자의 플레이리스트
-GET {{baseUrl}}/v1/playlists/user/user123 HTTP/1.1
+GET {{baseUrl}}/playlists?userId=user123 HTTP/1.1
 
 ### 플레이리스트 수정
-
-PUT {{baseUrl}}/v1/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
+PUT {{baseUrl}}/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
 Content-Type: application/json
 
 {
@@ -57,11 +196,94 @@ Content-Type: application/json
   "videos": ["video1Url", "video2URL", "video3URL"]
 }
 
+### 플레이리스트 구독
+POST {{baseUrl}}/playlists/Fdpk6YOi4d8djfGfWM8v/subscribe HTTP/1.1
+
 
 ### 플레이리스트 삭제
-DELETE {{baseUrl}}/v1/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
+DELETE {{baseUrl}}/playlists/Fdpk6YOi4d8djfGfWM8v HTTP/1.1
 Content-Type: application/json
 
 {
   "userId": "user124"
+}
+
+### ------------------------------
+
+#### 사용자
+
+### 사용자 생성
+POST {{baseUrl}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "nakyeon@gmail.com",
+  "displayName": "nakyeon",
+  "photoURL": "이미지url",
+  "bio": "안녕하세요. 반갑"
+}
+
+### 사용자 정보 수정
+PUT {{baseUrl}}/users/userID HTTP/1.1
+Content-Type: application/json
+
+{
+  "displayName": "nakyeon",
+  "photoURL": "https://www.google.com",
+  "profileImage": "이미지url",
+  "bio": "안녕하세요. 방가방가"
+}
+
+### 사용자 정보
+GET {{baseUrl}}/users/userID HTTP/1.1
+
+
+### 사용자 팔로우
+POST {{baseUrl}}/users/userID/follow HTTP/1.1
+
+
+### 사용자 팔로우 취소
+POST {{baseUrl}}/users/userID/unfollow HTTP/1.1
+
+
+
+### ------------------------------
+
+##### 비디오
+
+# @Collection()
+# export class Video {
+#   id!: string;
+#   userId!: string;
+#   title!: string;
+#   videoUrl!: string;
+#   uploadDate!: Date;
+#   thumbnailUrl!: string;
+#   views!: number;
+#   creater!: string;
+# }
+
+### 비디오 정보
+GET {{baseUrl}}/videos/videoID HTTP/1.1
+
+### repose example
+# {
+#   "id": "video123",
+#   "userId": "user123",
+#   "title": "My Awesome Video",
+#   "videoUrl": "https://www.youtube.com",
+#   "uploadDate": "2021-08-10",
+#   "thumbnailUrl": "https://www.google.com",
+#   "views": 100,
+#   "creater": "nakyeon"
+# }
+
+
+### 비디오 업로드
+POST {{baseUrl}}/videos HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "user123",
+  "videoUrl": "https://www.youtube.com",
 }
