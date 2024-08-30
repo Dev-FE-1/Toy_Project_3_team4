@@ -36,4 +36,38 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { userId, content } = req.body;
+
+  if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+    return res.status(400).send('Invalid userId');
+  }
+
+  try {
+    const comment = await commentService.updateComment({ id, userId, content });
+    return res.json(comment);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Error updating comment');
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+    return res.status(400).send('Invalid userId');
+  }
+
+  try {
+    await commentService.deleteComment({ id, userId });
+    return res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Error deleting comment');
+  }
+});
+
 export default router;

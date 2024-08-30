@@ -148,13 +148,13 @@ Content-Type: application/json
 
 {
   "userId": "bHp184r9uCUY8fXtMtkk",
-  "postId": "1",
+  "postId": "cvlTVPhgTG1JJ3ZVPJ8u",
   "content": "댓글1"
 }
 
 ### 댓글 가져오기
 ### GET /api/comments?postId=1
-GET {{baseUrl}}/comments?postId=1 HTTP/1.1
+GET {{baseUrl}}/comments?postId=cvlTVPhgTG1JJ3ZVPJ8u HTTP/1.1
 
 ### 댓글 좋아요 누르기
 ### POST /api/comments/1/like
@@ -184,19 +184,19 @@ PUT {{baseUrl}}/comments/1 HTTP/1.1
   "content": "수정된 댓글"
 }
 
-### 대댓글 달기
-### POST /api/comments/1/reply
-POST {{baseUrl}}/comments/1/reply HTTP/1.1
-Content-Type: application/json
+# ### 대댓글 달기
+# ### POST /api/comments/1/reply
+# POST {{baseUrl}}/comments/1/reply HTTP/1.1
+# Content-Type: application/json
 
-{
-  "userId": "bHp184r9uCUY8fXtMtkk",
-  "content": "대댓글1"
-}
+# {
+#   "userId": "bHp184r9uCUY8fXtMtkk",
+#   "content": "대댓글1"
+# }
 
-### 대댓글 삭제
-### DELETE /api/comments/1/reply/1
-DELETE {{baseUrl}}/comments/1/reply/1 HTTP/1.1
+# ### 대댓글 삭제
+# ### DELETE /api/comments/1/reply/1
+# DELETE {{baseUrl}}/comments/1/reply/1 HTTP/1.1
 
 ### ------------------------------
 
@@ -248,44 +248,6 @@ Content-Type: application/json
 {
   "userId": "user124"
 }
-
-### ------------------------------
-
-#### 사용자
-
-### 사용자 생성
-POST {{baseUrl}}/users HTTP/1.1
-Content-Type: application/json
-
-{
-  "email": "nakyeon@gmail.com",
-  "displayName": "nakyeon",
-  "photoURL": "이미지url",
-  "bio": "안녕하세요. 반갑"
-}
-
-### 사용자 정보 수정
-PUT {{baseUrl}}/users/userID HTTP/1.1
-Content-Type: application/json
-
-{
-  "displayName": "nakyeon",
-  "photoURL": "https://www.google.com",
-  "profileImage": "이미지url",
-  "bio": "안녕하세요. 방가방가"
-}
-
-### 사용자 정보
-GET {{baseUrl}}/users/userID HTTP/1.1
-
-
-### 사용자 팔로우
-POST {{baseUrl}}/users/userID/follow HTTP/1.1
-
-
-### 사용자 팔로우 취소
-POST {{baseUrl}}/users/userID/unfollow HTTP/1.1
-
 
 
 ### ------------------------------

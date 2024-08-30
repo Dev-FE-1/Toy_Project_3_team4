@@ -54,4 +54,39 @@ export class CommentService {
       await this.commentRepository.update(comment);
     }
   }
+
+  async updateComment({
+    id,
+    userId,
+    content,
+  }: {
+    id: string;
+    userId: string;
+    content?: string;
+  }): Promise<comments> {
+    const comment = await this.commentRepository.findById(id);
+    if (!comment) {
+      throw new Error('Comment not found');
+    }
+
+    if (comment.userId !== userId) {
+      throw new Error('User is not the owner of the comment');
+    }
+
+    comment.content = content || comment.content;
+    await this.commentRepository.update(comment);
+    return comment;
+  }
+
+  async deleteComment({ id, userId }: { id: string; userId: string }): Promise<void> {
+    const comment = await this.commentRepository.findById(id);
+    if (!comment) {
+      throw new Error('Comment not found');
+    }
+    if (comment.userId !== userId) {
+      throw new Error('User is not the owner of the comment');
+    }
+    const deletedComment = await this.commentRepository.delete(id);
+    return deletedComment;
+  }
 }
