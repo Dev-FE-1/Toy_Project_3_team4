@@ -11,6 +11,7 @@ module.exports = {
     'plugin:prettier/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -22,6 +23,9 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'react-hooks', 'import', 'prettier'],
   rules: {
+    '@tanstack/query/exhaustive-deps': 'error',
+    '@tanstack/query/stable-query-client': 'error',
+    '@tanstack/query/no-rest-destructuring': 'warn',
     'react/react-in-jsx-scope': 'off',
     'import/order': [
       'error',

@@ -129,11 +129,11 @@ Content-Type: application/json
 ### 타임라인 API 테스트 --------------------------------------------
 
 ### 무한 스크롤
-### GET /api/timeline?lastId=1&UserId=3234234234&limit=10
-### lastId: 마지막으로 불러온 포스트의 아이디
+### GET /api/timeline?lastId={lastId}&UserId={UserID}&limit={limit number}
+### lastId: 마지막으로 불러온 포스트의 아이디, 이후에는 이 아이디 이후의 포스트를 가져옴
 ### limit: 한번에 가져올 포스트의 수
 ### 포스트 우선 순위는 팔로우한 사용자의 포스트가 먼저 나오고, 그 다음에는 최신순으로 나옴
-GET {{baseUrl}}/timeline?&userId=LOqpUwROHvMHB2gJri49  HTTP/1.1
+GET {{baseUrl}}/timeline?&userId=LOqpUwROHvMHB2gJri49&limit=10  HTTP/1.1
 
 
 
