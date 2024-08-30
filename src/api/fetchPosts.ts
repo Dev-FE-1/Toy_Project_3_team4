@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-import BASE_URL from '@/pages/home/baseURL';
 import { Video, Comment } from '@/types/post';
+
+import BASE_URL from './baseURL';
 
 export const LIMIT = 2;
 const USER_ID = 'LOqpUwROHvMHB2gJri49';
