@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 
 import { css, Theme } from '@emotion/react';
 
-import { useToastStore, type ToastModel } from '@/store/toastStore';
+import { useToastStore, type ToastModel } from '@/stores/toastStore';
 
 const MAX_VISIBLE_TOASTS = 3;
 const TOAST_SPACING = 56;
