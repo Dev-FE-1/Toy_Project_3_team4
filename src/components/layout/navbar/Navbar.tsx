@@ -9,8 +9,8 @@ import {
   HiOutlineUserCircle,
 } from 'react-icons/hi2';
 
-import NavButtonItem from '@/components/layout/Navbar/NavButtonItem';
-import NavItem from '@/components/layout/Navbar/NavItem';
+import NavButtonItem from '@/components/layout/navbar/NavButtonItem';
+import NavItem from '@/components/layout/navbar/NavItem';
 import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
 import { maxWidthStyle } from '@/styles/GlobalStyles';
