@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { signOutWithGoogle } from '@/api/firebaseAuth';
+import BackHeader from '@/components/layout/header/BackHeader';
 import { PATH } from '@/constants/path';
 
 const SettingsPage = () => {
@@ -21,6 +22,7 @@ const SettingsPage = () => {
 
   return (
     <>
+      <BackHeader title="설정" />
       <button onClick={onSignOut}>로그아웃</button>
     </>
   );

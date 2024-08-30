@@ -20,7 +20,7 @@ import { dummyPlaylist, dummyPosts } from '@/utils/dummy';
 import ProfileInfo from '../components/profile/ProfileInfo';
 
 const tabs = [
-  { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
+  { id: 'post', label: '포스트', Icon: <HiOutlinePencil /> },
   { id: 'pli', label: '플리', icon: <FiPlay /> },
   { id: 'likes', label: '좋아요', icon: <FaRegHeart /> },
 ];
@@ -47,6 +47,10 @@ const ProfilePage: React.FC = () => {
     }
   }, [userId]);
 
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
+
   const handleEditClick = () => {
     if (currentUser && userData) {
       navigate(`/profile/${currentUser.uid}/edit`, { state: { userData } });
@@ -68,7 +72,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <>
-      <LogoHeader showSettings onSettingsClick={() => {}} />
+      <LogoHeader showSettings onSettingsClick={handleSettingsClick} />
       <ProfileInfo
         profileUserId={userId || currentUser?.uid || ''}
         userData={userData}
