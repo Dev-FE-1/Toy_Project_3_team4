@@ -12,6 +12,7 @@ import LogoHeader from '@/components/layout/header/LogoHeader';
 import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
 import Post from '@/components/post/Posts';
+import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
@@ -48,7 +49,7 @@ const ProfilePage: React.FC = () => {
   }, [userId]);
 
   const handleSettingsClick = () => {
-    navigate('/settings');
+    navigate(PATH.SETTINGS);
   };
 
   const handleEditClick = () => {
