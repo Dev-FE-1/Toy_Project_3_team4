@@ -1,7 +1,7 @@
 import { getRepository } from 'fireorm';
 
 import { getFirestore } from '../firebase';
-import { comments } from '../models/models';
+import { comments, posts } from '../models/models';
 
 export class CommentService {
   private commentRepository: ReturnType<typeof getRepository<comments>>;
@@ -11,12 +11,25 @@ export class CommentService {
     this.commentRepository = getRepository(comments);
   }
 
-  async addComment(postId: string, userId: string, content: string): Promise<comments> {
+  async addComment({
+    postId,
+    userId,
+    content,
+  }: {
+    postId: string;
+    userId: string;
+    content: string;
+  }): Promise<comments> {
     const newComment = new comments();
+    const post = await getRepository(posts).findById(postId);
+    if (!post) {
+      throw new Error('Post not found');
+    }
     newComment.postId = postId;
     newComment.userId = userId;
     newComment.content = content;
     newComment.createdAt = new Date();
+    newComment.replies = [];
     newComment.likes = [];
 
     return await this.commentRepository.create(newComment);

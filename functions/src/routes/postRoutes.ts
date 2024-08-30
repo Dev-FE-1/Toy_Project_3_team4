@@ -32,8 +32,6 @@ router.get('/', async (req, res) => {
     const lastPostId = req.query.lastPostId as string | undefined;
     const posts = await postService.getPosts({ userId, limit, lastPostId });
 
-    console.log(req.query);
-    console.log(userId);
     res.json(posts);
   } catch (error) {
     console.error(error);
@@ -58,7 +56,6 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { userId, content, playlistId, video } = req.body;
-  console.log(req.body);
 
   if (!userId || typeof userId !== 'string' || userId.trim() === '') {
     return res.status(400).send('Invalid userId');
@@ -97,8 +94,6 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    console.log(req.body);
-    console.log(req.params);
     await postService.deletePost(req.params.id, req.body.userId);
     res.send('Post deleted');
   } catch (error) {

@@ -168,7 +168,6 @@ export class PostService {
     playlistId?: string;
     video?: string;
   }): Promise<posts> {
-    console.log(postId, userId, content, playlistId, video);
     if (!postId || typeof postId !== 'string' || postId.trim() === '') {
       throw new Error('Invalid postId');
     }
@@ -177,7 +176,6 @@ export class PostService {
     if (!post) {
       throw new Error('Post not found');
     }
-    console.log(post.userId, userId);
     if (post.userId !== userId) {
       throw new Error('User is not the owner of the post');
     }
@@ -198,7 +196,6 @@ export class PostService {
     if (!post) {
       throw new Error('Post not found');
     }
-    console.log(post.userId, userId);
     if (post.userId !== userId) {
       throw new Error('User is not the owner of the post');
     }

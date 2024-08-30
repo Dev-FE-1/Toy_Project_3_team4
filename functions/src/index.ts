@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as functions from 'firebase-functions';
 
 import { initializeFirebase } from './firebase';
+import commentRoutes from './routes/commentRoutes';
 import playlistRoutes from './routes/playlistRoutes';
 import postRoutes from './routes/postRoutes';
 import timelineRoutes from './routes/timelineRoutes';
@@ -25,5 +26,6 @@ app.use(`/${version}/posts`, postRoutes);
 app.use(`/${version}/playlists`, playlistRoutes);
 app.use(`/${version}/users`, userRoutes);
 app.use(`/${version}/timeline`, timelineRoutes);
+app.use(`/${version}/comments`, commentRoutes);
 
 export const api = functions.https.onRequest(app);
