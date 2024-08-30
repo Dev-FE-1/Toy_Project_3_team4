@@ -2,22 +2,22 @@
 import { getRepository } from 'fireorm';
 
 import { getFirestore } from '../firebase';
-import { Notification } from '../models/models';
+import { notifications } from '../models/models';
 
 export class NotificationService {
-  private notificationRepository: ReturnType<typeof getRepository<Notification>>;
+  private notificationRepository: ReturnType<typeof getRepository<notifications>>;
 
   constructor() {
     getFirestore();
-    this.notificationRepository = getRepository(Notification);
+    this.notificationRepository = getRepository(notifications);
   }
 
   async createNotification(
     userId: string,
     type: string,
     relatedUserId: string,
-  ): Promise<Notification> {
-    const newNotification = new Notification();
+  ): Promise<notifications> {
+    const newNotification = new notifications();
     newNotification.userId = userId;
     newNotification.type = type;
     newNotification.relatedUserId = relatedUserId;

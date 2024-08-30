@@ -2,11 +2,11 @@
 import { Collection } from 'fireorm';
 
 @Collection()
-export class User {
+export class users {
   id!: string;
   displayName!: string;
   email!: string;
-  profileImage?: string;
+  photoURL?: string;
   bio?: string;
   subscriptions?: string[];
   followers?: string[];
@@ -14,28 +14,28 @@ export class User {
 }
 
 @Collection()
-export class Post {
+export class posts {
   id!: string;
   userId!: string;
-  playlistId!: string;
+  playlistId?: string;
   content!: string;
   createdAt!: Date;
   likes?: string[];
+  video!: string;
 }
 
 @Collection()
-export class Playlist {
+export class playlists {
   id!: string;
   userId!: string;
   title!: string;
-  description?: string;
   createdAt!: Date;
   isPublic!: boolean;
   videos?: string[];
 }
 
 @Collection()
-export class Notification {
+export class notifications {
   id!: string;
   userId!: string;
   type!: string;
@@ -45,7 +45,7 @@ export class Notification {
 }
 
 @Collection()
-export class Video {
+export class videos {
   id!: string;
   userId!: string;
   title!: string;
@@ -57,11 +57,12 @@ export class Video {
 }
 
 @Collection()
-export class Comment {
+export class comments {
   id!: string;
   userId!: string;
   content!: string;
   createdAt!: Date;
   likes!: string[];
   postId!: string;
+  replies?: string[];
 }

@@ -34,8 +34,9 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'import', 'prettier'],
   rules: {
+    indent: 'off',
+    '@typescript-eslint/indent': ['error', 2],
     'max-len': ['error', { code: 100 }],
-    indent: ['error', 2],
     'new-cap': 'off',
     // 'new-cap': ['error', { capIsNewExceptions: ['Router'] }],
     'require-jsdoc': 'off',

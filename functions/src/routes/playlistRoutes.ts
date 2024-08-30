@@ -27,7 +27,6 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const playlistId = req.params.id;
-  console.log(playlistId);
   try {
     const playlists = await playlistService.getPlaylistById(playlistId);
     res.status(200).json(playlists);
@@ -38,7 +37,6 @@ router.get('/:id', async (req, res) => {
 
 router.get('/user/:id', async (req, res) => {
   const playlistId = req.params.id;
-  console.log(playlistId);
   try {
     const playlists = await playlistService.getPlaylistsByUser(playlistId);
     res.status(200).json(playlists);

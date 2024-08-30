@@ -1,14 +1,14 @@
 import { getRepository } from 'fireorm';
 
 import { getFirestore } from '../firebase';
-import { Video } from '../models/models';
+import { videos } from '../models/models';
 
 export class VideoService {
-  private videoRepository: ReturnType<typeof getRepository<Video>>;
+  private videoRepository: ReturnType<typeof getRepository<videos>>;
 
   constructor() {
     getFirestore();
-    this.videoRepository = getRepository(Video);
+    this.videoRepository = getRepository(videos);
   }
 
   async createVideo(
@@ -17,8 +17,8 @@ export class VideoService {
     videoUrl: string,
     thumbnailUrl: string,
     creater: string,
-  ): Promise<Video> {
-    const newVideo = new Video();
+  ): Promise<videos> {
+    const newVideo = new videos();
     newVideo.userId = userId;
     newVideo.title = title;
     newVideo.videoUrl = videoUrl;
@@ -40,7 +40,7 @@ export class VideoService {
     await this.videoRepository.update(video);
   }
 
-  async getVideosByIds(videoIds: string[]): Promise<Video[]> {
+  async getVideosByIds(videoIds: string[]): Promise<videos[]> {
     return await this.videoRepository.whereIn('id', videoIds).find();
   }
 }

@@ -1,7 +1,7 @@
 import { getRepository } from 'fireorm';
 
 import { getFirestore } from '../firebase';
-import { Playlist, User } from '../models/models';
+import { playlists, users } from '../models/models';
 
 class playlistUpdateDto {
   id!: string;
@@ -12,28 +12,27 @@ class playlistUpdateDto {
 }
 
 export class PlaylistService {
-  private playlistRepository: ReturnType<typeof getRepository<Playlist>>;
-  private userRepository: ReturnType<typeof getRepository<User>>;
+  private playlistRepository: ReturnType<typeof getRepository<playlists>>;
+  private userRepository: ReturnType<typeof getRepository<users>>;
 
   constructor() {
     getFirestore();
-    this.playlistRepository = getRepository(Playlist);
-    this.userRepository = getRepository(User);
+    this.playlistRepository = getRepository(playlists);
+    this.userRepository = getRepository(users);
   }
 
   async createPlaylist(
     userId: string,
     title: string,
-    description: string,
     isPublic: boolean,
-  ): Promise<Playlist> {
-    const newPlaylist = new Playlist();
+    videos: string[],
+  ): Promise<playlists> {
+    const newPlaylist = new playlists();
     newPlaylist.userId = userId;
     newPlaylist.title = title;
-    newPlaylist.description = description || '';
     newPlaylist.isPublic = isPublic || false;
     newPlaylist.createdAt = new Date();
-    newPlaylist.videos = [];
+    newPlaylist.videos = videos;
 
     return await this.playlistRepository.create(newPlaylist);
   }
@@ -51,7 +50,7 @@ export class PlaylistService {
     await this.playlistRepository.update(playlist);
   }
 
-  async getPlaylist(limit = 100, lastPostId?: string): Promise<Playlist[]> {
+  async getPlaylist(limit = 100, lastPostId?: string): Promise<playlists[]> {
     let query = this.playlistRepository.orderByDescending('createdAt');
 
     if (lastPostId) {
@@ -67,15 +66,15 @@ export class PlaylistService {
     return await query.find();
   }
 
-  async getPlaylistById(playlistId: string): Promise<Playlist> {
+  async getPlaylistById(playlistId: string): Promise<playlists> {
     return await this.playlistRepository.findById(playlistId);
   }
 
-  async getPlaylistsByUser(userId: string): Promise<Playlist[]> {
+  async getPlaylistsByUser(userId: string): Promise<playlists[]> {
     return await this.playlistRepository.whereEqualTo('userId', userId).find();
   }
 
-  async updatePlaylist(updatedPlaylistData: playlistUpdateDto): Promise<Playlist> {
+  async updatePlaylist(updatedPlaylistData: playlistUpdateDto): Promise<playlists> {
     const playlist = await this.playlistRepository.findById(updatedPlaylistData.id);
     if (!playlist) {
       throw new Error('Playlist not found');
@@ -83,7 +82,6 @@ export class PlaylistService {
 
     playlist.title = updatedPlaylistData.title;
     playlist.userId = updatedPlaylistData.userId;
-    playlist.description = updatedPlaylistData.description;
     playlist.isPublic = updatedPlaylistData.isPublic;
 
     return await this.playlistRepository.update(playlist);

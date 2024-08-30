@@ -1,18 +1,18 @@
 import { getRepository } from 'fireorm';
 
 import { getFirestore } from '../firebase';
-import { Comment } from '../models/models';
+import { comments } from '../models/models';
 
 export class CommentService {
-  private commentRepository: ReturnType<typeof getRepository<Comment>>;
+  private commentRepository: ReturnType<typeof getRepository<comments>>;
 
   constructor() {
     getFirestore();
-    this.commentRepository = getRepository(Comment);
+    this.commentRepository = getRepository(comments);
   }
 
-  async addComment(postId: string, userId: string, content: string): Promise<Comment> {
-    const newComment = new Comment();
+  async addComment(postId: string, userId: string, content: string): Promise<comments> {
+    const newComment = new comments();
     newComment.postId = postId;
     newComment.userId = userId;
     newComment.content = content;
@@ -22,7 +22,7 @@ export class CommentService {
     return await this.commentRepository.create(newComment);
   }
 
-  async getCommentsByPostId(postId: string): Promise<Comment[]> {
+  async getCommentsByPostId(postId: string): Promise<comments[]> {
     return await this.commentRepository.whereEqualTo('postId', postId).find();
   }
 
