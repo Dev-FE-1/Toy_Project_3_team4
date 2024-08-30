@@ -7,6 +7,7 @@ import { UserData } from '@/types/profile';
 
 interface UseUserDataReturn {
   userData: UserData | null;
+  following: string[];
   updateUserData: (newData: Partial<UserData>) => Promise<void>;
   toggleFollow: (currentUserId: string, targetUserId: string) => Promise<void>;
 }
