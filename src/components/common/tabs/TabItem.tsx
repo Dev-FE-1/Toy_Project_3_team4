@@ -27,7 +27,7 @@ const tabStyle = (isActive: boolean) => (theme: Theme) => css`
   color: ${isActive ? theme.colors.black : theme.colors.darkestGray};
   transition: 0.3s ease;
   position: relative;
-  z-index: 1;
+  z-index: 0;
 
   &:hover {
     color: ${theme.colors.black};
