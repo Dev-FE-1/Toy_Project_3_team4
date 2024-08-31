@@ -94,8 +94,11 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    await postService.deletePost(req.params.id, req.body.userId);
-    res.send('Post deleted');
+    const deletedId = await postService.deletePost(req.params.id, req.body.userId);
+    res.send({
+      id: deletedId,
+      message: 'success',
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send('Error deleting post');
@@ -104,8 +107,9 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/:id/like', async (req, res) => {
   try {
+    console.log('req.params.id', req.params.id);
     await postService.likePost(req.params.id, req.body.userId);
-    res.send('Post liked');
+    res.send('like success');
   } catch (error) {
     console.error(error);
     res.status(500).send('Error liking post');

@@ -1,7 +1,7 @@
-import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { GoogleAuthProvider, signInWithPopup, signOut, getAuth } from 'firebase/auth';
 
-import { auth, db } from '@/api/firebaseApp';
+import { fetchCreateUser } from '@/api/fetchUsers';
+import { auth } from '@/api/firebaseApp';
 
 export const signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
@@ -9,17 +9,14 @@ export const signInWithGoogle = async () => {
   try {
     const { user } = await signInWithPopup(auth, provider);
 
-    const userDoc = doc(db, 'users', user.uid);
-    const docSnapshot = await getDoc(userDoc);
+    await fetchCreateUser({
+      userId: user.uid,
+      displayName: user.displayName || '',
+      email: user.email || '',
+      photoURL: user.photoURL || '',
+    });
 
-    if (!docSnapshot.exists()) {
-      await setDoc(userDoc, {
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        uid: user.uid,
-      });
-    }
+    console.log(`유저 ${user.uid} 생성 완료`);
 
     return user;
   } catch (error) {
@@ -43,4 +40,10 @@ export const signOutWithGoogle = async (
       onError(error);
     }
   }
+};
+
+export const getCurrentUserUid = (): string | null => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  return user ? user.uid : null;
 };

@@ -4,7 +4,8 @@ import { css } from '@emotion/react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 
-import { fetchTimeline, LIMIT } from '@/api/fetchPosts';
+import { LIMIT } from '@/api/apiConfig';
+import { fetchTimeline } from '@/api/fetchPosts';
 import Post from '@/components/post/Posts';
 import theme from '@/styles/theme';
 

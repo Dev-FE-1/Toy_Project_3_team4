@@ -1,13 +1,8 @@
-import axios from 'axios';
-
+import { getCurrentUserUid } from '@/api/firebaseAuth';
 import { Video, Comment } from '@/types/post';
 
-import BASE_URL from './baseURL';
-
-export const LIMIT = 2;
-const USER_ID = 'LOqpUwROHvMHB2gJri49';
-
-export interface TimelinePost {
+import { axiosApi, USER_ID, LIMIT } from './apiConfig';
+export interface Post {
   id: string;
   userId: string;
   playlistId: string;
@@ -20,15 +15,11 @@ export interface TimelinePost {
 }
 
 export interface TimelineResponse {
-  posts: TimelinePost[];
+  posts: Post[];
 }
 
-export const api = axios.create({
-  baseURL: BASE_URL,
-});
-
 export const fetchTimeline = async ({ pageParam = '' }): Promise<TimelineResponse> => {
-  const { data } = await api.get<TimelinePost[]>('/timeline', {
+  const { data } = await axiosApi.get<Post[]>('/timeline', {
     params: {
       userId: USER_ID,
       limit: LIMIT,
@@ -48,4 +39,17 @@ export const fetchTimeline = async ({ pageParam = '' }): Promise<TimelineRespons
   return {
     posts: formattedData,
   };
+};
+
+export const fetchLikedPosts = async (postId: string): Promise<Post[]> => {
+  try {
+    const uid = getCurrentUserUid();
+    const { data } = await axiosApi.post<Post[]>(`/posts/${postId}/like`, {
+      userId: uid,
+    });
+    return data;
+  } catch (error) {
+    console.error('게시물 좋아요 실패', error);
+    throw error;
+  }
 };

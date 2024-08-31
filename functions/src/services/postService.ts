@@ -51,6 +51,11 @@ export class PostService {
     if (!post.likes.includes(userId)) {
       post.likes.push(userId);
       await this.postRepository.update(post);
+    } else {
+      // 이미 좋아요를 누른 경우
+      // 좋아요 취소
+      post.likes = post.likes.filter((id) => id !== userId);
+      await this.postRepository.update(post);
     }
   }
 
@@ -73,7 +78,6 @@ export class PostService {
     return result;
   }
 
-  // userId?: string, limit = 100, lastPostId?: string
   async getPosts({
     userId,
     limit,
@@ -109,8 +113,6 @@ export class PostService {
     }
     return user.following || [];
   }
-
-  // 팔로우한 유저들의 포스트들을 가져옴.
   async getPostsByFollowedUsers(
     userId: string,
     limit = 100,
@@ -138,8 +140,6 @@ export class PostService {
   }
 
   // 타임라인 기능 구현
-  // 우선 유저가 팔로우한 유저들의 포스트들, 그리고 유저의 포스트들을 가져옴. 각 포스트들은 시간순으로 정렬
-  // 이후 lastPostId가 주어진 경우, 해당 포스트 이후의 포스트들을 가져옴.
   async getTimelinePosts(userId: string, limit = 100, lastPostId?: string): Promise<posts[]> {
     try {
       const userPosts = await this.getPostsByUser(limit, userId, lastPostId);
@@ -194,7 +194,7 @@ export class PostService {
     return await this.postRepository.update(post);
   }
 
-  async deletePost(postId: string, userId: string): Promise<void> {
+  async deletePost(postId: string, userId: string): Promise<string> {
     const post = await this.postRepository.findById(postId);
     if (!post) {
       throw new Error('Post not found');
@@ -204,5 +204,6 @@ export class PostService {
     }
 
     await this.postRepository.delete(postId);
+    return postId;
   }
 }

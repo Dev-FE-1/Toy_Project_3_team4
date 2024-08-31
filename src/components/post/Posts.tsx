@@ -10,6 +10,7 @@ import {
 import { IoBookmarkOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
+import { fetchLikedPosts } from '@/api/fetchPosts';
 import defaultProfile from '@/assets/images/default_profile.png';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
@@ -41,6 +42,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const toggleLike = () => {
     setIsLiked(!isLiked);
     setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
+    fetchLikedPosts(post.postId);
   };
 
   return (

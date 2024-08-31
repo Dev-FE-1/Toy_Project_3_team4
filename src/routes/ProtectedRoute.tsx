@@ -10,6 +10,7 @@ const ProtectedRoute: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  // return user ? <Navigate to="/" replace /> : <Outlet />;
   return user ? <Outlet /> : <Navigate to="/signin" replace />;
 };
 
