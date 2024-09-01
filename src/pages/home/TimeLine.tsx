@@ -21,7 +21,6 @@ const TimelineComponent: React.FC = () => {
   const { ref, inView } = useInView({
     threshold: 0.95,
   });
-  console.log(inView);
 
   useEffect(() => {
     if (inView && hasNextPage) {
