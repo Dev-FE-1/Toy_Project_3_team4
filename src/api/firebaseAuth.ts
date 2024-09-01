@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection } from 'firebase/firestore';
 
 import { auth, db } from '@/api/firebaseApp';
 
@@ -17,7 +17,20 @@ export const signInWithGoogle = async () => {
         displayName: user.displayName,
         email: user.email,
         photoURL: user.photoURL,
-        uid: user.uid,
+        userId: user.uid,
+      });
+
+      const playlistsCollection = collection(db, 'playlists');
+      const newPlaylistDocRef = doc(playlistsCollection);
+      const playlistId = newPlaylistDocRef.id;
+
+      await setDoc(newPlaylistDocRef, {
+        playlistId: playlistId,
+        userId: user.uid,
+        title: '분류되지 않은 목록',
+        createdAt: new Date(),
+        isPublic: false,
+        videos: [],
       });
     }
 
