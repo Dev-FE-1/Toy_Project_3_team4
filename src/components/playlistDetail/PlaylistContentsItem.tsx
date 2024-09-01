@@ -9,19 +9,32 @@ import { formatRelativeDate } from '@/utils/date';
 
 interface PlaylistContentItemProps {
   video: VideoModel;
+  isSelected: boolean;
+  onVideoSelect: (videoId: string) => void;
+  selectPli?: boolean;
 }
 
-const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({ video }) => {
-  const { title, videoUrl, thumbnailUrl, creator, uploadDate, views } = video;
+const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
+  video,
+  isSelected,
+  onVideoSelect,
+  selectPli,
+}) => {
+  const { title, thumbnailUrl, creator, uploadDate, views } = video;
 
   const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleClick = () => {
+    onVideoSelect(video.videoId);
   };
 
   return (
-    <li css={playlistItemStyle}>
-      <HiOutlineBars2 className="drag-bar" />
-      <a href={videoUrl} target="_blank" rel="noopener noreferrer">
+    <li css={[playlistItemStyle, isSelected && selectedStyle]} onClick={handleClick}>
+      {!selectPli && <HiOutlineBars2 className="drag-bar" />}
+      <div className="video-container">
         <VideoThumbnail url={thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
         <div className="video-info">
           <div className="info-container">
@@ -35,18 +48,20 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({ video }) => 
             <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
           </button>
         </div>
-      </a>
+      </div>
     </li>
   );
 };
 
 const playlistItemStyle = css`
   position: relative;
+  padding: 8px 3px;
 
-  a {
+  .video-container {
     position: relative;
     display: flex;
     gap: 12px;
+    cursor: pointer;
   }
 
   .drag-bar {
@@ -119,6 +134,12 @@ const playlistItemStyle = css`
       }
     }
   }
+`;
+
+const selectedStyle = css`
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
 `;
 
 const thumbnailStyle = css`
