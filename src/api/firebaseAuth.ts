@@ -16,8 +16,6 @@ export const signInWithGoogle = async () => {
       photoURL: user.photoURL || '',
     });
 
-    console.log(`유저 ${user.uid} 생성 완료`);
-
     return user;
   } catch (error) {
     console.error('Google 로그인 실패', error);

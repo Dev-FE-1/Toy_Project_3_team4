@@ -24,15 +24,15 @@ export class PostService {
     userId: string;
     video: string;
   }): Promise<posts> {
+    if (!userId) {
+      throw new Error('User id is required');
+    }
     const newPost = new posts();
     newPost.playlistId = playlistId || '';
     newPost.content = content || '';
     newPost.createdAt = new Date();
     newPost.video = video;
-    if (!userId) {
-      throw new Error('User id is required');
-    }
-    newPost.userId = userId;
+    newPost.comments = [];
     newPost.likes = [];
 
     return await this.postRepository.create(newPost);
@@ -53,7 +53,7 @@ export class PostService {
       await this.postRepository.update(post);
     } else {
       // 이미 좋아요를 누른 경우
-      // 좋아요 취소
+      // 좋아요를 취소
       post.likes = post.likes.filter((id) => id !== userId);
       await this.postRepository.update(post);
     }

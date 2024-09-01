@@ -4,11 +4,11 @@ import * as functions from 'firebase-functions';
 
 import { initializeFirebase } from './firebase';
 import commentRoutes from './routes/commentRoutes';
-import playlistRoutes from './routes/playlistRoutes';
+// import playlistRoutes from './routes/playlistRoutes';
+// import videoRoutes from './routes/videoRoutes';
 import postRoutes from './routes/postRoutes';
 import timelineRoutes from './routes/timelineRoutes';
 import userRoutes from './routes/userRoutes';
-import videoRoutes from './routes/videoRoutes';
 
 initializeFirebase();
 
@@ -24,10 +24,10 @@ app.get('/', (_req, res) => {
 });
 
 app.use(`/${version}/posts`, postRoutes);
-app.use(`/${version}/playlists`, playlistRoutes);
+// app.use(`/${version}/playlists`, playlistRoutes);
+// app.use(`/${version}/videos`, videoRoutes);
 app.use(`/${version}/users`, userRoutes);
 app.use(`/${version}/timeline`, timelineRoutes);
 app.use(`/${version}/comments`, commentRoutes);
-app.use(`/${version}/videos`, videoRoutes);
 
 export const api = functions.https.onRequest(app);

@@ -27,6 +27,7 @@ export class UserService {
 
     if (userData.userId) {
       newUser.id = userData.userId;
+      newUser.userId = userData.userId;
     }
     newUser.displayName = userData.displayName;
     newUser.email = userData.email;
@@ -50,8 +51,18 @@ export class UserService {
     return await this.userRepository.update(user);
   }
 
-  async deleteUser(userId: string): Promise<void> {
+  async deleteUser(userId: string): Promise<string | void> {
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (!userId) {
+      throw new Error('User id is required');
+    }
     await this.userRepository.delete(userId);
+    return userId;
   }
 
   private async checkFollowIntegrity(

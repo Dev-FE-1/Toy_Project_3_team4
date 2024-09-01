@@ -59,10 +59,15 @@ router.put('/:id', async (req, res) => {
 // 사용자 삭제
 router.delete('/:id', async (req, res) => {
   try {
-    await userService.deleteUser(req.params.id);
-    res.status(204).send();
+    if (!req.params.id) {
+      return res.status(400).send('User id is required');
+    }
+    const userId = await userService.deleteUser(req.params.id);
+    return res
+      .status(204)
+      .send({ message: `successs`, userId: userId, memo: `${userId} is deleted` });
   } catch (error) {
-    res.status(500).send('Error deleting user');
+    return res.status(500).send('Error deleting user');
   }
 });
 
@@ -93,24 +98,6 @@ router.post('/:id/follow', async (req, res) => {
     }
   }
 });
-// router.post('/:id/follow', async (req, res) => {
-//   try {
-//     const { targetUserId } = req.body;
-//     await userService.followToUser(req.params.id, targetUserId);
-
-//     if (!targetUserId) {
-//       res.status(400).send('targetUserId required to follow user');
-//       return;
-//     }
-//     res.status(200).send('User followed successfully');
-//   } catch (error) {
-//     if (error instanceof Error && error.message === 'User not found') {
-//       res.status(404).send(error.message);
-//     } else {
-//       res.status(500).send('Error following user');
-//     }
-//   }
-// });
 
 router.post('/:id/unfollow', async (req, res) => {
   try {
