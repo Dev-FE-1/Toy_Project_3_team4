@@ -24,11 +24,6 @@ const PlaylistDetailPage = () => {
     return <p>로딩 중입니다...</p>;
   }
 
-  if (!user) {
-    console.warn('사용자 정보를 찾을 수 없습니다.');
-    return <p>사용자 정보를 찾을 수 없습니다.</p>;
-  }
-
   const userModel: UserModel = {
     userId: user?.uid ?? '',
     displayName: user?.displayName ?? '',
