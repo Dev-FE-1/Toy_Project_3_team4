@@ -6,7 +6,7 @@ interface DragAndDropItemProps<Item> {
   onMove: OnMoveFunction;
   itemRenderer: (
     item: Item,
-    ref: React.RefObject<HTMLElement>,
+    ref: React.RefObject<HTMLLIElement>,
     isDragging: boolean,
   ) => React.ReactNode;
   dragType: string;

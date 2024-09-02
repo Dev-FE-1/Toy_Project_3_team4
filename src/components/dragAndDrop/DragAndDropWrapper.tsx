@@ -9,7 +9,11 @@ interface DragAndDropWrapperProps<Item> {
   dragList: Item[];
   onDragging?: (newOrder: Item[]) => void;
   onDragEnd: (newOrder: Item[]) => void;
-  children: (item: Item, ref: React.RefObject<HTMLElement>, isDragging: boolean) => React.ReactNode;
+  children: (
+    item: Item,
+    ref: React.RefObject<HTMLLIElement>,
+    isDragging: boolean,
+  ) => React.ReactNode;
   dragType: string;
 }
 

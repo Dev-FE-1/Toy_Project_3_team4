@@ -22,11 +22,6 @@ export const useDragAndDrop = ({ itemIndex, onMove, dragType }: UseDragAndDropPr
     type: dragType,
     item: { type: dragType, index: itemIndex },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-    end: (draggedItem: DraggedItemModel, monitor) => {
-      if (!monitor.didDrop() && ref.current) {
-        onMove(draggedItem.index, itemIndex, true);
-      }
-    },
   });
 
   const [, drop] = useDrop({
@@ -35,17 +30,16 @@ export const useDragAndDrop = ({ itemIndex, onMove, dragType }: UseDragAndDropPr
       if (!ref.current || draggingItem.index === itemIndex) return;
 
       const hoverBoundingRect = ref.current.getBoundingClientRect();
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
       if (!clientOffset) return;
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
-      const overlapArea = calculateOverlapArea(hoverBoundingRect, clientOffset);
-      const hoverArea = hoverBoundingRect.width * hoverBoundingRect.height;
-      const thresholdArea = hoverArea * 0.1;
+      if (draggingItem.index < itemIndex && hoverClientY < hoverMiddleY) return;
+      if (draggingItem.index > itemIndex && hoverClientY > hoverMiddleY) return;
 
-      if (overlapArea > thresholdArea) {
-        onMove(draggingItem.index, itemIndex, false);
-        draggingItem.index = itemIndex;
-      }
+      onMove(draggingItem.index, itemIndex, false);
+      draggingItem.index = itemIndex;
     },
     drop: (draggedItem: DraggedItemModel) => {
       onMove(draggedItem.index, itemIndex, true);
@@ -55,29 +49,4 @@ export const useDragAndDrop = ({ itemIndex, onMove, dragType }: UseDragAndDropPr
   drag(drop(ref));
 
   return { ref, isDragging };
-};
-
-const calculateOverlapArea = (
-  hoverBoundingRect: DOMRect,
-  clientOffset: { x: number; y: number },
-) => {
-  const draggedItemRect = {
-    left: clientOffset.x,
-    right: clientOffset.x + hoverBoundingRect.width,
-    top: clientOffset.y,
-    bottom: clientOffset.y + hoverBoundingRect.height,
-  };
-
-  const overlapX = Math.max(
-    0,
-    Math.min(hoverBoundingRect.right, draggedItemRect.right) -
-      Math.max(hoverBoundingRect.left, draggedItemRect.left),
-  );
-  const overlapY = Math.max(
-    0,
-    Math.min(hoverBoundingRect.bottom, draggedItemRect.bottom) -
-      Math.max(hoverBoundingRect.top, draggedItemRect.top),
-  );
-
-  return overlapX * overlapY;
 };
