@@ -8,6 +8,7 @@ import {
   orderBy,
   limit,
   startAfter,
+  updateDoc,
 } from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
@@ -128,9 +129,9 @@ export async function getPosts({
   return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
 }
 
-export async function getPostsTimelinesSorted({
+export async function fetchFilteredPostsTimelines({
   userId,
-  count = 20,
+  count = 10,
   lastPostId,
 }: {
   userId: string;
@@ -192,4 +193,31 @@ export async function getPostsTimelinesSorted({
   }
 
   return followingPosts;
+}
+
+export async function updatePostsLikes({
+  postId,
+  userId,
+}: {
+  postId: string;
+  userId: string;
+}): Promise<void> {
+  const postRef = doc(postsCollection, postId);
+  const postSnap = await getDoc(postRef);
+
+  if (!postSnap.exists()) {
+    console.warn('Post not found');
+    return;
+  }
+
+  const postData = postSnap.data();
+  const currentLikes = postData.likes;
+
+  if (postData.likes.includes(userId)) {
+    const updatedLikes = currentLikes.filter((userLike: string) => userLike !== userId);
+    await updateDoc(postRef, { likes: updatedLikes });
+  } else {
+    const updatedLikes = [...currentLikes, userId];
+    await updateDoc(postRef, { likes: updatedLikes });
+  }
 }

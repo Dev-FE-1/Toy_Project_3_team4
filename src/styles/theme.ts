@@ -26,20 +26,42 @@ const width = {
   large: '500px',
 };
 
+const space = {
+  xs: '4px',
+  sm: '8px',
+  md: '16px',
+  lg: '24px',
+  xl: '32px',
+};
+
+const zIndex = {
+  base: 1,
+  videoPlayer: 10,
+  header: 100,
+  modal: 1000,
+  toast: 10000,
+};
+
 export type ColorsType = typeof colors;
 export type FontSizeType = typeof fontSizes;
 export type WidthType = typeof width;
+export type SpaceType = typeof space;
+export type ZIndexType = typeof zIndex;
 
 interface Theme {
   colors: ColorsType;
   fontSizes: FontSizeType;
   width: WidthType;
+  space: SpaceType;
+  zIndex: ZIndexType;
 }
 
 const theme: Theme = {
   colors,
   fontSizes,
   width,
+  space,
+  zIndex,
 };
 
 export default theme;

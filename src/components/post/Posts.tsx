@@ -10,6 +10,7 @@ import {
 import { IoBookmarkOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
+import { updatePostsLikes } from '@/api/fetchPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
@@ -37,9 +38,10 @@ const Post: React.FC<PostProps> = ({ post }) => {
     }
   }, [currentUser, post.likes]);
 
-  const toggleLike = () => {
+  const toggleLike = async () => {
     setIsLiked(!isLiked);
     setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
+    await updatePostsLikes({ postId: post.postId, userId: currentUser?.uid || '' });
   };
 
   return (
@@ -76,7 +78,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
             </button>
             <button css={buttonStyle}>
               <HiOutlineChatBubbleOvalLeft style={{ position: 'relative', bottom: '1px' }} />{' '}
-              {post.comments.length}
+              {post.comments?.length}
             </button>
           </div>
           <p css={pliStyle}>
