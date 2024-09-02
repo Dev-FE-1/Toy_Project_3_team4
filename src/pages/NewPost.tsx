@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import { collection, addDoc, setDoc, updateDoc, getDoc, doc, arrayUnion } from 'firebase/firestore';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { db } from '@/api/firebaseApp';
 import CloseHeader from '@/components/layout/header/CloseHeader';
 import { useAuth } from '@/hooks/useAuth';
+import { useCreatePost } from '@/hooks/useCreatePost';
 import theme from '@/styles/theme';
 
 const NewPost = () => {
@@ -16,6 +15,7 @@ const NewPost = () => {
   const navigate = useNavigate();
   const [isShareButtonEnabled, setIsShareButtonEnabled] = useState(false);
   const [description, setDescription] = useState('');
+  const createPostMutation = useCreatePost();
   const user = useAuth();
 
   useEffect(() => {
@@ -26,64 +26,19 @@ const NewPost = () => {
     navigate(-1);
   };
 
-  const handleOnShare = async () => {
-    if (isShareButtonEnabled && user) {
-      if (!playlistId || !videoId) {
-        return;
-      }
-
-      try {
-        const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-        const videoThumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-
-        const postsCollection = collection(db, 'posts');
-        const postDocRef = await addDoc(postsCollection, {
-          content: description,
-          createdAt: new Date(),
-          likes: [],
-          playlistId,
-          userId: user.uid,
-          video: videoUrl,
-        });
-
-        await updateDoc(postDocRef, { postId: postDocRef.id });
-
-        const playlistsCollection = collection(db, 'playlists');
-        const playlistDocRef = doc(playlistsCollection, playlistId);
-        const playlistSnapshot = await getDoc(playlistDocRef);
-
-        const videoData = {
-          videoId: videoId,
-          thumbnailUrl: videoThumbnailUrl,
-          videoUrl: videoUrl,
-        };
-
-        if (!playlistSnapshot.exists()) {
-          await setDoc(playlistDocRef, {
-            playlistId: playlistId,
-            videos: [videoData],
-            createdAt: new Date(),
-            createdBy: user.uid,
-          });
-        } else {
-          const playlistData = playlistSnapshot.data();
-          const videos = playlistData.videos || [];
-
-          const videoExists = videos.some(
-            (video: { videoId: string }) => video.videoId === videoId,
-          );
-
-          if (!videoExists) {
-            await updateDoc(playlistDocRef, {
-              videos: arrayUnion(videoData),
-            });
-          }
-        }
-
-        navigate(`/`);
-      } catch (error) {
-        console.error('포스트 및 플레이리스트 업데이트 실패: ', error);
-      }
+  const handleOnShare = () => {
+    if (isShareButtonEnabled && user && playlistId && videoId) {
+      createPostMutation.mutate(
+        { playlistId, videoId, description },
+        {
+          onSuccess: () => {
+            navigate(`/`);
+          },
+          onError: (error) => {
+            console.error('포스트 및 플레이리스트 업데이트 실패: ', error);
+          },
+        },
+      );
     }
   };
 
