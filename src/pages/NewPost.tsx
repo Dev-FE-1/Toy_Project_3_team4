@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  arrayUnion,
-  query,
-  where,
-  getDocs,
-} from 'firebase/firestore';
+import { collection, addDoc, setDoc, updateDoc, getDoc, doc, arrayUnion } from 'firebase/firestore';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { db } from '@/api/firebaseApp';
@@ -56,25 +48,36 @@ const NewPost = () => {
 
         await updateDoc(postDocRef, { postId: postDocRef.id });
 
-        const videosCollection = collection(db, 'videos');
-        const videoDocRef = await addDoc(videosCollection, {
+        const playlistsCollection = collection(db, 'playlists');
+        const playlistDocRef = doc(playlistsCollection, playlistId);
+        const playlistSnapshot = await getDoc(playlistDocRef);
+
+        const videoData = {
+          videoId: videoId,
           thumbnailUrl: videoThumbnailUrl,
           videoUrl: videoUrl,
-        });
+        };
 
-        await updateDoc(videoDocRef, { videoId: videoDocRef.id });
-
-        const playlistsCollection = collection(db, 'playlists');
-        const q = query(playlistsCollection, where('playlistId', '==', playlistId));
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          const playlistDoc = querySnapshot.docs[0];
-          await updateDoc(playlistDoc.ref, {
-            videos: arrayUnion(videoDocRef.id),
+        if (!playlistSnapshot.exists()) {
+          await setDoc(playlistDocRef, {
+            playlistId: playlistId,
+            videos: [videoData],
+            createdAt: new Date(),
+            createdBy: user.uid,
           });
         } else {
-          console.warn('플레이리스트를 찾을 수 없습니다.');
+          const playlistData = playlistSnapshot.data();
+          const videos = playlistData.videos || [];
+
+          const videoExists = videos.some(
+            (video: { videoId: string }) => video.videoId === videoId,
+          );
+
+          if (!videoExists) {
+            await updateDoc(playlistDocRef, {
+              videos: arrayUnion(videoData),
+            });
+          }
         }
 
         navigate(`/`);
