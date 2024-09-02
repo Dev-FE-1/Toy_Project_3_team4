@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import Navbar from '@/components/layout/Navbar/Navbar';
+import Navbar from '@/components/layout/navbar/Navbar';
 import ContainerLayout from '@/layouts/Container';
 
 const RootLayout = () => (
