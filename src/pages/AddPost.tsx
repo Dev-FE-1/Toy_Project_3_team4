@@ -138,7 +138,6 @@ const AddPostPage: React.FC = () => {
 };
 
 const addPostContainer = css`
-  padding: 0 16px;
   font-family: Pretendard;
   & .inputContainer {
     margin-bottom: 16px;

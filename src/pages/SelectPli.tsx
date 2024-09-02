@@ -55,7 +55,6 @@ const SelectPliPage = () => {
     return <p>{error.message}</p>;
   }
 
-  // 동영상이 있는 플레이리스트만 필터링
   const filteredPlaylists = myPlaylists?.filter((playlist) => playlist.videos.length > 0) || [];
 
   return (
@@ -67,12 +66,24 @@ const SelectPliPage = () => {
       )}
 
       {state?.type === 'byLink' ? (
-        <AddPlaylistButton customStyle={addPlaylistButtonStyle} onAddPlaylist={handleAddPlaylist} />
+        <>
+          <AddPlaylistButton
+            customStyle={addPlaylistButtonStyle}
+            onAddPlaylist={handleAddPlaylist}
+          />
+          <Playlists
+            playlists={myPlaylists || []}
+            customStyle={playlistStyle}
+            customVideoStyle={videoStyle}
+            onPlaylistClick={handlePlaylistClick}
+            isColumn={false}
+          />
+        </>
       ) : (
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
           <TabContent id="my" activeTabId={activeTab}>
             <Playlists
-              playlists={filteredPlaylists}
+              playlists={filteredPlaylists || []}
               customStyle={playlistStyle}
               customVideoStyle={videoStyle}
               onPlaylistClick={handlePlaylistClick}

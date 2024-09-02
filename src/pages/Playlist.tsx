@@ -23,7 +23,6 @@ const PlaylistPage = () => {
 
   const { data: myPlaylists, isLoading, error } = useUserPlaylists();
   const addPlaylistMutation = useAddPlaylist();
-
   const handlePlaylistClick = (playlistId: string) => {
     navigate(`/playlist/${playlistId}`);
   };
@@ -43,7 +42,6 @@ const PlaylistPage = () => {
   return (
     <>
       <LogoHeader />
-
       <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
         <TabContent id="my" activeTabId={activeTab}>
           <AddPlaylistButton
