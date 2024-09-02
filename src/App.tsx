@@ -29,6 +29,11 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [{ index: true, element: <SettingsPage /> }],
       },
+      {
+        path: PATH.PROFILE_Edit,
+        element: <ProtectedRoute />,
+        children: [{ index: true, element: <ProfileEditPage /> }],
+      },
     ],
   },
   {
@@ -61,10 +66,10 @@ const router = createBrowserRouter([
             path: PATH.PROFILE,
             element: <ProfilePage />,
           },
-          {
-            path: PATH.PROFILE_Edit,
-            element: <ProfileEditPage />,
-          },
+          // {
+          //   path: PATH.PROFILE_Edit,
+          //   element: <ProfileEditPage />,
+          // },
         ],
       },
     ],
