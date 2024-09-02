@@ -57,6 +57,7 @@ const slideUp = keyframes`
 `;
 
 const overlayStyle = css`
+  z-index: 400;
   position: fixed;
   top: 0;
   left: 50%;

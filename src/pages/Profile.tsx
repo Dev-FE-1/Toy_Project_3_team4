@@ -107,4 +107,3 @@ const addPlaylistButtonStyle = css`
 `;
 
 export default ProfilePage;
-

@@ -1,28 +1,44 @@
 import { css, SerializedStyles } from '@emotion/react';
-import { Link } from 'react-router-dom';
 
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
-import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 
 interface PlaylistListProps {
   playlists: PlaylistModel[];
   customStyle?: SerializedStyles;
+  customVideoStyle?: SerializedStyles;
+  isColumn?: boolean;
+  onPlaylistClick?: (playlistId: string, title: string) => void;
 }
 
-const Playlists: React.FC<PlaylistListProps> = ({ playlists, customStyle }) => {
+const Playlists: React.FC<PlaylistListProps> = ({
+  playlists,
+  customStyle,
+  customVideoStyle,
+  onPlaylistClick,
+  isColumn = true,
+}) => {
   return (
     <div css={[playlistStyle, customStyle]}>
       {playlists.length > 0 &&
         playlists.map(({ playlistId, title, videos, isPublic }) => (
-          <Link to={`${PATH.PLAYLIST}/${playlistId}`} key={playlistId} css={itemStyle}>
-            <VideoThumbnail url={videos[0]?.thumbnailUrl} isPublic={isPublic} type="stack" />
+          <div
+            key={`playlist-${playlistId}`}
+            css={itemStyle(isColumn)}
+            onClick={() => (onPlaylistClick ? onPlaylistClick(playlistId, title) : null)}
+          >
+            <VideoThumbnail
+              url={videos[0]?.thumbnailUrl}
+              isPublic={isPublic}
+              type="stack"
+              customStyle={customVideoStyle}
+            />
             <div className="playlist-info">
               <h2>{title}</h2>
               <p>{videos.length}개의 비디오</p>
             </div>
-          </Link>
+          </div>
         ))}
       {playlists.length === 0 && <p>마음에 드는 플리를 구독해 보세요!</p>}
     </div>
@@ -35,13 +51,15 @@ const playlistStyle = css`
   gap: 23px 12px;
 `;
 
-const itemStyle = css`
+const itemStyle = (isColumn: boolean) => css`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${isColumn ? 'column' : 'row'};
+  cursor: pointer;
 
   .playlist-info {
     padding: 0 6px;
-    margin-top: 4px;
+    margin-top: ${isColumn ? '4px' : '0'};
+    margin-left: ${isColumn ? '0' : '8px'};
 
     h2 {
       font-size: ${theme.fontSizes.small};
