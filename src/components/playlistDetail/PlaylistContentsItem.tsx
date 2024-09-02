@@ -1,4 +1,6 @@
-import { css } from '@emotion/react';
+import { forwardRef } from 'react';
+
+import { css, SerializedStyles } from '@emotion/react';
 import { HiOutlineEllipsisVertical, HiOutlineBars2 } from 'react-icons/hi2';
 
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
@@ -9,40 +11,42 @@ import { formatRelativeDate } from '@/utils/date';
 
 interface PlaylistContentItemProps {
   video: VideoModel;
+  isDraggable?: boolean;
+  customStyle?: SerializedStyles;
 }
 
-const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({ video }) => {
-  const { title, videoUrl, thumbnailUrl, creator, uploadDate, views } = video;
+const PlaylistContentsItem = forwardRef<HTMLLIElement, PlaylistContentItemProps>(
+  ({ video, isDraggable = false, customStyle }, ref) => {
+    const { title, videoUrl, thumbnailUrl, creator, uploadDate, views } = video;
 
-  const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+    const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
 
-  return (
-    <li css={playlistItemStyle}>
-      <HiOutlineBars2 className="drag-bar" />
-      <a href={videoUrl} target="_blank" rel="noopener noreferrer">
-        <VideoThumbnail url={thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
-        <div className="video-info">
-          <div className="info-container">
-            <h2>{title}</h2>
-            <span>{creator}</span>
-            <span>
-              조회수 {views} · {formatRelativeDate(uploadDate)}
-            </span>
+    return (
+      <li css={[playlistItemStyle, customStyle]} ref={ref}>
+        {isDraggable && <HiOutlineBars2 className="drag-bar" />}
+        <a href={videoUrl} target="_blank" rel="noopener noreferrer">
+          <VideoThumbnail url={thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
+          <div className="video-info">
+            <div className="info-container">
+              <h2>{title}</h2>
+              <span>{creator}</span>
+              <span>
+                조회수 {views} · {formatRelativeDate(uploadDate)}
+              </span>
+            </div>
+            <button onClick={onClickOption}>
+              <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
+            </button>
           </div>
-          <button onClick={onClickOption}>
-            <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
-          </button>
-        </div>
-      </a>
-    </li>
-  );
-};
+        </a>
+      </li>
+    );
+  },
+);
 
 const playlistItemStyle = css`
-  position: relative;
-
   a {
     position: relative;
     display: flex;
@@ -57,6 +61,7 @@ const playlistItemStyle = css`
     font-size: 20px;
     color: ${theme.colors.darkGray};
     stroke-width: 1.7;
+    cursor: grab;
   }
 
   .video-info {

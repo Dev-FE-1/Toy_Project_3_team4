@@ -8,7 +8,7 @@ const PlaylistDetailPage = () => {
     <>
       <BackHeader />
       <PlaylistInfo playlist={dummyPlaylist[4]} user={dummyUser} />
-      <PlaylistContents videos={dummyPlaylist[4].videos} />
+      <PlaylistContents videos={dummyPlaylist[4].videos} isDraggable={true} />
     </>
   );
 };
