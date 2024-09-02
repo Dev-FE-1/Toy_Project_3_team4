@@ -1,17 +1,23 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Outlet } from 'react-router-dom';
 
+import Navbar from '@/components/layout/navbar/Navbar';
 import theme from '@/styles/theme';
 
 interface ContainerLayoutProps {
   customStyle?: SerializedStyles;
+  showNavbar?: boolean;
 }
 
-const ContainerLayout: React.FC<ContainerLayoutProps> = ({ customStyle }) => {
+const ContainerLayout: React.FC<ContainerLayoutProps> = ({ customStyle, showNavbar = true }) => {
   return (
-    <main css={[mainStyle, customStyle]}>
-      <Outlet />
-    </main>
+    <>
+      <div id="header"></div>
+      <main css={[mainStyle, customStyle]}>
+        <Outlet />
+      </main>
+      {showNavbar && <Navbar />}
+    </>
   );
 };
 
