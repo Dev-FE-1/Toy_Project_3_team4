@@ -7,6 +7,7 @@ import CloseHeader from '@/components/layout/header/CloseHeader';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { errorMessageStyle } from '@/styles/input';
 import theme from '@/styles/theme';
+import { extractVideoId, validateVideoId } from '@/utils/youtubeUtils';
 
 const AddPostPage: React.FC = () => {
   const navigate = useNavigate();
@@ -75,25 +76,6 @@ const AddPostPage: React.FC = () => {
     } else {
       setVideoId(null);
       setError('올바른 YouTube 링크가 아닙니다');
-    }
-  };
-
-  const extractVideoId = (url: string) => {
-    const regex =
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
-  };
-
-  const validateVideoId = async (id: string) => {
-    try {
-      const response = await fetch(
-        `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`,
-      );
-      return response.ok;
-    } catch (error) {
-      console.warn('비디오 아이디 검증 실패', error);
-      return false;
     }
   };
 
