@@ -10,10 +10,13 @@ import {
 import { IoBookmarkOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
+// import { getPlaylist } from '@/api/fetchPlaylist';
+import { getPlaylist } from '@/api/fetchPlaylist';
 import { updatePostsLikes } from '@/api/fetchPosts';
 import defaultProfile from '@/assets/images/default-avatar.svg';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
+import { PlaylistModel } from '@/types/playlist';
 import { PostModel } from '@/types/post';
 import { formatRelativeDate, timestampToString } from '@/utils/date';
 
@@ -32,18 +35,16 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
-  // const [playlist, setPlaylist] = useState<PlaylistModel>();
+  const [playlist, setPlaylist] = useState<PlaylistModel>();
 
-  // useEffect(() => {
-  //   const fetchPlaylist = async () => {
-  //     const playlist = await getPlaylist({
-  //       playlistId: post.playlistId,
-  //     });
-  //     setPlaylist(playlist);
-  //   };
+  useEffect(() => {
+    const fetchPlaylist = async () => {
+      const playlist = await getPlaylist({ playlistId: post.playlistId });
+      setPlaylist(playlist);
+    };
 
-  //   fetchPlaylist();
-  // }, [playlist, post.playlistId]);
+    fetchPlaylist();
+  }, [post.playlistId]);
 
   useEffect(() => {
     if (currentUser) {
@@ -76,7 +77,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
         <p css={contentStyle}>{post.content}</p>
         <p css={playlistStyle}>
           <Link to={`/playlist/${post.playlistId}`}>
-            <span>[Playlist] {}</span>
+            <span>[Playlist] {playlist?.title}</span>
             <HiChevronRight />
           </Link>
         </p>

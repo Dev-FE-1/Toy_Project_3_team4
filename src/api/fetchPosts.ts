@@ -16,6 +16,12 @@ import { PostModel } from '@/types/post';
 
 const postsCollection = collection(db, 'posts');
 
+export async function getPostByPostId({ postId }: { postId: string }): Promise<PostModel> {
+  const postDoc = doc(postsCollection, postId);
+  const postDocSnapshot = await getDoc(postDoc);
+  return { postId: postDocSnapshot.id, ...postDocSnapshot.data() } as PostModel;
+}
+
 export async function getPostsFilterdLikes({
   userId,
   count = 10,
