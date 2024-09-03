@@ -30,7 +30,9 @@ export const useUserPlaylists = () => {
         } as PlaylistModel;
       });
 
-      return playlists.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      return playlists.sort(
+        (a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime(),
+      );
     },
     enabled: !!user,
   });
