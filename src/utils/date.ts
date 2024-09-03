@@ -2,7 +2,7 @@ import { Timestamp } from 'firebase/firestore';
 
 export const formatRelativeDate = (dateString: string): string => {
   const date = new Date(dateString);
-  const now = new Date();
+  const now = Timestamp.now().toDate();
   const diffTime = Math.abs(now.getTime() - date.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -13,12 +13,12 @@ export const formatRelativeDate = (dateString: string): string => {
   return `${Math.floor(diffDays / 365)}년 전`;
 };
 
-export const timestampToString = (timestamp: { seconds: number; nanoseconds: number }) => {
+export const timestampToString = (timestamp: Timestamp): string => {
   const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
   return date.toLocaleString();
 };
 
-export function stringToTimestamp(dateString: string): Timestamp {
+export const stringToTimestamp = (dateString: string): Timestamp => {
   const date = new Date(dateString);
   return Timestamp.fromDate(date);
-}
+};

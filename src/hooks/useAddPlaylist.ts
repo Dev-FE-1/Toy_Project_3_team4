@@ -19,7 +19,7 @@ export const useAddPlaylist = () => {
       const playlistDocRef = await addDoc(playlistsCollection, {
         userId: user.uid,
         title,
-        createdAt: new Date(),
+        createdAt: Timestamp.now(),
         isPublic,
         videos: [],
       });

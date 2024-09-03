@@ -26,8 +26,6 @@ const Navbar = () => {
     }
   }, [currentUser]);
 
-  console.log(userId, currentUser);
-
   return (
     <nav css={[navStyle, maxWidthStyle(false)]}>
       <ul className="nav-list">

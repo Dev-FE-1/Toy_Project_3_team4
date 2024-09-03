@@ -13,10 +13,12 @@ import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
 import Post from '@/components/post/Posts';
 import { PATH } from '@/constants/path';
+import { useAddPlaylist } from '@/hooks/useAddPlaylist';
 import { useAuth } from '@/hooks/useAuth';
+import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
-import { dummyPlaylist, dummyPosts } from '@/utils/dummy';
+import { dummyPosts } from '@/utils/dummy';
 
 import ProfileInfo from '../components/profile/ProfileInfo';
 
@@ -34,8 +36,8 @@ const ProfilePage: React.FC = () => {
   const { userData, toggleFollow } = useUserData(userId || currentUser?.uid || null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState<PostModel[]>([]);
-
-  console.log('profile', userId, userData);
+  const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists();
+  const addPlaylistMutation = useAddPlaylist();
 
   useEffect(() => {
     if (currentUser && userData) {
@@ -67,6 +69,10 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  const handleAddPlaylist = (title: string, isPublic: boolean) => {
+    addPlaylistMutation.mutate({ title, isPublic });
+  };
+
   if (!userData) {
     return <div>Loading...</div>;
   }
@@ -92,8 +98,15 @@ const ProfilePage: React.FC = () => {
             ))}
           </TabContent>
           <TabContent id="pli" activeTabId={activeTab}>
-            <AddPlaylistButton onAddPlaylist={() => {}} customStyle={addPlaylistButtonStyle} />
-            <Playlists playlists={dummyPlaylist} />
+            <AddPlaylistButton
+              customStyle={addPlaylistButtonStyle}
+              onAddPlaylist={handleAddPlaylist}
+            />
+            {playlistsLoading ? (
+              <div>Loading playlists...</div>
+            ) : (
+              <Playlists playlists={playlists || []} />
+            )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
             <div>좋아요 내용</div>
