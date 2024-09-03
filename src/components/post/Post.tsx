@@ -10,7 +10,6 @@ import {
 import { IoBookmarkOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
-// import { getPlaylist } from '@/api/fetchPlaylist';
 import { getPlaylist } from '@/api/fetchPlaylist';
 import { updatePostsLikes } from '@/api/fetchPosts';
 import defaultProfile from '@/assets/images/default-avatar.svg';
