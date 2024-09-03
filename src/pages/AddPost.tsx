@@ -48,7 +48,7 @@ const AddPostPage: React.FC = () => {
 
   const handleOnShare = () => {
     if (videoId && playlistId) {
-      navigate(`/post/add/newpost?pli=${playlistId}&videoId=${videoId}`);
+      navigate(`/post/add/newPost?pli=${playlistId}&videoId=${videoId}`);
     }
   };
 

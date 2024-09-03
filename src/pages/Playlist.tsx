@@ -48,11 +48,7 @@ const PlaylistPage = () => {
             onAddPlaylist={handleAddPlaylist}
             customStyle={addPlaylistButtonStyle}
           />
-          <Playlists
-            playlists={myPlaylists || []}
-            onPlaylistClick={handlePlaylistClick}
-            customVideoStyle={videoStyle}
-          />
+          <Playlists playlists={myPlaylists || []} onPlaylistClick={handlePlaylistClick} />
         </TabContent>
         <TabContent id="subscribe" activeTabId={activeTab}>
           <Playlists playlists={[]} />
@@ -66,8 +62,4 @@ const addPlaylistButtonStyle = css`
   margin-bottom: 24px;
 `;
 
-const videoStyle = css`
-  width: 165px;
-  height: 93px;
-`;
 export default PlaylistPage;

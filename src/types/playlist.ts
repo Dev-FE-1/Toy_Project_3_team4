@@ -17,3 +17,7 @@ export interface VideoModel {
   views: string;
   creator: string;
 }
+
+export interface DraggableVideoModel extends VideoModel {
+  id: string | number;
+}
