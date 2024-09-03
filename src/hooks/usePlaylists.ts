@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
 import { useAuth } from '@/hooks/useAuth';
@@ -16,23 +16,22 @@ export const useUserPlaylists = () => {
       }
 
       const playlistsRef = collection(db, 'playlists');
-      const q = query(playlistsRef, where('userId', '==', user.uid));
+      const q = query(playlistsRef, where('userId', '==', user.uid), orderBy('createdAt', 'desc'));
+
       const querySnapshot = await getDocs(q);
+
       const playlists = querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           playlistId: data.playlistId,
           userId: data.userId,
           title: data.title,
-          createdAt: data.createdAt.toDate(),
+          createdAt: data.createdAt,
           isPublic: data.isPublic,
           videos: data.videos,
         } as PlaylistModel;
       });
-
-      return playlists.sort(
-        (a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime(),
-      );
+      return playlists;
     },
     enabled: !!user,
   });

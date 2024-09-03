@@ -1,5 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { collection, addDoc, setDoc, updateDoc, getDoc, doc, arrayUnion } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  setDoc,
+  updateDoc,
+  getDoc,
+  doc,
+  arrayUnion,
+  Timestamp,
+} from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
 import { useAuth } from '@/hooks/useAuth';
@@ -26,7 +35,7 @@ export const useCreatePost = () => {
       const postsCollection = collection(db, 'posts');
       const postDocRef = await addDoc(postsCollection, {
         content: description,
-        createdAt: new Date(),
+        createdAt: Timestamp.now(),
         likes: [],
         playlistId,
         userId: user.uid,
@@ -49,7 +58,7 @@ export const useCreatePost = () => {
         await setDoc(playlistDocRef, {
           playlistId: playlistId,
           videos: [videoData],
-          createdAt: new Date(),
+          createdAt: Timestamp.now(),
           createdBy: user.uid,
         });
       } else {
