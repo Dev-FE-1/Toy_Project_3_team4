@@ -1,24 +1,28 @@
-import { css, Theme } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { HiArrowLeft } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
 
 import IconButton from '@/components/common/buttons/IconButton';
-
-import Header from './Header';
+import Header from '@/components/layout/header/Header';
+import theme from '@/styles/theme';
 
 interface BackHeaderProps {
   onBackClick?: () => void;
+  onCloseClick?: () => void;
   title?: string;
-  showSearch?: boolean;
-  onSearchChange?: (value: string) => void;
-  customStyle?: React.CSSProperties;
+  rightButtonText?: string;
+  onrightButtonClick?: () => void;
+  customStyle?: SerializedStyles;
+  rightButtonDisabled?: boolean;
 }
 
 const BackHeader: React.FC<BackHeaderProps> = ({
   onBackClick,
   title,
-  showSearch = false,
-  onSearchChange,
+  rightButtonText,
+  onrightButtonClick,
+  customStyle,
+  rightButtonDisabled = false,
 }) => {
   const navigate = useNavigate();
 
@@ -27,13 +31,18 @@ const BackHeader: React.FC<BackHeaderProps> = ({
   return (
     <Header
       leftSection={<BackButton onClick={onClick} />}
-      centerSection={
-        showSearch ? (
-          <SearchInput onChange={onSearchChange} />
-        ) : title ? (
-          <Title text={title} />
-        ) : null
+      centerSection={title ? <Title text={title} /> : null}
+      rightSection={
+        rightButtonText &&
+        onrightButtonClick && (
+          <ActionButton
+            text={rightButtonText}
+            onClick={onrightButtonClick}
+            disabled={rightButtonDisabled}
+          />
+        )
       }
+      customStyle={customStyle}
     />
   );
 };
@@ -44,37 +53,32 @@ const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
 
 const Title: React.FC<{ text: string }> = ({ text }) => <h1 css={titleStyle}>{text}</h1>;
 
-interface SearchInputProps {
-  onChange?: (value: string) => void;
-}
+const ActionButton: React.FC<{ text: string; onClick: () => void; disabled: boolean }> = ({
+  text,
+  onClick,
+  disabled,
+}) => {
+  return (
+    <button onClick={onClick} css={actionButtonStyle(disabled)} disabled={disabled}>
+      {text}
+    </button>
+  );
+};
 
-const SearchInput: React.FC<SearchInputProps> = ({ onChange }) => (
-  <input
-    type="text"
-    placeholder="키워드 또는 닉네임 검색"
-    onChange={(e) => onChange && onChange(e.target.value)}
-    css={searchInputStyle}
-  />
-);
-
-const titleStyle = (theme: Theme) => css`
+const titleStyle = css`
   margin: 0;
   font-size: ${theme.fontSizes.base};
   font-weight: 700;
   color: ${theme.colors.black};
 `;
 
-const searchInputStyle = (theme: Theme) => css`
-  width: 100%;
-  height: 36px;
-  padding-left: 14px;
-  border: 1px solid ${theme.colors.gray};
-  border-radius: 8px;
-  font-size: ${theme.fontSizes.base};
-  color: ${theme.colors.black};
-  &::placeholder {
-    color: ${theme.colors.darkGray};
-  }
+const actionButtonStyle = (disabled: boolean) => css`
+  color: ${disabled ? theme.colors.darkGray : theme.colors.primary};
+  font-size: ${theme.fontSizes.small};
+  font-weight: 700;
+  background: ${theme.colors.white};
+  transition: 0.3s ease;
+  cursor: ${disabled ? 'not-allowed' : 'pointer'};
 `;
 
 export default BackHeader;

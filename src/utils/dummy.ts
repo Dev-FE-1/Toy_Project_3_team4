@@ -1,4 +1,5 @@
 import { PlaylistModel } from '@/types/playlist';
+import { PostModel } from '@/types/post';
 
 export const dummyPlaylist: PlaylistModel[] = [
   {
@@ -151,3 +152,84 @@ export const dummyUser = {
   photoURL:
     'https://lh3.googleusercontent.com/a/ACg8ocK_cTfrGYt-Y2Bs9WGspAR0xbJLYPVgw64TggUEPV5J8X9UG8k=s96-c',
 };
+
+export const dummyPosts: PostModel[] = [
+  {
+    postId: '1',
+    userId: 'user1',
+    playlistId: '1',
+    playlistName: '내가 만든 플리',
+    content:
+      '00:00 NewJeans is loyal 01:54 NewJeans had a talk 🤍 15:17 NewJeans played Balance game 💛 20:38 NewJeans played a game 💚',
+    createdAt: '2024-08-22 12:16:55',
+    likes: ['user2', 'user3'],
+    comments: [
+      { commentId: 'comment1', userId: 'user2', content: 'Great video!', likes: '5' },
+      { commentId: 'comment2', userId: 'user3', content: 'Love NewJeans!', likes: '3' },
+    ],
+    video: [
+      {
+        videoId: 'sVTy_wmn5SU',
+        title: 'NewJeans - OMG (Official MV)',
+        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
+      },
+      {
+        videoId: 'Q3K0TOvTOno',
+        title: 'NewJeans - OMG (Official MV)',
+        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
+      },
+    ],
+  },
+  {
+    postId: '2',
+    userId: 'user2',
+    playlistId: '2',
+    playlistName: '내가 만든 플리',
+    content:
+      '00:00 NewJeans is loyal 01:54 NewJeans had a talk 🤍 15:17 NewJeans played Balance game 💛 20:38 NewJeans played a game 💚',
+    createdAt: '2024-08-22 12:16:55',
+    likes: ['user1', 'user3', 'user4', 'user1', 'user3', 'user4', 'user1', 'user3', 'user4'],
+    comments: [
+      { commentId: 'comment1', userId: 'user1', content: 'Great video!', likes: '5' },
+      { commentId: 'comment2', userId: 'user3', content: 'Love NewJeans!', likes: '3' },
+    ],
+    video: [
+      {
+        videoId: 'sVTy_wmn5SU',
+        title: 'NewJeans - OMG (Official MV)',
+        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
+      },
+      {
+        videoId: 'Q3K0TOvTOno',
+        title: 'NewJeans - OMG (Official MV)',
+        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
+      },
+    ],
+  },
+  {
+    postId: '3',
+    userId: 'RgkfFq9hLXPs3f9XYcPhkoERRfA3',
+    playlistId: '3',
+    playlistName: '내가 만든 플리',
+    content:
+      '00:00 NewJeans is loyal 01:54 NewJeans had a talk 🤍 15:17 NewJeans played Balance game 💛 20:38 NewJeans played a game 💚',
+    createdAt: '2024-08-22 12:16:55',
+    likes: ['user1', 'user3', 'user4', 'user1', 'user3', 'user4', 'user1', 'user3', 'user4'],
+    comments: [
+      { commentId: 'comment1', userId: 'user1', content: 'Great video!', likes: '5' },
+      { commentId: 'comment2', userId: 'user3', content: 'Love NewJeans!', likes: '3' },
+    ],
+    video: [
+      {
+        videoId: 'Q3K0TOvTOno',
+        title: 'NewJeans - OMG (Official MV)',
+        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
+      },
+      {
+        videoId: 'sVTy_wmn5SU',
+        title: 'NewJeans - OMG (Official MV)',
+        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
+      },
+    ],
+  },
+];

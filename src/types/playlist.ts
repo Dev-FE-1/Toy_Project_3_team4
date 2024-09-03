@@ -2,7 +2,7 @@ export interface PlaylistModel {
   playlistId: string;
   userId: string;
   title: string;
-  createdAt: string;
+  createdAt: Date;
   isPublic: boolean;
   videos: VideoModel[];
 }

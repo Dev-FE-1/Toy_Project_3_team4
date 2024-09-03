@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 import { css } from '@emotion/react';
 import { CiSquarePlus } from 'react-icons/ci';
 import {
@@ -10,18 +12,30 @@ import {
 import NavButtonItem from '@/components/layout/navbar/NavButtonItem';
 import NavItem from '@/components/layout/navbar/NavItem';
 import { PATH } from '@/constants/path';
+import { useAuth } from '@/hooks/useAuth';
 import { maxWidthStyle } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 
 const Navbar = () => {
+  const currentUser = useAuth();
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (currentUser) {
+      setUserId(currentUser.uid);
+    }
+  }, [currentUser]);
+
+  console.log(userId, currentUser);
+
   return (
     <nav css={[navStyle, maxWidthStyle(false)]}>
       <ul className="nav-list">
         <NavItem Icon={HiOutlineHome} path={PATH.HOME} />
         <NavItem Icon={HiMagnifyingGlass} path={PATH.SEARCH} />
-        <NavButtonItem Icon={CiSquarePlus} onClick={() => {}} stroke={0.5} />
+        <NavButtonItem Icon={CiSquarePlus} />
         <NavItem Icon={HiOutlineRectangleStack} path={PATH.PLAYLIST} />
-        <NavItem Icon={HiOutlineUserCircle} path={PATH.PROFILE} />
+        <NavItem Icon={HiOutlineUserCircle} path={PATH.PROFILE} userId={userId || ''} />
       </ul>
     </nav>
   );

@@ -10,24 +10,33 @@ import { DraggableVideoModel, VideoModel } from '@/types/playlist';
 interface PlaylistContentsProps {
   videos: VideoModel[];
   isDraggable?: boolean;
+  onVideoSelect: (videoId: string) => void;
+  selectedVideoId: string | null;
 }
 
 const PlaylistContents: React.FC<PlaylistContentsProps> = ({
   videos: initialVideos,
+  onVideoSelect,
+  selectedVideoId,
   isDraggable = false,
 }) => {
   const [videos, setVideos] = useState(getDraggableVideos(initialVideos));
 
   const onDragEnd = (newOrder: DraggableVideoModel[]) => {
     setVideos(newOrder);
-    // 서버에 저장
   };
 
   if (!isDraggable) {
     return (
       <ul css={playlistStyle}>
         {videos.map((video) => (
-          <PlaylistContentsItem key={video.videoId} video={video} />
+          <PlaylistContentsItem
+            key={video.videoId}
+            video={video}
+            isSelected={video.videoId === selectedVideoId}
+            onVideoSelect={onVideoSelect}
+            isDraggable={isDraggable}
+          />
         ))}
       </ul>
     );

@@ -2,8 +2,7 @@ import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
 import { HiOutlineXMark } from 'react-icons/hi2';
 
 import IconButton from '@/components/common/buttons/IconButton';
-
-import Header from './Header';
+import Header from '@/components/layout/header/Header';
 
 interface CloseHeaderProps {
   onCloseClick: () => void;
@@ -11,6 +10,7 @@ interface CloseHeaderProps {
   rightButtonText?: string;
   onrightButtonClick?: () => void;
   customStyle?: SerializedStyles;
+  rightButtonDisabled?: boolean;
 }
 
 const CloseHeader: React.FC<CloseHeaderProps> = ({
@@ -19,6 +19,7 @@ const CloseHeader: React.FC<CloseHeaderProps> = ({
   rightButtonText,
   onrightButtonClick,
   customStyle,
+  rightButtonDisabled = false,
 }) => {
   return (
     <Header
@@ -26,7 +27,13 @@ const CloseHeader: React.FC<CloseHeaderProps> = ({
       centerSection={title && <Title text={title} />}
       rightSection={
         rightButtonText &&
-        onrightButtonClick && <ActionButton text={rightButtonText} onClick={onrightButtonClick} />
+        onrightButtonClick && (
+          <ActionButton
+            text={rightButtonText}
+            onClick={onrightButtonClick}
+            disabled={rightButtonDisabled}
+          />
+        )
       }
       customStyle={customStyle}
     />
@@ -42,10 +49,14 @@ const Title: React.FC<{ text: string }> = ({ text }) => {
   return <h1 css={titleStyle(theme)}>{text}</h1>;
 };
 
-const ActionButton: React.FC<{ text: string; onClick: () => void }> = ({ text, onClick }) => {
+const ActionButton: React.FC<{ text: string; onClick: () => void; disabled: boolean }> = ({
+  text,
+  onClick,
+  disabled,
+}) => {
   const theme = useTheme();
   return (
-    <button onClick={onClick} css={actionButtonStyle(theme)}>
+    <button onClick={onClick} css={actionButtonStyle(theme, disabled)} disabled={disabled}>
       {text}
     </button>
   );
@@ -58,15 +69,13 @@ const titleStyle = (theme: Theme) => css`
   color: ${theme.colors.black};
 `;
 
-const actionButtonStyle = (theme: Theme) => css`
-  color: ${theme.colors.darkGray};
+const actionButtonStyle = (theme: Theme, disabled: boolean) => css`
+  color: ${disabled ? theme.colors.darkGray : theme.colors.primary};
   font-size: ${theme.fontSizes.small};
   font-weight: 700;
   background: ${theme.colors.white};
   transition: 0.3s ease;
-  &:hover {
-    color: ${theme.colors.primary};
-  }
+  cursor: ${disabled ? 'not-allowed' : 'pointer'};
 `;
 
 export default CloseHeader;
