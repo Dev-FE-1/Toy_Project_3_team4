@@ -42,7 +42,7 @@ const PlaylistDetailPage = () => {
 
   const handleCompleteClick = () => {
     if (selectedVideoId) {
-      navigate(`/post/add/newpost?pli=${playlistId}&videoId=${selectedVideoId}`);
+      navigate(`/post/add/newPost?pli=${playlistId}&videoId=${selectedVideoId}`);
     }
   };
   return (
@@ -50,7 +50,7 @@ const PlaylistDetailPage = () => {
       <BackHeader
         title={state?.selectPli ? '동영상 선택' : undefined}
         rightButtonText={'완료'}
-        onrightButtonClick={state?.selectPli ? handleCompleteClick : undefined}
+        onRightButtonClick={state?.selectPli ? handleCompleteClick : undefined}
         rightButtonDisabled={!selectedVideoId}
       />
       <PlaylistInfo playlist={playlist} user={userModel} />
@@ -58,7 +58,7 @@ const PlaylistDetailPage = () => {
         videos={playlist.videos}
         onVideoSelect={handleVideoSelect}
         selectedVideoId={selectedVideoId}
-        selectPli={state?.selectPli}
+        isDraggable={!state?.selectPli}
       />
     </>
   );

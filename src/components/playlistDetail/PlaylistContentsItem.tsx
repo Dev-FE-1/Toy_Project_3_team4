@@ -1,4 +1,6 @@
-import { css } from '@emotion/react';
+import { forwardRef } from 'react';
+
+import { css, SerializedStyles } from '@emotion/react';
 import { HiOutlineEllipsisVertical, HiOutlineBars2 } from 'react-icons/hi2';
 
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
@@ -9,49 +11,55 @@ import { formatRelativeDate } from '@/utils/date';
 
 interface PlaylistContentItemProps {
   video: VideoModel;
-  isSelected: boolean;
-  onVideoSelect: (videoId: string) => void;
-  selectPli?: boolean;
+  isDraggable?: boolean;
+  isSelected?: boolean;
+  onVideoSelect?: (videoId: string) => void;
+  customStyle?: SerializedStyles;
 }
 
-const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
-  video,
-  isSelected,
-  onVideoSelect,
-  selectPli,
-}) => {
-  const { title, thumbnailUrl, creator, uploadDate, views } = video;
+const PlaylistContentsItem = forwardRef<HTMLLIElement, PlaylistContentItemProps>(
+  ({ video, isSelected, onVideoSelect = () => {}, isDraggable = false, customStyle }, ref) => {
+    const { title, thumbnailUrl, creator, uploadDate, views } = video;
 
-  const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
+    const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
 
-  const handleClick = () => {
-    onVideoSelect(video.videoId);
-  };
+    const handleClick = () => {
+      if (!isDraggable) {
+        onVideoSelect(video.videoId);
+      }
+    };
 
-  return (
-    <li css={[playlistItemStyle, isSelected && selectedStyle]} onClick={handleClick}>
-      {!selectPli && <HiOutlineBars2 className="drag-bar" />}
-      <div className="video-container">
-        <VideoThumbnail url={thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
-        <div className="video-info">
-          <div className="info-container">
-            <h2>{title}</h2>
-            <span>{creator}</span>
-            <span>
-              조회수 {views} · {formatRelativeDate(uploadDate)}
-            </span>
+    return (
+      <li
+        css={[playlistItemStyle, isSelected && selectedStyle, customStyle]}
+        ref={ref}
+        onClick={handleClick}
+      >
+        {isDraggable && <HiOutlineBars2 className="drag-bar" />}
+        <div className="video-container">
+          <VideoThumbnail url={thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
+          <div className="video-info">
+            <a href={`${isDraggable ? video.videoUrl : 'javascript:void(0)'}`}>
+              <div className="info-container">
+                <h2>{title}</h2>
+                <span>{creator}</span>
+                <span>
+                  조회수 {views} · {formatRelativeDate(uploadDate)}
+                </span>
+              </div>
+              <button onClick={onClickOption}>
+                <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
+              </button>
+            </a>
           </div>
-          <button onClick={onClickOption}>
-            <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
-          </button>
         </div>
-      </div>
-    </li>
-  );
-};
+      </li>
+    );
+  },
+);
 
 const playlistItemStyle = css`
   position: relative;
@@ -72,6 +80,7 @@ const playlistItemStyle = css`
     font-size: 20px;
     color: ${theme.colors.darkGray};
     stroke-width: 1.7;
+    cursor: grab;
   }
 
   .video-info {

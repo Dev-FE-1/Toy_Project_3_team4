@@ -49,7 +49,7 @@ const router = createBrowserRouter([
             path: PATH.ADD_POST,
             children: [
               { index: true, element: <AddPostPage /> },
-              { path: `${PATH.ADD_POST}/newpost`, element: <NewPost /> },
+              { path: `${PATH.ADD_POST}/newPost`, element: <NewPost /> },
             ],
           },
           {

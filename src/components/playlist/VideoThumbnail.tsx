@@ -49,6 +49,7 @@ const thumbnailStyle = (url: URLType) => css`
     position: relative;
     width: 100%;
     height: 100%;
+    aspect-ratio: 16 / 9;
     background-color: ${theme.colors.bgGray};
     border: 1px solid ${theme.colors.lightGray};
     border-radius: 12px;

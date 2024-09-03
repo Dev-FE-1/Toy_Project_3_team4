@@ -35,6 +35,8 @@ const ProfilePage: React.FC = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState<PostModel[]>([]);
 
+  console.log('profile', userId, userData);
+
   useEffect(() => {
     if (currentUser && userData) {
       setIsFollowing(userData.followers?.includes(currentUser.uid) || false);
@@ -90,7 +92,7 @@ const ProfilePage: React.FC = () => {
             ))}
           </TabContent>
           <TabContent id="pli" activeTabId={activeTab}>
-            <AddPlaylistButton customStyle={addPlaylistButtonStyle} />
+            <AddPlaylistButton onAddPlaylist={() => {}} customStyle={addPlaylistButtonStyle} />
             <Playlists playlists={dummyPlaylist} />
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
