@@ -31,10 +31,12 @@ const UserInfo: React.FC<UserInfoProps> = ({
   console.log('UserInfo props:', { name, userId, showFollowButton, isFollowing });
   return (
     <div css={[userInfoStyle(imageSize), customStyle]} onClick={onClick}>
-      <img src={url} alt={name} />
-      <div className="name-container">
-        <span>{name}</span>
-        {additionalInfo && <p>{additionalInfo}</p>}
+      <div className="info-container">
+        <img src={url} alt={name} />
+        <div className="name-container">
+          <span>{name}</span>
+          {additionalInfo && <p>{additionalInfo}</p>}
+        </div>
       </div>
       {showFollowButton && userId && onFollowToggle && (
         <FitButton
@@ -52,28 +54,35 @@ const UserInfo: React.FC<UserInfoProps> = ({
 
 const userInfoStyle = (imageSize: string) => css`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: ${imageSize === 'default' ? '8px' : '12px'};
 
-  img {
-    width: ${imageSize === 'default' ? '24px' : '42px'};
-    height: ${imageSize === 'default' ? '24px' : '42px'};
-    border-radius: 50%;
-  }
-
-  .name-container {
+  .info-container {
     display: flex;
-    flex-direction: column;
-    line-height: 100%;
-    font-weight: 500;
+    align-items: center;
+    gap: ${imageSize === 'default' ? '8px' : '12px'};
 
-    span {
-      font-size: ${theme.fontSizes.small};
+    img {
+      width: ${imageSize === 'default' ? '24px' : '42px'};
+      height: ${imageSize === 'default' ? '24px' : '42px'};
+      border-radius: 50%;
     }
 
-    p {
-      font-size: ${theme.fontSizes.micro};
-      color: ${theme.colors.darkGray};
+    .name-container {
+      display: flex;
+      flex-direction: column;
+      line-height: 100%;
+      font-weight: 500;
+
+      span {
+        font-size: ${theme.fontSizes.small};
+      }
+
+      p {
+        font-size: ${theme.fontSizes.micro};
+        color: ${theme.colors.darkGray};
+      }
     }
   }
 
@@ -94,5 +103,6 @@ const userInfoStyle = (imageSize: string) => css`
     }
   }
 `;
+
 
 export default UserInfo;

@@ -13,7 +13,7 @@ import { UserData } from '@/types/profile';
 
 const FollowPage = () => {
   const { userId } = useParams<{ userId: string }>();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const { userData, followingUsers, followerUsers, toggleFollow, refetchUserData } = useUserData(
     userId || null,
   );
@@ -69,6 +69,7 @@ const FollowPage = () => {
               key={`info-${user.uid}`}
               name={user.displayName}
               url={user.photoURL}
+              imageSize={'large'}
               additionalInfo={`팔로워 ${user.followers?.length || 0}명`}
               userId={user.userId}
               showFollowButton={currentUser && currentUser.userId !== user.userId}
@@ -104,10 +105,6 @@ const FollowPage = () => {
 };
 
 const userItemStyle = css`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 16px;
   cursor: pointer;
 `;
