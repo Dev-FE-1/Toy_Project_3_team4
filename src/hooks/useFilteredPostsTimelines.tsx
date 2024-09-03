@@ -19,7 +19,7 @@ export const useFilteredPostsTimelinesQuery = ({ userId }: { userId: string }) =
       });
       return {
         posts,
-        nextCursor: posts.length > 0 ? posts[posts.length - 1].postId : null,
+        nextCursor: posts.length > 1 ? posts[posts.length - 1].postId : null,
       };
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor,

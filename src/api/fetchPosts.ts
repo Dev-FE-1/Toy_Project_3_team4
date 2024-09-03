@@ -197,7 +197,6 @@ export async function fetchFilteredPostsTimelines({
 
     return [...followingPosts, ...otherPosts];
   }
-
   return followingPosts;
 }
 
