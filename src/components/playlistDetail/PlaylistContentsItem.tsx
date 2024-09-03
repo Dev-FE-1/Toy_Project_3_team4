@@ -12,13 +12,13 @@ import { formatRelativeDate } from '@/utils/date';
 interface PlaylistContentItemProps {
   video: VideoModel;
   isDraggable?: boolean;
-  isSelected: boolean;
-  onVideoSelect: (videoId: string) => void;
+  isSelected?: boolean;
+  onVideoSelect?: (videoId: string) => void;
   customStyle?: SerializedStyles;
 }
 
 const PlaylistContentsItem = forwardRef<HTMLLIElement, PlaylistContentItemProps>(
-  ({ video, isSelected, onVideoSelect, isDraggable = false, customStyle }, ref) => {
+  ({ video, isSelected, onVideoSelect = () => {}, isDraggable = false, customStyle }, ref) => {
     const { title, thumbnailUrl, creator, uploadDate, views } = video;
 
     const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
