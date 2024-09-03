@@ -35,7 +35,7 @@ const ProfilePage: React.FC = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState<PostModel[]>([]);
 
-  console.log('profile', userId, userData);
+  // console.log('profile', userId, userData);
 
   useEffect(() => {
     if (currentUser && userData) {

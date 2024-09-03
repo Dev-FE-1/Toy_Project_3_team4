@@ -1,5 +1,6 @@
 import { css, SerializedStyles } from '@emotion/react';
 
+import FitButton from '@/components/common/buttons/FitButton';
 import theme from '@/styles/theme';
 
 interface UserInfoProps {
@@ -8,6 +9,10 @@ interface UserInfoProps {
   additionalInfo?: string | null;
   imageSize?: 'default' | 'large';
   customStyle?: SerializedStyles;
+  userId?: string;
+  showFollowButton?: boolean;
+  isFollowing?: boolean;
+  onFollowToggle?: (userId: string) => void;
 }
 
 const UserInfo: React.FC<UserInfoProps> = ({
@@ -16,7 +21,12 @@ const UserInfo: React.FC<UserInfoProps> = ({
   additionalInfo = null,
   imageSize = 'default',
   customStyle,
+  userId,
+  showFollowButton = false,
+  isFollowing = false,
+  onFollowToggle,
 }) => {
+  console.log('UserInfo props:', { name, userId, showFollowButton, isFollowing });
   return (
     <div css={[userInfoStyle(imageSize), customStyle]}>
       <img src={url} alt={name} />
@@ -24,6 +34,17 @@ const UserInfo: React.FC<UserInfoProps> = ({
         <span>{name}</span>
         {additionalInfo && <p>{additionalInfo}</p>}
       </div>
+      {showFollowButton && userId && onFollowToggle && (
+        <FitButton
+          styleType={isFollowing ? 'secondary' : 'primary'}
+          onClick={() => {
+            console.log('Follow button clicked for user:', userId);
+            onFollowToggle(userId);
+          }}
+        >
+          {isFollowing ? '팔로잉' : '팔로우'}
+        </FitButton>
+      )}
     </div>
   );
 };

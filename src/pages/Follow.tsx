@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
 import { useParams } from 'react-router-dom';
@@ -7,30 +7,81 @@ import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import BackHeader from '@/components/layout/header/BackHeader';
 import UserInfo from '@/components/user/UserInfo';
+import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import { UserData } from '@/types/profile';
 
 const FollowPage = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { userData, followingUsers, followerUsers } = useUserData(userId || null);
+  const { userData, followingUsers, followerUsers, toggleFollow, refetchUserData } = useUserData(
+    userId || null,
+  );
   const [activeTab, setActiveTab] = useState('following');
+  const currentUser = useAuth();
+  const [followStatus, setFollowStatus] = useState<{ [key: string]: boolean }>({});
+
+  useEffect(() => {
+    const initialStatus: { [key: string]: boolean } = {};
+    followingUsers.forEach((user) => {
+      initialStatus[user.userId] = true;
+    });
+    setFollowStatus(initialStatus);
+    console.log('Initial follow status:', initialStatus); // 로그 추가
+  }, [followingUsers]);
+
+  const handleFollowToggle = useCallback(
+    async (targetUserId: string) => {
+      if (currentUser?.uid) {
+        try {
+          await toggleFollow(currentUser.uid, targetUserId);
+
+          setFollowStatus((prev) => {
+            const newStatus = { ...prev, [targetUserId]: !prev[targetUserId] };
+            console.log('Updated follow status:', newStatus); // 로그 추가
+            return newStatus;
+          });
+
+          await refetchUserData();
+        } catch (error) {
+          console.error('Failed to toggle follow status:', error);
+        }
+      }
+    },
+    [currentUser, toggleFollow, refetchUserData],
+  );
+
+  const renderUserList = useCallback(
+    (users: UserData[]) => {
+      return users.map((user) => {
+        console.log('Rendering user:', user);
+        console.log('Current user:', currentUser);
+        console.log('Show follow button:', currentUser && currentUser.userId !== user.userId);
+        console.log('Is following:', followStatus[user.userId]);
+
+        return (
+          <div key={user.uid} css={userItemStyle}>
+            <UserInfo
+              key={`info-${user.uid}`}
+              name={user.displayName}
+              url={user.photoURL}
+              additionalInfo={`팔로워 ${user.followers?.length || 0}명`}
+              customStyle={followUserList}
+              userId={user.userId}
+              showFollowButton={currentUser && currentUser.userId !== user.userId}
+              isFollowing={followStatus[user.userId] || false}
+              onFollowToggle={handleFollowToggle}
+            />
+          </div>
+        );
+      });
+    },
+    [currentUser, handleFollowToggle, followStatus],
+  );
 
   const tabs = [
-    { id: 'following', label: `팔로잉 (${followingUsers.length})` },
-    { id: 'followers', label: `팔로워 (${followerUsers.length})` },
+    { id: 'following', label: `팔로잉 ${followingUsers.length}` },
+    { id: 'followers', label: `팔로워 ${followerUsers.length}` },
   ];
-
-  const renderUserList = (users: UserData[]) => {
-    return users.map((user) => (
-      <UserInfo
-        key={user.uid}
-        name={user.displayName}
-        url={user.photoURL}
-        additionalInfo={`팔로워 ${user.followers?.length || 0}`}
-        customStyle={followUserList}
-      />
-    ));
-  };
 
   return (
     <>
@@ -48,6 +99,13 @@ const FollowPage = () => {
 };
 
 const followUserList = css`
+  margin-bottom: 16px;
+`;
+
+const userItemStyle = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
 `;
 

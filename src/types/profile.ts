@@ -5,4 +5,5 @@ export interface UserData {
   bio?: string;
   photoURL: string;
   uid: string;
+  userId: string;
 }
