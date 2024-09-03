@@ -92,7 +92,7 @@ const ProfilePage: React.FC = () => {
             ))}
           </TabContent>
           <TabContent id="pli" activeTabId={activeTab}>
-            <AddPlaylistButton customStyle={addPlaylistButtonStyle} />
+            <AddPlaylistButton onAddPlaylist={() => {}} customStyle={addPlaylistButtonStyle} />
             <Playlists playlists={dummyPlaylist} />
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>

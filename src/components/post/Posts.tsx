@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
-import { formatRelativeDate } from '@/utils/date';
+import { formatRelativeDate, timestampToString } from '@/utils/date';
 
 import VideoPlayer from './VideoPlayer';
 import IconButton from '../common/buttons/IconButton';
@@ -53,7 +53,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
               url={userData?.photoURL || '@assets/default-avatar.svg'}
               imageSize="large"
             />
-            <span css={createdAtStyle}>{formatRelativeDate(post.createdAt)}</span>
+            <span css={createdAtStyle}>
+              {formatRelativeDate(timestampToString(post.createdAt))}
+            </span>
           </div>
           <IconButton icon={<IoBookmarkOutline size={20} />} onClick={() => {}} />
         </div>
