@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
+import defaultImage from '@/assets/images/default-avatar.svg';
 import { UserData } from '@/types/profile';
 
 interface UseUserDataReturn {
@@ -112,7 +113,7 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
 
   const defaultUserData: UserData = {
     displayName: 'Unknown',
-    photoURL: 'default-avatar.png',
+    photoURL: defaultImage,
     bio: '',
     followers: [],
     following: [],
