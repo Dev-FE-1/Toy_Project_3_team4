@@ -13,6 +13,7 @@ interface UserInfoProps {
   showFollowButton?: boolean;
   isFollowing?: boolean;
   onFollowToggle?: (userId: string) => void;
+  onClick?: () => void;
 }
 
 const UserInfo: React.FC<UserInfoProps> = ({
@@ -25,10 +26,11 @@ const UserInfo: React.FC<UserInfoProps> = ({
   showFollowButton = false,
   isFollowing = false,
   onFollowToggle,
+  onClick,
 }) => {
   console.log('UserInfo props:', { name, userId, showFollowButton, isFollowing });
   return (
-    <div css={[userInfoStyle(imageSize), customStyle]}>
+    <div css={[userInfoStyle(imageSize), customStyle]} onClick={onClick}>
       <img src={url} alt={name} />
       <div className="name-container">
         <span>{name}</span>
@@ -38,7 +40,6 @@ const UserInfo: React.FC<UserInfoProps> = ({
         <FitButton
           styleType={isFollowing ? 'secondary' : 'primary'}
           onClick={() => {
-            console.log('Follow button clicked for user:', userId);
             onFollowToggle(userId);
           }}
         >

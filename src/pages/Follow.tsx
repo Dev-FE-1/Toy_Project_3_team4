@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
@@ -13,6 +13,7 @@ import { UserData } from '@/types/profile';
 
 const FollowPage = () => {
   const { userId } = useParams<{ userId: string }>();
+  const navigate = useNavigate(); 
   const { userData, followingUsers, followerUsers, toggleFollow, refetchUserData } = useUserData(
     userId || null,
   );
@@ -50,6 +51,10 @@ const FollowPage = () => {
     [currentUser, toggleFollow, refetchUserData],
   );
 
+  const handleUserClick = (userId: string) => {
+    navigate(`/profile/${userId}`); // Navigate to the user's profile page
+  };
+
   const renderUserList = useCallback(
     (users: UserData[]) => {
       return users.map((user) => {
@@ -65,11 +70,11 @@ const FollowPage = () => {
               name={user.displayName}
               url={user.photoURL}
               additionalInfo={`팔로워 ${user.followers?.length || 0}명`}
-              customStyle={followUserList}
               userId={user.userId}
               showFollowButton={currentUser && currentUser.userId !== user.userId}
               isFollowing={followStatus[user.userId] || false}
               onFollowToggle={handleFollowToggle}
+              onClick={() => handleUserClick(user.userId)}
             />
           </div>
         );
@@ -98,15 +103,13 @@ const FollowPage = () => {
   );
 };
 
-const followUserList = css`
-  margin-bottom: 16px;
-`;
-
 const userItemStyle = css`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  cursor: pointer;
 `;
 
 export default FollowPage;
