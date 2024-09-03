@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 
-import Post from '@/components/post/Posts';
+import Post from '@/components/post/Post';
 import theme from '@/styles/theme';
 import { PostModel } from '@/types/post';
-export const PostsListLine = ({ posts }: { posts: PostModel[] }) => {
+export const PostsTimeLine = ({ posts }: { posts: PostModel[] }) => {
   return (
     <div css={timelineStyles}>
       {posts.map((post) => (
@@ -16,5 +16,5 @@ export const PostsListLine = ({ posts }: { posts: PostModel[] }) => {
 const timelineStyles = css`
   max-width: ${theme.width.max};
   margin: 0 auto;
-  padding: 0 ${theme.space.md};
+  padding: 0 16px;
 `;

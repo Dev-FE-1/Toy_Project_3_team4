@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { useInView } from 'react-intersection-observer';
 
 import LogoHeader from '@/components/layout/header/LogoHeader';
-import { PostsListLine } from '@/components/post/PostListLine';
+import { PostsTimeLine } from '@/components/post/PostsTimeline';
 import { useAuth } from '@/hooks/useAuth';
 import { useFilteredPostsTimelinesQuery } from '@/hooks/useFilteredPostsTimelines';
 import theme from '@/styles/theme';
@@ -40,7 +40,7 @@ const HomePage = () => {
   return (
     <>
       <LogoHeader />
-      <PostsListLine posts={posts} />
+      <PostsTimeLine posts={posts} />
       <div ref={ref} css={loadingTrigger}>
         {getLoadingMessage(isFetchingNextPage, hasNextPage)}
       </div>
@@ -52,6 +52,6 @@ export default HomePage;
 
 const loadingTrigger = css`
   text-align: center;
-  padding: ${theme.space.md};
+  padding: 16px;
   color: ${theme.colors.darkGray};
 `;
