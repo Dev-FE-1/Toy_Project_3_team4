@@ -16,7 +16,7 @@ const DraggablePlaylistItem = forwardRef<HTMLLIElement, DraggablePlaylistItemPro
     return (
       <PlaylistContentsItem
         video={video}
-        isDraggable={true}
+        onVideoSelect={() => {}}
         ref={ref}
         customStyle={draggableStyle(isDragging)}
       />
