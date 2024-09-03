@@ -18,7 +18,6 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [followingUsers, setFollowingUsers] = useState<UserData[]>([]);
   const [followerUsers, setFollowerUsers] = useState<UserData[]>([]);
-  // const [loading, setLoading] = useState(true);
 
   const getUserData = useCallback(async (userId: string): Promise<UserData | null> => {
     try {
@@ -37,7 +36,6 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
-        // setLoading(false);
         return;
       }
       try {
@@ -52,7 +50,6 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
           );
           setFollowingUsers(followingData.filter(Boolean) as UserData[]);
 
-          // Fetch follower users
           const followerData = await Promise.all(
             (user.followers || []).map((id) => getUserData(id)),
           );
@@ -63,9 +60,6 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
-      // finally {
-      //   setLoading(false);
-      // }
     };
 
     fetchUserData();
