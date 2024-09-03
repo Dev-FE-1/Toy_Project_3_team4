@@ -168,18 +168,7 @@ export const dummyPosts: PostModel[] = [
       { commentId: 'comment1', userId: 'user2', content: 'Great video!', likes: '5' },
       { commentId: 'comment2', userId: 'user3', content: 'Love NewJeans!', likes: '3' },
     ],
-    video: [
-      {
-        videoId: 'sVTy_wmn5SU',
-        title: 'NewJeans - OMG (Official MV)',
-        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
-      },
-      {
-        videoId: 'Q3K0TOvTOno',
-        title: 'NewJeans - OMG (Official MV)',
-        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
-      },
-    ],
+    video: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
   },
   {
     postId: '2',
@@ -194,18 +183,7 @@ export const dummyPosts: PostModel[] = [
       { commentId: 'comment1', userId: 'user1', content: 'Great video!', likes: '5' },
       { commentId: 'comment2', userId: 'user3', content: 'Love NewJeans!', likes: '3' },
     ],
-    video: [
-      {
-        videoId: 'sVTy_wmn5SU',
-        title: 'NewJeans - OMG (Official MV)',
-        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
-      },
-      {
-        videoId: 'Q3K0TOvTOno',
-        title: 'NewJeans - OMG (Official MV)',
-        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
-      },
-    ],
+    video: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
   },
   {
     postId: '3',
@@ -220,17 +198,6 @@ export const dummyPosts: PostModel[] = [
       { commentId: 'comment1', userId: 'user1', content: 'Great video!', likes: '5' },
       { commentId: 'comment2', userId: 'user3', content: 'Love NewJeans!', likes: '3' },
     ],
-    video: [
-      {
-        videoId: 'Q3K0TOvTOno',
-        title: 'NewJeans - OMG (Official MV)',
-        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
-      },
-      {
-        videoId: 'sVTy_wmn5SU',
-        title: 'NewJeans - OMG (Official MV)',
-        videoUrl: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
-      },
-    ],
+    video: 'https://www.youtube.com/watch?v=sVTy_wmn5SU',
   },
 ];

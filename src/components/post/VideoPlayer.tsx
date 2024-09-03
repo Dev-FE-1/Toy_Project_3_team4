@@ -4,13 +4,13 @@ import { css } from '@emotion/react';
 import { FaPlay, FaPause } from 'react-icons/fa';
 import YouTube, { YouTubeEvent } from 'react-youtube';
 
-import { Video } from '@/types/post';
-
+import { extractVideoId } from '@/utils/youtubeUtils';
 interface VideoPlayerProps {
-  video: Video;
+  video: string;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
+  console.log(video);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const playerRef = useRef<YouTube>(null);
@@ -38,7 +38,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
       onMouseLeave={() => setIsHovering(false)}
     >
       <YouTube
-        videoId={video.videoId}
+        videoId={extractVideoId(video) || ''}
         opts={{
           width: '100%',
           height: '200',
@@ -52,6 +52,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
             cc_load_policy: 0,
             iv_load_policy: 3,
             disablekb: 1,
+            enablejsapi: 1,
+            origin: window.location.origin,
           },
         }}
         onReady={onReady}

@@ -28,7 +28,6 @@ const HomePage = () => {
   });
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
-  console.log(posts);
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -40,6 +39,7 @@ const HomePage = () => {
   return (
     <>
       <LogoHeader />
+      {posts.length === 0 ? <div css={loadingTrigger}>No posts found</div> : null}
       <PostsTimeLine posts={posts} />
       <div ref={ref} css={loadingTrigger}>
         {getLoadingMessage(isFetchingNextPage, hasNextPage)}
