@@ -11,7 +11,7 @@ interface BackHeaderProps {
   onCloseClick?: () => void;
   title?: string;
   rightButtonText?: string;
-  onrightButtonClick?: () => void;
+  onRightButtonClick?: () => void;
   customStyle?: SerializedStyles;
   rightButtonDisabled?: boolean;
 }
@@ -20,7 +20,7 @@ const BackHeader: React.FC<BackHeaderProps> = ({
   onBackClick,
   title,
   rightButtonText,
-  onrightButtonClick,
+  onRightButtonClick,
   customStyle,
   rightButtonDisabled = false,
 }) => {
@@ -34,10 +34,10 @@ const BackHeader: React.FC<BackHeaderProps> = ({
       centerSection={title ? <Title text={title} /> : null}
       rightSection={
         rightButtonText &&
-        onrightButtonClick && (
+        onRightButtonClick && (
           <ActionButton
             text={rightButtonText}
-            onClick={onrightButtonClick}
+            onClick={onRightButtonClick}
             disabled={rightButtonDisabled}
           />
         )
