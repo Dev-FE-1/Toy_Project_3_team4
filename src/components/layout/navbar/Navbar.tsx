@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
 import { CiSquarePlus } from 'react-icons/ci';
@@ -26,12 +26,14 @@ const Navbar = () => {
     }
   }, [currentUser]);
 
+  console.log(userId, currentUser);
+
   return (
     <nav css={[navStyle, maxWidthStyle(false)]}>
       <ul className="nav-list">
         <NavItem Icon={HiOutlineHome} path={PATH.HOME} />
         <NavItem Icon={HiMagnifyingGlass} path={PATH.SEARCH} />
-        <NavButtonItem Icon={CiSquarePlus} onClick={() => {}} stroke={0.5} />
+        <NavButtonItem Icon={CiSquarePlus} />
         <NavItem Icon={HiOutlineRectangleStack} path={PATH.PLAYLIST} />
         <NavItem Icon={HiOutlineUserCircle} path={PATH.PROFILE} userId={userId || ''} />
       </ul>
