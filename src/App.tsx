@@ -4,6 +4,7 @@ import { PATH } from '@/constants/path';
 import ContainerLayout from '@/layouts/Container';
 import RootLayout from '@/layouts/Root';
 import AddPostPage from '@/pages/AddPost';
+import FollowPage from '@/pages/Follow';
 import HomePage from '@/pages/Home';
 import PlaylistPage from '@/pages/Playlist';
 import PlaylistDetailPage from '@/pages/PlaylistDetail';
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
         path: PATH.PROFILE_Edit,
         element: <ProtectedRoute />,
         children: [{ index: true, element: <ProfileEditPage /> }],
+      },
+      {
+        path: PATH.Follow,
+        element: <ProtectedRoute />,
+        children: [{ index: true, element: <FollowPage /> }],
       },
     ],
   },

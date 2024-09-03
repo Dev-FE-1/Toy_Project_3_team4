@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
@@ -8,29 +8,68 @@ import { UserData } from '@/types/profile';
 interface UseUserDataReturn {
   userData: UserData | null;
   following: string[];
+  followingUsers: UserData[];
+  followerUsers: UserData[];
   updateUserData: (newData: Partial<UserData>) => Promise<void>;
   toggleFollow: (currentUserId: string, targetUserId: string) => Promise<void>;
 }
 
 export const useUserData = (userId: string | null): UseUserDataReturn => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [followingUsers, setFollowingUsers] = useState<UserData[]>([]);
+  const [followerUsers, setFollowerUsers] = useState<UserData[]>([]);
+  // const [loading, setLoading] = useState(true);
+
+  const getUserData = useCallback(async (userId: string): Promise<UserData | null> => {
+    try {
+      const userDoc = doc(db, 'users', userId);
+      const docSnapshot = await getDoc(userDoc);
+      if (docSnapshot.exists()) {
+        return docSnapshot.data() as UserData;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return null;
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!userId) return;
+      if (!userId) {
+        // setLoading(false);
+        return;
+      }
       try {
         const userDoc = doc(db, 'users', userId);
         const docSnapshot = await getDoc(userDoc);
         if (docSnapshot.exists()) {
-          setUserData(docSnapshot.data() as UserData);
+          const user = docSnapshot.data() as UserData;
+          setUserData(user);
+
+          const followingData = await Promise.all(
+            (user.following || []).map((id) => getUserData(id)),
+          );
+          setFollowingUsers(followingData.filter(Boolean) as UserData[]);
+
+          // Fetch follower users
+          const followerData = await Promise.all(
+            (user.followers || []).map((id) => getUserData(id)),
+          );
+          setFollowerUsers(followerData.filter(Boolean) as UserData[]);
+        } else {
+          setUserData(null);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
+      // finally {
+      //   setLoading(false);
+      // }
     };
 
     fetchUserData();
-  }, [userId]);
+  }, [userId, getUserData]);
 
   const updateUserData = async (newData: Partial<UserData>) => {
     if (!userId) return;
@@ -83,11 +122,14 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
     bio: '',
     followers: [],
     following: [],
+    uid: '',
   };
 
   return {
     userData: userData || defaultUserData,
     following: userData?.following || [],
+    followingUsers,
+    followerUsers,
     updateUserData,
     toggleFollow,
   };

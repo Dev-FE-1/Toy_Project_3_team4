@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import { css, Theme } from '@emotion/react';
+import { Link } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
 import { useAuth } from '@/hooks/useAuth';
 import { UserData } from '@/types/profile';
-// import { useUserData } from '@/hooks/useUserData';
 
 interface ProfileInfoProps {
   profileUserId: string;
@@ -16,18 +16,16 @@ interface ProfileInfoProps {
   onFollowToggle: () => Promise<void>;
 }
 
-const ProfileInfo: React.FC<ProfileInfoProps> = 
-({ 
-  profileUserId, 
-  userData, 
-  isOwnProfile, 
-  isFollowing: initialIsFollowing, 
-  onEditClick, 
-  onFollowToggle 
+const ProfileInfo: React.FC<ProfileInfoProps> = ({
+  profileUserId,
+  userData,
+  isOwnProfile,
+  isFollowing: initialIsFollowing,
+  onEditClick,
+  onFollowToggle,
 }) => {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const currentUser = useAuth();
-  // const { toggleFollow } = useUserData(currentUser?.uid || null);
 
   useEffect(() => {
     setIsFollowing(initialIsFollowing);
@@ -35,21 +33,15 @@ const ProfileInfo: React.FC<ProfileInfoProps> =
 
   const handleFollowToggle = async () => {
     if (currentUser && profileUserId) {
-      // await toggleFollow(currentUser.uid, profileUserId);
-      // setIsFollowing(!isFollowing);
-      // onFollowToggle();
-      // console.log(isFollowing ? '언팔로우' : '팔로우');
       try {
-        await onFollowToggle(); // 외부에서 전달된 toggle 함수 실행
-        setIsFollowing(!isFollowing); // 상태 업데이트
+        await onFollowToggle();
+        setIsFollowing(!isFollowing);
         console.log(isFollowing ? '언팔로우' : '팔로우');
       } catch (error) {
         console.error('팔로우/언팔로우 실패:', error);
       }
     }
   };
-
-  // const isOwnProfile = currentUser?.uid === profileUserId;
 
   return (
     <>
@@ -61,14 +53,18 @@ const ProfileInfo: React.FC<ProfileInfoProps> =
           <div css={profileInfoStyle}>
             <p css={usernameStyle}>{userData.displayName}</p>
             <div css={followInfoStyle}>
-              <div>
+              <Link
+                to={`/profile/${profileUserId}/follow?following=${userData?.following?.length || 0}&followers=${userData?.followers?.length || 0}`}
+              >
                 <span css={followCountStyle}>{userData?.following?.length || 0}</span>
                 <span css={followLabelStyle}>팔로잉</span>
-              </div>
-              <div>
-                <span css={followCountStyle}>12</span>
+              </Link>
+              <Link
+                to={`/profile/${profileUserId}/follow?following=${userData?.following?.length || 0}&followers=${userData?.followers?.length || 0}`}
+              >
+                <span css={followCountStyle}>{userData?.followers?.length || 0}</span>
                 <span css={followLabelStyle}>팔로워</span>
-              </div>
+              </Link>
             </div>
           </div>
           {isOwnProfile ? (
