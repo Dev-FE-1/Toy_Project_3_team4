@@ -147,7 +147,6 @@ export async function fetchFilteredPostsTimelines({
   const followingUserIds = userDoc.data()?.following || [];
   if (!followingUserIds || followingUserIds.length === 0) {
     console.warn('No following users');
-    return [];
   }
 
   let followingPostsQuery = query(
@@ -188,6 +187,7 @@ export async function fetchFilteredPostsTimelines({
     const otherPosts = otherPostsSnapshot.docs.map(
       (doc) => ({ postId: doc.id, ...doc.data() }) as PostModel,
     );
+    console.log('otherPosts', otherPosts);
 
     return [...followingPosts, ...otherPosts];
   }
