@@ -11,7 +11,7 @@ interface TabItemProps {
 
 const TabItem: React.FC<TabItemProps> = ({ id, label, icon, isActive, onClick, customStyle }) => (
   <button onClick={() => onClick(id)} css={[tabStyle(isActive), customStyle]}>
-    {icon && <span css={iconStyle(isActive)}>{icon}</span>} 
+    {icon && <span css={iconStyle(isActive)}>{icon}</span>}
     {label}
   </button>
 );
