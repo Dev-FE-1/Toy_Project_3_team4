@@ -16,13 +16,13 @@ import { PostModel } from '@/types/post';
 
 const postsCollection = collection(db, 'posts');
 
-export async function getPostByPostId({ postId }: { postId: string }): Promise<PostModel> {
+export const getPostByPostId = async ({ postId }: { postId: string }): Promise<PostModel> => {
   const postDoc = doc(postsCollection, postId);
   const postDocSnapshot = await getDoc(postDoc);
   return { postId: postDocSnapshot.id, ...postDocSnapshot.data() } as PostModel;
-}
+};
 
-export async function getPostsFilterdLikes({
+export const getPostsFilterdLikes = async ({
   userId,
   count = 10,
   lastPostId,
@@ -30,7 +30,7 @@ export async function getPostsFilterdLikes({
   userId: string;
   count?: number;
   lastPostId?: string;
-}): Promise<PostModel[]> {
+}): Promise<PostModel[]> => {
   let q = query(
     postsCollection,
     where('likes', 'array-contains', userId),
@@ -47,9 +47,9 @@ export async function getPostsFilterdLikes({
 
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
-}
+};
 
-export async function getPostsByUserId({
+export const getPostsByUserId = async ({
   userId,
   count = 10,
   lastPostId,
@@ -57,7 +57,7 @@ export async function getPostsByUserId({
   userId: string;
   count?: number;
   lastPostId?: string;
-}): Promise<PostModel[]> {
+}): Promise<PostModel[]> => {
   let q = query(
     postsCollection,
     where('userId', '==', userId),
@@ -74,9 +74,9 @@ export async function getPostsByUserId({
 
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
-}
+};
 
-export async function getPostsByFollowingUsers({
+export const getPostsByFollowingUsers = async ({
   userId,
   count = 100,
   lastPostId,
@@ -84,7 +84,7 @@ export async function getPostsByFollowingUsers({
   userId: string;
   count?: number;
   lastPostId?: string;
-}): Promise<PostModel[]> {
+}): Promise<PostModel[]> => {
   const userDoc = await getDoc(doc(db, 'users', userId));
   if (!userDoc.exists()) {
     console.warn('User not found');
@@ -113,15 +113,15 @@ export async function getPostsByFollowingUsers({
 
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
-}
+};
 
-export async function getPosts({
+export const getPosts = async ({
   count = 10,
   lastPostId,
 }: {
   count?: number;
   lastPostId?: string;
-}): Promise<PostModel[]> {
+}): Promise<PostModel[]> => {
   let q = query(postsCollection, orderBy('createdAt', 'desc'), limit(count));
 
   if (lastPostId) {
@@ -133,9 +133,9 @@ export async function getPosts({
 
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
-}
+};
 
-export async function fetchFilteredPostsTimelines({
+export const fetchFilteredPostsTimelines = async ({
   userId,
   count = 10,
   lastPostId,
@@ -143,7 +143,7 @@ export async function fetchFilteredPostsTimelines({
   userId: string;
   count?: number;
   lastPostId?: string;
-}): Promise<PostModel[]> {
+}): Promise<PostModel[]> => {
   const userDoc = await getDoc(doc(db, 'users', userId));
   if (!userDoc.exists()) {
     console.warn('User not found');
@@ -198,15 +198,15 @@ export async function fetchFilteredPostsTimelines({
     return [...followingPosts, ...otherPosts];
   }
   return followingPosts;
-}
+};
 
-export async function updatePostsLikes({
+export const updatePostsLikes = async ({
   postId,
   userId,
 }: {
   postId: string;
   userId: string;
-}): Promise<void> {
+}): Promise<void> => {
   const postRef = doc(postsCollection, postId);
   const postSnap = await getDoc(postRef);
 
@@ -225,4 +225,4 @@ export async function updatePostsLikes({
     const updatedLikes = [...currentLikes, userId];
     await updateDoc(postRef, { likes: updatedLikes });
   }
-}
+};

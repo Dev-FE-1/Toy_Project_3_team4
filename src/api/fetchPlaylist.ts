@@ -5,11 +5,15 @@ import { PlaylistModel } from '@/types/playlist';
 
 const postsCollection = collection(db, 'playlists');
 
-export async function getPlaylist({ playlistId }: { playlistId: string }): Promise<PlaylistModel> {
+export const getPlaylist = async ({
+  playlistId,
+}: {
+  playlistId: string;
+}): Promise<PlaylistModel> => {
   const q = query(postsCollection, where('playlistId', '==', playlistId));
   const querySnapshot = await getDocs(q);
   const playlist = querySnapshot.docs.map(
     (doc) => ({ playlistId: doc.id, ...doc.data() }) as PlaylistModel,
   );
   return playlist[0];
-}
+};
