@@ -9,7 +9,7 @@ export interface PostModel {
   createdAt: Timestamp;
   likes: string[];
   comments: Comment[];
-  video: Video[];
+  video: string;
 }
 
 export interface Comment {

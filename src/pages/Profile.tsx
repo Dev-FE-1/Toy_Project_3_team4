@@ -11,7 +11,7 @@ import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
 import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
-import Post from '@/components/post/Posts';
+import Post from '@/components/post/Post';
 import { PATH } from '@/constants/path';
 import { useAddPlaylist } from '@/hooks/useAddPlaylist';
 import { useAuth } from '@/hooks/useAuth';

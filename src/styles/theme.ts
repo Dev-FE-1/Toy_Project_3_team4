@@ -26,20 +26,31 @@ const width = {
   large: '500px',
 };
 
+const zIndex = {
+  base: 1,
+  videoPlayer: 10,
+  header: 100,
+  modal: 1000,
+  toast: 10000,
+};
+
 export type ColorsType = typeof colors;
 export type FontSizeType = typeof fontSizes;
 export type WidthType = typeof width;
+export type ZIndexType = typeof zIndex;
 
 interface Theme {
   colors: ColorsType;
   fontSizes: FontSizeType;
   width: WidthType;
+  zIndex: ZIndexType;
 }
 
 const theme: Theme = {
   colors,
   fontSizes,
   width,
+  zIndex,
 };
 
 export default theme;
