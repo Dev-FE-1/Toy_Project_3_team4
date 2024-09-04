@@ -30,8 +30,8 @@ const UserInfo: React.FC<UserInfoProps> = ({
 }) => {
   console.log('UserInfo props:', { name, userId, showFollowButton, isFollowing });
   return (
-    <div css={[userInfoStyle(imageSize), customStyle]} onClick={onClick}>
-      <div className="info-container">
+    <div css={[userInfoStyle(imageSize), customStyle]}>
+      <div className="info-container" onClick={onClick}>
         <img src={url} alt={name} />
         <div className="name-container">
           <span>{name}</span>
@@ -103,6 +103,5 @@ const userInfoStyle = (imageSize: string) => css`
     }
   }
 `;
-
 
 export default UserInfo;

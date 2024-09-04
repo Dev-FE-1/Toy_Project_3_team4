@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 
 import { css } from '@emotion/react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -14,80 +14,63 @@ import { UserData } from '@/types/profile';
 const FollowPage = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
-  const { userData, followingUsers, followerUsers, toggleFollow, refetchUserData } = useUserData(
-    userId || null,
-  );
+  const { userData, followingUsers, followerUsers, toggleFollow, refetchUserData, isFollowing } =
+    useUserData(userId || null);
   const [activeTab, setActiveTab] = useState('following');
   const currentUser = useAuth();
-  const [followStatus, setFollowStatus] = useState<{ [key: string]: boolean }>({});
-
-  useEffect(() => {
-    const initialStatus: { [key: string]: boolean } = {};
-    followingUsers.forEach((user) => {
-      initialStatus[user.userId] = true;
-    });
-    setFollowStatus(initialStatus);
-    console.log('Initial follow status:', initialStatus); // 로그 추가
-  }, [followingUsers]);
 
   const handleFollowToggle = useCallback(
     async (targetUserId: string) => {
       if (currentUser?.uid) {
         try {
+          console.log('Toggling follow for:', targetUserId);
           await toggleFollow(currentUser.uid, targetUserId);
-
-          setFollowStatus((prev) => {
-            const newStatus = { ...prev, [targetUserId]: !prev[targetUserId] };
-            console.log('Updated follow status:', newStatus); // 로그 추가
-            return newStatus;
-          });
-
+          console.log('Follow toggled successfully');
           await refetchUserData();
         } catch (error) {
           console.error('Failed to toggle follow status:', error);
         }
       }
     },
-    [currentUser, toggleFollow, refetchUserData],
+    [currentUser, toggleFollow],
   );
 
-  const handleUserClick = (userId: string) => {
-    navigate(`/profile/${userId}`); // Navigate to the user's profile page
+  const handleUserClick = useCallback(
+    (userId: string) => {
+      navigate(`/profile/${userId}`);
+    },
+    [navigate],
+  );
+
+  const renderUserList = (users: UserData[]) => {
+    console.log('Rendering user list:', users);
+    return users.map((user) => {
+      console.log('Rendering user:', user);
+      return (
+        <div key={user.userId} css={userItemStyle}>
+          <UserInfo
+            name={user.displayName}
+            url={user.photoURL}
+            imageSize={'large'}
+            additionalInfo={`팔로워 ${user.followers?.length || 0}명`}
+            userId={user.userId}
+            showFollowButton={currentUser && currentUser.userId !== user.userId}
+            isFollowing={isFollowing(user.userId)}
+            onFollowToggle={() => handleFollowToggle(user.userId)}
+            onClick={() => handleUserClick(user.userId)}
+          />
+        </div>
+      );
+    });
   };
 
-  const renderUserList = useCallback(
-    (users: UserData[]) => {
-      return users.map((user) => {
-        console.log('Rendering user:', user);
-        console.log('Current user:', currentUser);
-        console.log('Show follow button:', currentUser && currentUser.userId !== user.userId);
-        console.log('Is following:', followStatus[user.userId]);
-
-        return (
-          <div key={user.uid} css={userItemStyle}>
-            <UserInfo
-              key={`info-${user.uid}`}
-              name={user.displayName}
-              url={user.photoURL}
-              imageSize={'large'}
-              additionalInfo={`팔로워 ${user.followers?.length || 0}명`}
-              userId={user.userId}
-              showFollowButton={currentUser && currentUser.userId !== user.userId}
-              isFollowing={followStatus[user.userId] || false}
-              onFollowToggle={handleFollowToggle}
-              onClick={() => handleUserClick(user.userId)}
-            />
-          </div>
-        );
-      });
-    },
-    [currentUser, handleFollowToggle, followStatus],
+  const tabs = useMemo(
+    () => [
+      { id: 'following', label: `팔로잉 ${followingUsers.length}` },
+      { id: 'followers', label: `팔로워 ${followerUsers.length}` },
+    ],
+    [followingUsers.length, followerUsers.length],
   );
-
-  const tabs = [
-    { id: 'following', label: `팔로잉 ${followingUsers.length}` },
-    { id: 'followers', label: `팔로워 ${followerUsers.length}` },
-  ];
 
   return (
     <>
