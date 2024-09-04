@@ -6,6 +6,7 @@ import { FiPlay } from 'react-icons/fi';
 import { HiOutlinePencil } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { getPostsByUserId } from '@/api/fetchPosts';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
@@ -18,7 +19,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
-import { dummyPosts } from '@/utils/dummy';
+// import { dummyPosts } from '@/utils/dummy';
 
 import ProfileInfo from '../components/profile/ProfileInfo';
 
@@ -36,6 +37,8 @@ const ProfilePage: React.FC = () => {
   const { userData, toggleFollow } = useUserData(userId || currentUser?.uid || null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState<PostModel[]>([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists();
   const addPlaylistMutation = useAddPlaylist();
 
@@ -46,10 +49,26 @@ const ProfilePage: React.FC = () => {
   }, [currentUser, userData]);
 
   useEffect(() => {
-    if (userId) {
-      const profilePosts = dummyPosts.filter((post) => post.userId === userId);
-      setFilteredPosts(profilePosts);
-    }
+    // if (userId) {
+    //   const profilePosts = dummyPosts.filter((post) => post.userId === userId);
+    //   setFilteredPosts(profilePosts);
+    // }
+    const fetchPosts = async () => {
+      if (userId) {
+        try {
+          setLoadingPosts(true);
+          const profilePosts = await getPostsByUserId({ userId });
+          setFilteredPosts(profilePosts);
+        } catch (err) {
+          setError('Failed to load posts');
+          console.error(err);
+        } finally {
+          setLoadingPosts(false);
+        }
+      }
+    };
+
+    fetchPosts();
   }, [userId]);
 
   const handleSettingsClick = () => {
@@ -93,9 +112,16 @@ const ProfilePage: React.FC = () => {
       <div>
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
           <TabContent id="post" activeTabId={activeTab}>
-            {filteredPosts.map((post) => (
+            {/* {filteredPosts.map((post) => (
               <Post key={post.postId} post={post} id={post.postId} />
-            ))}
+            ))} */}
+            {loadingPosts ? (
+              <div>Loading posts...</div>
+            ) : error ? (
+              <div>{error}</div>
+            ) : (
+              filteredPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
+            )}
           </TabContent>
           <TabContent id="pli" activeTabId={activeTab}>
             <AddPlaylistButton
