@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { HiOutlinePencil, HiOutlineUser } from 'react-icons/hi2';
 
+import { SearchType } from '@/api/algoliaSearch';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import SearchHeader from '@/components/layout/header/SearchHeader';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useSearch } from '@/hooks/useSearch';
 
 const tabs = [
   { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
@@ -15,13 +17,13 @@ const tabs = [
 const SearchPage = () => {
   const { value: searchTerm, debouncedValue: debouncedSearchTerm, onChange } = useDebounce();
   const [activeTab, setActiveTab] = useState(tabs[0].id);
+  const { search } = useSearch();
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      console.log('Searching for:', debouncedSearchTerm);
-      // 검색 로직
-    }
-  }, [debouncedSearchTerm]);
+    if (!debouncedSearchTerm) return;
+
+    search(debouncedSearchTerm, activeTab as SearchType);
+  }, [debouncedSearchTerm, activeTab, search]);
 
   return (
     <>
