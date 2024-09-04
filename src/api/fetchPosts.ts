@@ -193,7 +193,6 @@ export const fetchFilteredPostsTimelines = async ({
     const otherPosts = otherPostsSnapshot.docs.map(
       (doc) => ({ postId: doc.id, ...doc.data() }) as PostModel,
     );
-    console.log('otherPosts', otherPosts);
 
     return [...followingPosts, ...otherPosts];
   }
@@ -225,4 +224,12 @@ export const updatePostsLikes = async ({
     const updatedLikes = [...currentLikes, userId];
     await updateDoc(postRef, { likes: updatedLikes });
   }
+};
+
+export const fetchMultiplePostsByPostIds = async (postIds: string[]) => {
+  const postsRef = collection(db, 'posts');
+  const q = query(postsRef, where('__name__', 'in', postIds));
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map((doc) => doc.data());
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { HiOutlinePencil, HiOutlineUser } from 'react-icons/hi2';
 
@@ -6,8 +6,12 @@ import { SearchType } from '@/api/algoliaSearch';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import SearchHeader from '@/components/layout/header/SearchHeader';
+import { PostsTimeLine } from '@/components/post/PostsTimeline';
+import UserInfo from '@/components/user/UserInfo';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useSearch } from '@/hooks/useSearch';
+import { PostModel } from '@/types/post';
+import { UserModel } from '@/types/user';
 
 const tabs = [
   { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
@@ -17,13 +21,11 @@ const tabs = [
 const SearchPage = () => {
   const { value: searchTerm, debouncedValue: debouncedSearchTerm, onChange } = useDebounce();
   const [activeTab, setActiveTab] = useState(tabs[0].id);
-  const { search } = useSearch();
+  const { data: searchResults } = useSearch(activeTab as SearchType, debouncedSearchTerm);
 
-  useEffect(() => {
-    if (!debouncedSearchTerm) return;
-
-    search(debouncedSearchTerm, activeTab as SearchType);
-  }, [debouncedSearchTerm, activeTab, search]);
+  const isUserModel = (result: UserModel | PostModel): result is UserModel => {
+    return 'displayName' in result;
+  };
 
   return (
     <>
@@ -31,15 +33,18 @@ const SearchPage = () => {
       {searchTerm && (
         <TabMenu activeTabId={activeTab} tabs={tabs} onTabChange={setActiveTab}>
           <TabContent id="post" activeTabId={activeTab}>
-            <div>포스트</div>
+            {activeTab === 'post' && <PostsTimeLine posts={(searchResults as PostModel[]) || []} />}
           </TabContent>
           <TabContent id="user" activeTabId={activeTab}>
-            <div>유저</div>
+            {activeTab === 'user' &&
+              searchResults
+                ?.filter(isUserModel)
+                .map((user) => (
+                  <UserInfo key={user.userId} name={user.displayName} url={user.photoURL} />
+                ))}
           </TabContent>
         </TabMenu>
       )}
-      {searchTerm && <p>{searchTerm}</p>}
-      {debouncedSearchTerm && <p>{debouncedSearchTerm}</p>}
     </>
   );
 };
