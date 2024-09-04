@@ -21,6 +21,7 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [followingUsers, setFollowingUsers] = useState<UserData[]>([]);
   const [followerUsers, setFollowerUsers] = useState<UserData[]>([]);
+  const [localFollowing, setLocalFollowing] = useState<string[]>([]);
 
   const getUserData = useCallback(async (userId: string): Promise<UserData | null> => {
     try {
@@ -48,11 +49,9 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
         const followingData = await Promise.all(
           (user.following || []).map((id) => getUserData(id)),
         );
-        console.log('Fetched following users:', followingData);
         setFollowingUsers(followingData.filter(Boolean) as UserData[]);
 
         const followerData = await Promise.all((user.followers || []).map((id) => getUserData(id)));
-        console.log('Fetched follower users:', followerData);
         setFollowerUsers(followerData.filter(Boolean) as UserData[]);
       } else {
         console.log('User document does not exist');
@@ -66,6 +65,12 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
+
+  useEffect(() => {
+    if (userData) {
+      setLocalFollowing(userData.following || []);
+    }
+  }, [userData]);
 
   const updateUserData = async (newData: Partial<UserData>) => {
     if (!userId) return;
@@ -87,14 +92,9 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
       const currentUserDoc = doc(db, 'users', currentUserId);
       const targetUserDoc = doc(db, 'users', targetUserId);
 
-      const currentUserSnapshot = await getDoc(currentUserDoc);
-      if (!currentUserSnapshot.exists()) {
-        console.error('Current user document does not exist');
-        return;
-      }
-      const currentUserData = currentUserSnapshot.data() as UserData;
-      const isFollowing = currentUserData.following?.includes(targetUserId) || false;
+      const isFollowing = localFollowing.includes(targetUserId);
 
+      // Update Firestore
       if (isFollowing) {
         await updateDoc(currentUserDoc, {
           following: arrayRemove(targetUserId),
@@ -111,8 +111,10 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
         });
       }
 
-      await fetchUserData();
-      // fetchUserData();
+      // Update local state
+      setLocalFollowing((prev) =>
+        isFollowing ? prev.filter((id) => id !== targetUserId) : [...prev, targetUserId],
+      );
     } catch (error) {
       console.error('Error toggling follow:', error);
     }
@@ -120,9 +122,9 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
 
   const isFollowing = useCallback(
     (targetUserId: string) => {
-      return userData?.following?.includes(targetUserId) || false;
+      return localFollowing.includes(targetUserId);
     },
-    [userData],
+    [localFollowing],
   );
 
   const refetchUserData = useCallback(async () => {
@@ -141,7 +143,7 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
 
   return {
     userData: userData || defaultUserData,
-    following: userData?.following || [],
+    following: localFollowing,
     followingUsers,
     followerUsers,
     updateUserData,
