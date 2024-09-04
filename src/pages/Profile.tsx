@@ -147,7 +147,6 @@ const ProfilePage: React.FC = () => {
             )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
-            <div>좋아요 내용</div>
             {loadingLikedPosts ? (
               <div>Loading liked posts...</div>
             ) : error ? (
