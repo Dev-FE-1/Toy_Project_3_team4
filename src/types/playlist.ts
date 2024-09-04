@@ -1,8 +1,9 @@
+import { Timestamp } from 'firebase/firestore';
 export interface PlaylistModel {
   playlistId: string;
   userId: string;
   title: string;
-  createdAt: Date;
+  createdAt: Timestamp;
   isPublic: boolean;
   videos: VideoModel[];
 }

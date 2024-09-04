@@ -2,10 +2,8 @@ import { forwardRef } from 'react';
 
 import { css } from '@emotion/react';
 
+import PlaylistContentsItem from '@/components/playlistDetail/PlaylistContentsItem';
 import { VideoModel } from '@/types/playlist';
-
-import PlaylistContentsItem from './PlaylistContentsItem';
-
 interface DraggablePlaylistItemProps {
   video: VideoModel;
   isDragging: boolean;
@@ -16,7 +14,7 @@ const DraggablePlaylistItem = forwardRef<HTMLLIElement, DraggablePlaylistItemPro
     return (
       <PlaylistContentsItem
         video={video}
-        isDraggable={true}
+        onVideoSelect={() => {}}
         ref={ref}
         customStyle={draggableStyle(isDragging)}
       />

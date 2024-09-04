@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { doc, setDoc, getDoc, collection } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, Timestamp } from 'firebase/firestore';
 
 import { auth, db } from '@/api/firebaseApp';
 
@@ -28,7 +28,7 @@ export const signInWithGoogle = async () => {
         playlistId: playlistId,
         userId: user.uid,
         title: '분류되지 않은 목록',
-        createdAt: new Date(),
+        createdAt: Timestamp.now(),
         isPublic: false,
         videos: [],
       });

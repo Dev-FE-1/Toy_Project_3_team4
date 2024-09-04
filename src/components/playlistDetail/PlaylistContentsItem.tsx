@@ -4,6 +4,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { HiOutlineEllipsisVertical, HiOutlineBars2 } from 'react-icons/hi2';
 
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
+import { useYouTubeVideoData } from '@/hooks/useYouTubeVideoData';
 import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { VideoModel } from '@/types/playlist';
@@ -12,14 +13,17 @@ import { formatRelativeDate } from '@/utils/date';
 interface PlaylistContentItemProps {
   video: VideoModel;
   isDraggable?: boolean;
-  isSelected: boolean;
-  onVideoSelect: (videoId: string) => void;
+  isSelected?: boolean;
+  onVideoSelect?: (videoId: string) => void;
   customStyle?: SerializedStyles;
 }
 
 const PlaylistContentsItem = forwardRef<HTMLLIElement, PlaylistContentItemProps>(
-  ({ video, isSelected, onVideoSelect, isDraggable = false, customStyle }, ref) => {
-    const { title, thumbnailUrl, creator, uploadDate, views } = video;
+  (
+    { video, isSelected = false, onVideoSelect = () => {}, isDraggable = false, customStyle },
+    ref,
+  ) => {
+    const { data: videoData, isLoading, isError } = useYouTubeVideoData(video.videoId);
 
     const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
@@ -32,6 +36,14 @@ const PlaylistContentsItem = forwardRef<HTMLLIElement, PlaylistContentItemProps>
       }
     };
 
+    if (isLoading) {
+      return <li>Loading...</li>;
+    }
+
+    if (isError || !videoData) {
+      return <li>Error loading video data</li>;
+    }
+
     return (
       <li
         css={[playlistItemStyle, isSelected && selectedStyle, customStyle]}
@@ -40,14 +52,14 @@ const PlaylistContentsItem = forwardRef<HTMLLIElement, PlaylistContentItemProps>
       >
         {isDraggable && <HiOutlineBars2 className="drag-bar" />}
         <div className="video-container">
-          <VideoThumbnail url={thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
+          <VideoThumbnail url={video.thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
           <div className="video-info">
             <a href={`${isDraggable ? video.videoUrl : 'javascript:void(0)'}`}>
               <div className="info-container">
-                <h2>{title}</h2>
-                <span>{creator}</span>
+                <h2>{videoData.title}</h2>
+                <span>{videoData.creator}</span>
                 <span>
-                  조회수 {views} · {formatRelativeDate(uploadDate)}
+                  조회수 {videoData.views} · {formatRelativeDate(videoData.uploadDate)}
                 </span>
               </div>
               <button onClick={onClickOption}>

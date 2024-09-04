@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { collection, addDoc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, Timestamp } from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
 import { useAuth } from '@/hooks/useAuth';
@@ -19,7 +19,7 @@ export const useAddPlaylist = () => {
       const playlistDocRef = await addDoc(playlistsCollection, {
         userId: user.uid,
         title,
-        createdAt: new Date(),
+        createdAt: Timestamp.now(),
         isPublic,
         videos: [],
       });
@@ -31,7 +31,7 @@ export const useAddPlaylist = () => {
         playlistId,
         userId: user.uid,
         title,
-        createdAt: new Date(),
+        createdAt: Timestamp.now(),
         isPublic,
         videos: [],
       } as PlaylistModel;

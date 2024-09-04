@@ -1,13 +1,15 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface PostModel {
   postId: string;
   userId: string;
   playlistId: string;
   playlistName: string;
   content: string;
-  createdAt: string;
+  createdAt: Timestamp;
   likes: string[];
   comments: Comment[];
-  video: Video[];
+  video: string;
 }
 
 export interface Comment {
