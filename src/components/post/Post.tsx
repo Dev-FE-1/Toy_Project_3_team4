@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { css, SerializedStyles, Theme } from '@emotion/react';
+import { Timestamp } from 'firebase/firestore';
 import {
   HiOutlineHeart,
   HiOutlineChatBubbleOvalLeft,
@@ -17,7 +18,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import { PlaylistModel } from '@/types/playlist';
 import { PostModel } from '@/types/post';
-import { formatRelativeDate, timestampToString } from '@/utils/date';
+import { formatRelativeDate } from '@/utils/date';
 
 import VideoPlayer from './VideoPlayer';
 import IconButton from '../common/buttons/IconButton';
@@ -35,6 +36,16 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
   const [playlist, setPlaylist] = useState<PlaylistModel>();
+
+  const formatCreateAt = () => {
+    if (post.createdAt instanceof Timestamp) {
+      return formatRelativeDate(post.createdAt.toDate().toISOString());
+    } else if (typeof post.createdAt === 'string') {
+      return formatRelativeDate(post.createdAt);
+    } else {
+      return formatRelativeDate(new Date(post.createdAt).toISOString());
+    }
+  };
 
   useEffect(() => {
     const fetchPlaylist = async () => {
@@ -67,9 +78,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
               url={userData?.photoURL || defaultProfile}
               imageSize="large"
             />
-            <span css={createdAtStyle}>
-              {formatRelativeDate(timestampToString(post.createdAt))}
-            </span>
+            <span css={createdAtStyle}>{formatCreateAt()}</span>
           </div>
           <IconButton icon={<IoBookmarkOutline size={20} />} onClick={() => {}} />
         </div>
