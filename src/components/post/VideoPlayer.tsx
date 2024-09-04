@@ -5,6 +5,9 @@ import { FaPlay, FaPause } from 'react-icons/fa';
 import YouTube, { YouTubeEvent } from 'react-youtube';
 
 import { extractVideoId } from '@/utils/youtubeUtils';
+
+import VideoThumbnail from '../playlist/VideoThumbnail';
+
 interface VideoPlayerProps {
   video: string;
 }
@@ -12,15 +15,22 @@ interface VideoPlayerProps {
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [showThumbnail, setShowThumbnail] = useState(true);
   const playerRef = useRef<YouTube>(null);
 
   const togglePlay = () => {
-    if (isPlaying) {
-      playerRef.current?.internalPlayer.pauseVideo();
-    } else {
+    if (showThumbnail) {
+      setShowThumbnail(false);
       playerRef.current?.internalPlayer.playVideo();
+      setIsPlaying(true);
+    } else {
+      if (isPlaying) {
+        playerRef.current?.internalPlayer.pauseVideo();
+      } else {
+        playerRef.current?.internalPlayer.playVideo();
+      }
+      setIsPlaying(!isPlaying);
     }
-    setIsPlaying(!isPlaying);
   };
 
   const onReady = (event: YouTubeEvent) => {
@@ -36,30 +46,46 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <YouTube
-        videoId={extractVideoId(video) || ''}
-        opts={{
-          width: '100%',
-          height: '200',
-          playerVars: {
-            autoplay: 0,
-            rel: 0,
-            modestbranding: 1,
-            controls: 0,
-            showinfo: 0,
-            fs: 0,
-            cc_load_policy: 0,
-            iv_load_policy: 3,
-            disablekb: 1,
-            enablejsapi: 1,
-            origin: window.location.origin,
-          },
-        }}
-        onReady={onReady}
-        onStateChange={onStateChange}
-        ref={playerRef}
-      />
-      <button css={playPauseButton(isPlaying, isHovering)} onClick={togglePlay}>
+      <div
+        css={css`
+          display: ${showThumbnail ? 'block' : 'none'};
+        `}
+      >
+        <VideoThumbnail
+          url={`https://img.youtube.com/vi/${extractVideoId(video) || ''}/0.jpg`}
+          isPublic={true}
+        />
+      </div>
+      <div
+        css={css`
+          display: ${showThumbnail ? 'none' : 'block'};
+        `}
+      >
+        <YouTube
+          videoId={extractVideoId(video) || ''}
+          opts={{
+            width: '100%',
+            height: '200',
+            playerVars: {
+              autoplay: 0,
+              rel: 0,
+              modestbranding: 1,
+              controls: 0,
+              showinfo: 0,
+              fs: 0,
+              cc_load_policy: 0,
+              iv_load_policy: 3,
+              disablekb: 1,
+              enablejsapi: 1,
+              origin: window.location.origin,
+            },
+          }}
+          onReady={onReady}
+          onStateChange={onStateChange}
+          ref={playerRef}
+        />
+      </div>
+      <button css={playPauseButton(isPlaying, isHovering || showThumbnail)} onClick={togglePlay}>
         {isPlaying ? <FaPause /> : <FaPlay />}
       </button>
     </div>
@@ -84,6 +110,7 @@ const videoContainerStyle = css`
 `;
 
 const playPauseButton = (isPlaying: boolean, isHovering: boolean) => css`
+  color: white;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -91,7 +118,9 @@ const playPauseButton = (isPlaying: boolean, isHovering: boolean) => css`
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: rgba(30, 41, 59, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(5px);
   font-size: 24px;
   display: flex;
   align-items: center;

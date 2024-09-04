@@ -9,9 +9,12 @@ interface ContainerLayoutProps {
 
 const ContainerLayout: React.FC<ContainerLayoutProps> = ({ customStyle }) => {
   return (
-    <main css={[mainStyle, customStyle]}>
-      <Outlet />
-    </main>
+    <>
+      <div id="header"></div>
+      <main css={[mainStyle, customStyle]}>
+        <Outlet />
+      </main>
+    </>
   );
 };
 

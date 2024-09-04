@@ -8,4 +8,5 @@ export const PATH = {
   PROFILE_Edit: '/profile/:userId/edit',
   SIGN_IN: '/signin',
   SETTINGS: '/settings',
+  FOLLOW: '/profile/:userId/follow',
 } as const;
