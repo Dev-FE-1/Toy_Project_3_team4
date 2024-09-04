@@ -4,8 +4,6 @@ import { css } from '@emotion/react';
 import { FaPlay, FaPause } from 'react-icons/fa';
 import YouTube, { YouTubeEvent } from 'react-youtube';
 
-// import { Video } from '@/types/post';
-
 import { extractVideoId } from '@/utils/youtubeUtils';
 
 import VideoThumbnail from '../playlist/VideoThumbnail';
@@ -53,7 +51,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
           display: ${showThumbnail ? 'block' : 'none'};
         `}
       >
-        <VideoThumbnail url={`https://img.youtube.com/vi/${extractVideoId(video) || ''}/0.jpg`} isPublic={true} />
+        <VideoThumbnail
+          url={`https://img.youtube.com/vi/${extractVideoId(video) || ''}/0.jpg`}
+          isPublic={true}
+        />
       </div>
       <div
         css={css`

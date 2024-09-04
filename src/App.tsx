@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         children: [{ index: true, element: <ProfileEditPage /> }],
       },
       {
-        path: PATH.Follow,
+        path: PATH.FOLLOW,
         element: <ProtectedRoute />,
         children: [{ index: true, element: <FollowPage /> }],
       },
@@ -81,10 +81,6 @@ const router = createBrowserRouter([
             path: PATH.PROFILE,
             element: <ProfilePage />,
           },
-          // {
-          //   path: PATH.PROFILE_Edit,
-          //   element: <ProfileEditPage />,
-          // },
         ],
       },
     ],
