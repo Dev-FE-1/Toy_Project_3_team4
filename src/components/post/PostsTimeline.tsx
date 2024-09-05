@@ -16,5 +16,4 @@ export const PostsTimeLine = ({ posts }: { posts: PostModel[] }) => {
 const timelineStyles = css`
   max-width: ${theme.width.max};
   margin: 0 auto;
-  padding: 0 16px;
 `;
