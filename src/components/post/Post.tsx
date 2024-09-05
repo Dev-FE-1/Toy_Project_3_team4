@@ -13,12 +13,14 @@ import { Link } from 'react-router-dom';
 
 import { getPlaylist } from '@/api/fetchPlaylist';
 import { updatePostsLikes } from '@/api/fetchPosts';
+import { fetchYouTubeVideoData } from '@/api/fetchYouTubeVideoData';
 import defaultProfile from '@/assets/images/default-avatar.svg';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import { PlaylistModel } from '@/types/playlist';
 import { PostModel } from '@/types/post';
 import { formatRelativeDate } from '@/utils/date';
+import { extractVideoId } from '@/utils/youtubeUtils';
 
 import VideoPlayer from './VideoPlayer';
 import IconButton from '../common/buttons/IconButton';
@@ -36,6 +38,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
   const [playlist, setPlaylist] = useState<PlaylistModel>();
+  const [videoTitle, setVideoTitle] = useState('');
 
   const formatCreateAt = () => {
     if (post.createdAt instanceof Timestamp) {
@@ -55,6 +58,29 @@ const Post: React.FC<PostProps> = ({ post }) => {
 
     fetchPlaylist();
   }, [post.playlistId]);
+
+  useEffect(() => {
+    const getVideoTitle = async () => {
+      try {
+        console.log('Video URL:', post.video);
+        const videoId = extractVideoId(post.video);
+        console.log('Extracted Video ID:', videoId);
+        if (videoId) {
+          const videoData = await fetchYouTubeVideoData(videoId);
+          console.log('Video Data:', videoData);
+          setVideoTitle(videoData.title);
+        } else {
+          console.error('Invalid video URL');
+          setVideoTitle('유효하지 않은 비디오 URL');
+        }
+      } catch (error) {
+        console.error('비디오 제목을 가져오는데 실패했습니다:', error);
+        setVideoTitle('비디오 제목을 불러올 수 없습니다');
+      }
+    };
+
+    getVideoTitle();
+  }, [post.video]);
 
   useEffect(() => {
     if (currentUser) {
@@ -84,8 +110,8 @@ const Post: React.FC<PostProps> = ({ post }) => {
         </div>
         <p css={contentStyle}>{post.content}</p>
         <p css={playlistStyle}>
-          <Link to={`/playlist/${post.playlistId}`}>
-            <span>[Playlist] {playlist?.title}</span>
+          <Link to={post.video}>
+            <span>{videoTitle}</span>
             <HiChevronRight />
           </Link>
         </p>
@@ -105,7 +131,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
             </button>
           </div>
           <p css={pliStyle}>
-            {post.playlistName} (<span>{post.video.length}</span>)
+            {playlist?.title} (<span>{playlist?.videos.length}</span>)
           </p>
         </div>
       </div>

@@ -28,7 +28,6 @@ const UserInfo: React.FC<UserInfoProps> = ({
   onFollowToggle,
   onClick,
 }) => {
-  console.log('UserInfo props:', { name, userId, showFollowButton, isFollowing });
   return (
     <div css={[userInfoStyle(imageSize), customStyle]}>
       <div className="info-container" onClick={onClick}>
