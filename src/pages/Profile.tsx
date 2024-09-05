@@ -53,9 +53,6 @@ const ProfilePage: React.FC = () => {
     const fetchUserPosts = async () => {
       if (userId) {
         try {
-          // setLoadingPosts(true);
-          // const profilePosts = await getPostsByUserId({ userId });
-          // setFilteredPosts(profilePosts);
           setLoadingPosts(true);
           const posts = await getPostsByUserId({ userId });
           setUserPosts(posts);
