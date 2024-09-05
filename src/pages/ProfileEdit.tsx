@@ -10,6 +10,7 @@ import Textarea from '@/components/common/inputs/Textarea';
 import BackHeader from '@/components/layout/header/BackHeader';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
+import { useToastStore } from '@/stores/toastStore';
 import { UserData } from '@/types/profile';
 
 const ProfileEditPage: React.FC = () => {
@@ -17,6 +18,7 @@ const ProfileEditPage: React.FC = () => {
   const location = useLocation();
   const currentUser = useAuth();
   const { updateUserData } = useUserData(currentUser?.uid || null);
+  const addToast = useToastStore((state) => state.addToast);
 
   const initialUserData = location.state?.userData as UserData | undefined;
 
@@ -59,9 +61,11 @@ const ProfileEditPage: React.FC = () => {
         bio,
         photoURL,
       });
+      addToast('프로필이 수정되었습니다.');
       navigate(`/profile/${currentUser.uid}`);
     } catch (error) {
       console.error('Error updating user data:', error);
+      addToast('프로필 수정 중 오류가 발생했습니다.');
     }
   };
 
