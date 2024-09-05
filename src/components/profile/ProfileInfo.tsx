@@ -68,35 +68,37 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
             </div>
           </div>
           {isOwnProfile ? (
-            <FitButton styleType="secondary" onClick={onEditClick}>
+            <FitButton styleType="secondary" onClick={onEditClick} customStyle={buttonStyle}>
               프로필 수정
             </FitButton>
           ) : (
             <FitButton
               styleType={isFollowing ? 'secondary' : 'primary'}
               onClick={handleFollowToggle}
+              customStyle={buttonStyle}
             >
               {isFollowing ? '팔로잉' : '팔로우'}
             </FitButton>
           )}
         </div>
-        <div css={introduceStyle}>
-          <p>{userData.bio}</p>
-        </div>
+        {userData.bio && (
+          <div css={introduceStyle}>
+            <p>{userData.bio}</p>
+          </div>
+        )}
       </div>
     </>
   );
 };
 
 const profileContainerStyle = css`
-  padding: 20px 16px 22px 16px;
+  padding: 20px 0 28px;
 `;
 
 const ProfileWrapStyle = css`
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 12px;
 `;
 
 const profileImageStyle = css`
@@ -119,19 +121,18 @@ const profileInfoStyle = css`
 const usernameStyle = (theme: Theme) => css`
   font-size: ${theme.fontSizes.base};
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 `;
 
 const followInfoStyle = css`
   display: flex;
-  gap: 20px;
-  // margin-bottom: 8px;
+  gap: 16px;
 `;
 
 const followCountStyle = (theme: Theme) => css`
   font-weight: 700;
   font-size: ${theme.fontSizes.small};
-  margin-right: 5px;
+  margin-right: 4px;
 `;
 
 const followLabelStyle = (theme: Theme) => css`
@@ -139,7 +140,15 @@ const followLabelStyle = (theme: Theme) => css`
 `;
 
 const introduceStyle = (theme: Theme) => css`
-  font-size: ${theme.fontSizes.micro};
+  font-size: ${theme.fontSizes.small};
+  font-weight: 500;
+  color: ${theme.colors.darkestGray};
+  padding: 0 8px;
+  margin-top: 16px;
+`;
+
+const buttonStyle = css`
+  font-weight: 600;
 `;
 
 export default ProfileInfo;

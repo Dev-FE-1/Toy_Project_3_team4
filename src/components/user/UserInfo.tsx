@@ -4,11 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import FitButton from '@/components/common/buttons/FitButton';
 import theme from '@/styles/theme';
 
+type ImageSizeType = 'default' | 'medium' | 'large';
+
+const imageSizes: Record<ImageSizeType, string> = {
+  default: '24px',
+  medium: '32px',
+  large: '42px',
+};
 interface UserInfoProps {
   name: string;
   url: string;
   additionalInfo?: string | null;
-  imageSize?: 'default' | 'large';
+  imageSize?: ImageSizeType;
   customStyle?: SerializedStyles;
   userId?: string;
   showFollowButton?: boolean;
@@ -55,22 +62,22 @@ const UserInfo: React.FC<UserInfoProps> = ({
   );
 };
 
-const userInfoStyle = (imageSize: string) => css`
+const userInfoStyle = (imageSize: ImageSizeType) => css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: ${imageSize === 'default' ? '8px' : '12px'};
+  gap: ${imageSize === 'default' || imageSize === 'medium' ? '8px' : '12px'};
 
   .info-container {
     display: flex;
     align-items: center;
-    gap: ${imageSize === 'default' ? '8px' : '12px'};
+    gap: ${imageSize === 'default' || imageSize === 'medium' ? '8px' : '12px'};
     padding: 0;
     cursor: pointer;
 
     img {
-      width: ${imageSize === 'default' ? '24px' : '42px'};
-      height: ${imageSize === 'default' ? '24px' : '42px'};
+      width: ${imageSizes[imageSize]};
+      height: ${imageSizes[imageSize]};
       border-radius: 50%;
     }
 
@@ -92,11 +99,6 @@ const userInfoStyle = (imageSize: string) => css`
   }
 
   @media screen and (min-width: ${theme.width.max}) {
-    img {
-      width: ${imageSize === 'default' ? '32px' : '42px'};
-      height: ${imageSize === 'default' ? '32px' : '42px'};
-    }
-
     .name-container {
       span {
         font-size: ${theme.fontSizes.base};

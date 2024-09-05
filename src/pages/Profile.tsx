@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import { FaRegHeart } from 'react-icons/fa';
-import { FiPlay } from 'react-icons/fi';
-import { HiOutlinePencil } from 'react-icons/hi2';
+import { HiOutlinePencil, HiOutlinePlay, HiOutlineHeart } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getPostsByUserId, getPostsFilterdLikes } from '@/api/fetchPosts';
@@ -24,8 +22,8 @@ import ProfileInfo from '../components/profile/ProfileInfo';
 
 const tabs = [
   { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
-  { id: 'pli', label: '플리', icon: <FiPlay /> },
-  { id: 'likes', label: '좋아요', icon: <FaRegHeart /> },
+  { id: 'pli', label: '플리', icon: <HiOutlinePlay /> },
+  { id: 'likes', label: '좋아요', icon: <HiOutlineHeart /> },
 ];
 
 const ProfilePage: React.FC = () => {
