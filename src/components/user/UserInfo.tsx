@@ -1,4 +1,5 @@
 import { css, SerializedStyles } from '@emotion/react';
+import { useNavigate } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
 import theme from '@/styles/theme';
@@ -28,10 +29,12 @@ const UserInfo: React.FC<UserInfoProps> = ({
   onFollowToggle,
   onClick,
 }) => {
-  console.log('UserInfo props:', { name, userId, showFollowButton, isFollowing });
+  const navigate = useNavigate();
+  const onClickUserName = () => navigate(`/profile/${userId}`);
+
   return (
     <div css={[userInfoStyle(imageSize), customStyle]}>
-      <div className="info-container" onClick={onClick}>
+      <div className="info-container" onClick={onClick || onClickUserName}>
         <img src={url} alt={name} />
         <div className="name-container">
           <span>{name}</span>

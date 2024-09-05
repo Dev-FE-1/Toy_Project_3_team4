@@ -81,7 +81,7 @@ const FollowPage = () => {
   );
 };
 
-const userItemStyle = css`
+export const userItemStyle = css`
   margin-bottom: 16px;
   cursor: pointer;
 `;
