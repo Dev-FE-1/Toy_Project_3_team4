@@ -65,6 +65,7 @@ const userInfoStyle = (imageSize: string) => css`
     display: flex;
     align-items: center;
     gap: ${imageSize === 'default' ? '8px' : '12px'};
+    padding: 0;
 
     img {
       width: ${imageSize === 'default' ? '24px' : '42px'};
