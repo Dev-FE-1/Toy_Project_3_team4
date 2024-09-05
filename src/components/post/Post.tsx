@@ -89,6 +89,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
               name={userData?.displayName || 'UnKnown User'}
               url={userData?.photoURL || defaultProfile}
               imageSize="large"
+              userId={post.userId}
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
