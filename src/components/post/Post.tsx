@@ -62,12 +62,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
   useEffect(() => {
     const getVideoTitle = async () => {
       try {
-        console.log('Video URL:', post.video);
         const videoId = extractVideoId(post.video);
-        console.log('Extracted Video ID:', videoId);
         if (videoId) {
           const videoData = await fetchYouTubeVideoData(videoId);
-          console.log('Video Data:', videoData);
           setVideoTitle(videoData.title);
         } else {
           console.error('Invalid video URL');
