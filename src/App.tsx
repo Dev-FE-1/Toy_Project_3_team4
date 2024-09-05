@@ -9,12 +9,14 @@ import HomePage from '@/pages/Home';
 import NewPost from '@/pages/NewPost';
 import PlaylistPage from '@/pages/Playlist';
 import PlaylistDetailPage from '@/pages/PlaylistDetail';
+import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
 import ProfilePage from '@/pages/Profile';
 import ProfileEditPage from '@/pages/ProfileEdit';
 import SearchPage from '@/pages/Search';
 import SelectPliPage from '@/pages/SelectPli';
 import SettingsPage from '@/pages/Settings';
 import SignInPage from '@/pages/SignIn';
+import TermsOfServicePage from '@/pages/TermsOfServicePage';
 import ProtectedRoute from '@/routes/ProtectedRoute';
 import PublicRoute from '@/routes/PublicRoute';
 
@@ -28,12 +30,20 @@ const router = createBrowserRouter([
         children: [{ index: true, element: <SignInPage /> }],
       },
       {
+        path: PATH.PRIVACY_POLICY,
+        element: <PrivacyPolicyPage />,
+      },
+      {
+        path: PATH.TERM_OF_SERVICE,
+        element: <TermsOfServicePage />,
+      },
+      {
         path: PATH.SETTINGS,
         element: <ProtectedRoute />,
         children: [{ index: true, element: <SettingsPage /> }],
       },
       {
-        path: PATH.PROFILE_Edit,
+        path: PATH.PROFILE_EDIT,
         element: <ProtectedRoute />,
         children: [{ index: true, element: <ProfileEditPage /> }],
       },

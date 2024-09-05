@@ -1,4 +1,4 @@
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import { HiArrowLeft } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +12,6 @@ interface BackHeaderProps {
   title?: string;
   rightButtonText?: string;
   onRightButtonClick?: () => void;
-  customStyle?: SerializedStyles;
   rightButtonDisabled?: boolean;
 }
 
@@ -21,7 +20,6 @@ const BackHeader: React.FC<BackHeaderProps> = ({
   title,
   rightButtonText,
   onRightButtonClick,
-  customStyle,
   rightButtonDisabled = false,
 }) => {
   const navigate = useNavigate();
@@ -42,7 +40,7 @@ const BackHeader: React.FC<BackHeaderProps> = ({
           />
         )
       }
-      customStyle={customStyle}
+      customStyle={headerStyle}
     />
   );
 };
@@ -64,6 +62,10 @@ const ActionButton: React.FC<{ text: string; onClick: () => void; disabled: bool
     </button>
   );
 };
+
+const headerStyle = css`
+  position: fixed;
+`;
 
 const titleStyle = css`
   margin: 0;
