@@ -13,7 +13,9 @@ import { Link } from 'react-router-dom';
 import { getPlaylist } from '@/api/fetchPlaylist';
 import { updatePostsLikes } from '@/api/fetchPosts';
 import { fetchYouTubeVideoData } from '@/api/fetchYouTubeVideoData';
-import defaultProfile from '@/assets/images/default-avatar.svg';
+import IconButton from '@/components/common/buttons/IconButton';
+import VideoPlayer from '@/components/post/VideoPlayer';
+import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import theme from '@/styles/theme';
@@ -21,10 +23,6 @@ import { PlaylistModel } from '@/types/playlist';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
 import { extractVideoId } from '@/utils/youtubeUtils';
-
-import VideoPlayer from './VideoPlayer';
-import IconButton from '../common/buttons/IconButton';
-import UserInfo from '../user/UserInfo';
 
 interface PostProps {
   id: string;
@@ -89,7 +87,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
           <div css={metaInfoStyle}>
             <UserInfo
               name={userData?.displayName || 'UnKnown User'}
-              url={userData?.photoURL || defaultProfile}
+              url={userData?.photoURL}
               imageSize="medium"
               userId={post.userId}
             />

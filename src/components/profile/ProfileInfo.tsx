@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 import { css, Theme } from '@emotion/react';
 import { Link } from 'react-router-dom';
 
+import defaultImage from '@/assets/images/default-avatar.svg';
 import FitButton from '@/components/common/buttons/FitButton';
 import { useAuth } from '@/hooks/useAuth';
+import theme from '@/styles/theme';
 import { UserData } from '@/types/profile';
 
 interface ProfileInfoProps {
@@ -36,7 +38,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
       try {
         await onFollowToggle();
         setIsFollowing(!isFollowing);
-        console.log(isFollowing ? '언팔로우' : '팔로우');
       } catch (error) {
         console.error('팔로우/언팔로우 실패:', error);
       }
@@ -48,7 +49,11 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
       <div css={profileContainerStyle}>
         <div css={ProfileWrapStyle}>
           <div css={profileImageStyle}>
-            <img src={userData.photoURL} alt="Profile" />
+            {userData.photoURL ? (
+              <img src={userData.photoURL} alt="Profile" />
+            ) : (
+              <img src={defaultImage} alt="" className="image-placeholder" />
+            )}
           </div>
           <div css={profileInfoStyle}>
             <p css={usernameStyle}>{userData.displayName}</p>
@@ -102,10 +107,19 @@ const ProfileWrapStyle = css`
 `;
 
 const profileImageStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 70px;
   height: 70px;
   border-radius: 50%;
   overflow: hidden;
+  background-color: ${theme.colors.lightestGray};
+
+  .image-placeholder {
+    width: 60%;
+    height: 60%;
+  }
 
   img {
     width: 100%;

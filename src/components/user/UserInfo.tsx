@@ -1,6 +1,7 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
+import defaultImage from '@/assets/images/default-avatar.svg';
 import FitButton from '@/components/common/buttons/FitButton';
 import theme from '@/styles/theme';
 
@@ -13,7 +14,7 @@ const imageSizes: Record<ImageSizeType, string> = {
 };
 interface UserInfoProps {
   name: string;
-  url: string;
+  url?: string;
   additionalInfo?: string | null;
   imageSize?: ImageSizeType;
   customStyle?: SerializedStyles;
@@ -42,7 +43,13 @@ const UserInfo: React.FC<UserInfoProps> = ({
   return (
     <div css={[userInfoStyle(imageSize), customStyle]}>
       <div className="info-container" onClick={onClick || onClickUserName}>
-        <img src={url} alt={name} />
+        <div className="image-container">
+          {url ? (
+            <img src={url} alt="Profile" />
+          ) : (
+            <img src={defaultImage} alt="" className="image-placeholder" />
+          )}
+        </div>
         <div className="name-container">
           <span>{name}</span>
           {additionalInfo && <p>{additionalInfo}</p>}
@@ -75,10 +82,26 @@ const userInfoStyle = (imageSize: ImageSizeType) => css`
     padding: 0;
     cursor: pointer;
 
-    img {
+    .image-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: ${imageSizes[imageSize]};
       height: ${imageSizes[imageSize]};
+      background-color: ${theme.colors.lightestGray};
       border-radius: 50%;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+
+        &.image-placeholder {
+          width: 60%;
+          height: 60%;
+        }
+      }
     }
 
     .name-container {
