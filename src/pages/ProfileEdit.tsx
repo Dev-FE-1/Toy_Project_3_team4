@@ -110,9 +110,19 @@ const ProfileEditPage: React.FC = () => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="닉네임"
+          placeholder="닉네임을 입력해주세요"
+          customStyle={inputStyle}
+          label="닉네임"
         />
-        <Textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="소개" />
+        <Textarea
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          placeholder="소개를 입력해주세요"
+          label="소개"
+          customStyle={inputStyle}
+        />
+      </div>
+      <div css={buttonContainerStyle}>
         <FullButton styleType="primary" onClick={handleSaveProfile}>
           수정하기
         </FullButton>
@@ -127,17 +137,16 @@ const ProfileEditPage: React.FC = () => {
 const pageContentStyle = css`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px;
+  align-items: center;
+  gap: 12px;
   width: 100%;
-  max-width: 500px;
   margin: 0 auto;
+  padding-bottom: 156px;
 `;
 
 const imageContainerStyle = css`
-  width: 120px;
-  margin: 0 auto;
   position: relative;
+  margin-top: 16px;
 
   > div {
     display: flex;
@@ -193,6 +202,18 @@ const imageChangeButton = css`
 
 const hiddenInputStyle = css`
   display: none;
+`;
+
+const inputStyle = css`
+  padding: 8px 14px;
+`;
+
+const buttonContainerStyle = css`
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 32px);
+  max-width: calc(${theme.width.max} - 32px);
+  padding-bottom: 32px;
 `;
 
 export default ProfileEditPage;
