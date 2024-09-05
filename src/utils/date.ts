@@ -22,3 +22,15 @@ export const stringToTimestamp = (dateString: string): Timestamp => {
   const date = new Date(dateString);
   return Timestamp.fromDate(date);
 };
+
+export const formatCreatedAt = (createdAt: Timestamp | string | number): string => {
+  if (createdAt instanceof Timestamp) {
+    return formatRelativeDate(createdAt.toDate().toISOString());
+  } else if (typeof createdAt === 'string') {
+    return formatRelativeDate(createdAt);
+  } else if (typeof createdAt === 'number') {
+    return formatRelativeDate(new Date(createdAt).toISOString());
+  } else {
+    throw new Error('Invalid date format');
+  }
+};
