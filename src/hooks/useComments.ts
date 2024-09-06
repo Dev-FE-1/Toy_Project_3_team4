@@ -3,14 +3,9 @@ import { useState } from 'react';
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 
-import {
-  createComment,
-  getComments,
-  updateComment,
-  deleteComment,
-  CommentModel,
-} from '@/api/fetchComment';
+import { createComment, getComments, updateComment, deleteComment } from '@/api/fetchComment';
 import { useAuth } from '@/hooks/useAuth';
+import { CommentModel } from '@/types/comment';
 
 export const useComments = (postId: string) => {
   const [newCommentContent, setNewCommentContent] = useState('');

@@ -11,22 +11,17 @@ import {
   limit,
   startAfter,
   Timestamp,
+  where,
 } from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
-
-export interface CommentModel {
-  id: string;
-  userId: string;
-  content: string;
-  createdAt: Timestamp;
-  updatedAt?: Timestamp;
-}
+import { CommentModel } from '@/types/comment';
 
 export const createComment = async (
   postId: string,
   userId: string,
   content: string,
+  parentCommentId?: string,
 ): Promise<string> => {
   const postDoc = doc(db, 'posts', postId);
   const commentsCollection = collection(postDoc, 'comments');
@@ -35,6 +30,7 @@ export const createComment = async (
     userId,
     content,
     createdAt: Timestamp.now(),
+    parentCommentId: parentCommentId || null,
   };
 
   const docRef = await addDoc(commentsCollection, newComment);
@@ -56,10 +52,13 @@ export const getComments = async (
   postId: string,
   count: number = 10,
   lastCommentId?: string,
+  parentCommentId?: string,
 ): Promise<CommentModel[]> => {
   const commentsCollection = collection(db, 'posts', postId, 'comments');
   let q = query(commentsCollection, orderBy('createdAt', 'desc'), limit(count));
-
+  if (parentCommentId) {
+    q = query(q, where('parentCommentId', '==', parentCommentId));
+  }
   if (lastCommentId) {
     const lastCommentDoc = await getDoc(doc(commentsCollection, lastCommentId));
     if (lastCommentDoc.exists()) {

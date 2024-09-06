@@ -1,9 +1,9 @@
 // CommentItem.tsx
 import { css } from '@emotion/react';
 
-import { CommentModel } from '@/api/fetchComment';
 import defaultProfile from '@/assets/images/default-avatar.svg';
 import theme from '@/styles/theme';
+import { CommentModel } from '@/types/comment';
 import { formatCreatedAt } from '@/utils/date';
 
 import CommentActions from './CommentActions';
