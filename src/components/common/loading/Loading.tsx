@@ -2,6 +2,7 @@ import { css, keyframes } from '@emotion/react';
 
 import logo from '@/assets/images/logo.svg';
 import { mainStyle } from '@/layouts/Container';
+import theme from '@/styles/theme';
 
 const Loading = () => {
   return (
@@ -25,6 +26,10 @@ const containerStyle = css`
   flex-direction: column;
   align-items: center;
   gap: 24px;
+
+  @media screen and (min-width: ${theme.width.max}) {
+    border: 0;
+  }
 
   img {
     width: 70px;
