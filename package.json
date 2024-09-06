@@ -10,7 +10,9 @@
     "eslint": "eslint",
     "preview": "vite preview",
     "prettier": "prettier --write",
-    "type-check": "tsc --noEmit -p ./tsconfig.app.json"
+    "type-check": "tsc --noEmit -p ./tsconfig.app.json",
+    "test": "playwright test",
+    "test:report": "playwright show-report"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
