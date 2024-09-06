@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { useLocation } from 'react-router-dom';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';
 import { useComments } from '@/hooks/useComments';
@@ -8,14 +7,11 @@ import { useMultipleUsersData } from '@/hooks/useMultipleUsersData';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
 
-const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
-};
+interface CommentSectionProps {
+  postId: string;
+}
 
-const CommentSection: React.FC = () => {
-  const query = useQuery();
-  const postId = query.get('postId');
-
+const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
   const {
     currentUser,
     comments,
