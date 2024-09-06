@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { HiOutlinePencil, HiOutlinePlay, HiOutlineHeart } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getPostsByUserId, getPostsFilterdLikes } from '@/api/fetchPosts';
+import { getPostsByUserId, getPostsFilteredLikes } from '@/api/fetchPosts';
 import Spinner from '@/components/common/loading/Spinner';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
@@ -67,7 +67,7 @@ const ProfilePage: React.FC = () => {
       if (userId) {
         try {
           setLoadingLikedPosts(true);
-          const posts = await getPostsFilterdLikes({ userId });
+          const posts = await getPostsFilteredLikes({ userId });
           setLikedPosts(posts);
         } catch (err) {
           setError('Failed to load liked posts');

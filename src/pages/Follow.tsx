@@ -1,24 +1,37 @@
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import BackHeader from '@/components/layout/header/BackHeader';
 import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useUserData } from '@/hooks/useUserData';
 import { UserData } from '@/types/profile';
 
-const FollowPage = () => {
+const FollowPage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { userData, followingUsers, followerUsers, toggleFollow, isFollowing } = useUserData(
-    userId || null,
-  );
-  const [activeTab, setActiveTab] = useState('following');
+  const { userData, followingUsers, followerUsers, toggleFollow, isFollowing, refetchUserData } =
+    useUserData(userId || null);
   const currentUser = useAuth();
+
+  const initialActiveTab = searchParams.get('active') || 'following';
+  const {
+    value: activeTab,
+    debouncedValue: debouncedActiveTab,
+    onChange: setActiveTab,
+  } = useDebounce({
+    initialValue: initialActiveTab,
+  });
+
+  useEffect(() => {
+    refetchUserData();
+  }, [debouncedActiveTab, refetchUserData]);
 
   const handleFollowToggle = useCallback(
     async (targetUserId: string) => {
@@ -58,13 +71,10 @@ const FollowPage = () => {
     ));
   };
 
-  const tabs = useMemo(
-    () => [
-      { id: 'following', label: `팔로잉 ${followingUsers.length}` },
-      { id: 'followers', label: `팔로워 ${followerUsers.length}` },
-    ],
-    [followingUsers.length, followerUsers.length],
-  );
+  const tabs = [
+    { id: 'following', label: `팔로잉 ${userData?.following?.length || 0}` },
+    { id: 'followers', label: `팔로워 ${userData?.followers?.length || 0}` },
+  ];
 
   return (
     <>
