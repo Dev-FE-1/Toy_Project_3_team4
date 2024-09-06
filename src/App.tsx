@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import CommentSection from '@/components/comment/commentSection';
 import { PATH } from '@/constants/path';
 import ContainerLayout from '@/layouts/Container';
 import RootLayout from '@/layouts/Root';
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
           {
             path: PATH.PROFILE,
             element: <ProfilePage />,
+          },
+          {
+            path: 'comments',
+            element: <CommentSection postId="postId" />,
           },
         ],
       },
