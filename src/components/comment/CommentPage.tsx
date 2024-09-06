@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { getPostByPostId } from '@/api/fetchPosts';
 import CommentSection from '@/components/comment/commentSection';
+import BackHeader from '@/components/layout/header/BackHeader';
 import Post from '@/components/post/Post';
 import { PostModel } from '@/types/post';
 
@@ -29,6 +30,7 @@ export const CommentPage = () => {
 
   return (
     <>
+      <BackHeader title="" />
       {post && <Post id={postId || ''} post={post} />}
       <CommentSection postId={postId || ''} />
     </>
