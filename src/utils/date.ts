@@ -8,8 +8,6 @@ export const formatRelativeDate = (dateString: string): string => {
   const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  console.log(dateString, diffDays, diffTime);
-
   if (diffMinutes < 1) return '방금 전';
   if (diffMinutes < 60) return `${diffMinutes}분 전`;
   if (diffHours < 24) return `${diffHours}시간 전`;
