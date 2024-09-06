@@ -1,14 +1,17 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 
 import { css } from '@emotion/react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
+import { updatePlaylistOrder } from '@/api/fetchPlaylist';
 import PlaylistContentsItem from '@/components/playlistDetail/PlaylistContentsItem';
 import theme from '@/styles/theme';
 import { VideoModel } from '@/types/playlist';
 
 interface PlaylistContentsProps {
+  playlistId: string;
   videos: VideoModel[];
+  setVideos: (videos: VideoModel[]) => void;
   isDraggable?: boolean;
   onVideoSelect: (videoId: string) => void;
   selectedVideoId: string | null;
@@ -16,13 +19,14 @@ interface PlaylistContentsProps {
 }
 
 const PlaylistContents: React.FC<PlaylistContentsProps> = ({
-  videos: initialVideos,
+  playlistId,
+  videos,
+  setVideos,
   onVideoSelect,
   selectedVideoId,
   isDraggable = false,
   isOwner,
 }) => {
-  const [videos, setVideos] = useState(initialVideos);
   const listRef = useRef<HTMLUListElement>(null);
 
   const onDragEnd = (result: DropResult) => {
@@ -33,7 +37,7 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
     newVideos.splice(result.destination.index, 0, reorderedItem);
 
     setVideos(newVideos);
-    // 서버에 새 순서 저장
+    updatePlaylistOrder(playlistId, newVideos);
   };
 
   if (!isDraggable || !isOwner) {

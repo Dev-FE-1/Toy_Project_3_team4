@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 
@@ -20,10 +20,17 @@ const PlaylistDetailPage = () => {
   const { data: playlistUser } = useUserById(playlist?.userId || '');
   const user = useAuth();
 
+  const [videos, setVideos] = useState(playlist?.videos || []);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (playlist && playlist.videos) {
+      setVideos(playlist.videos);
+    }
+  }, [playlist]);
+
   if (isLoading) {
-    return <p>로딩 중입니다...</p>;
+    return;
   }
 
   if (isError || !playlist) {
@@ -50,6 +57,7 @@ const PlaylistDetailPage = () => {
   };
 
   const isOwner = user?.uid === playlist?.userId;
+
   return (
     <>
       <BackHeader
@@ -58,9 +66,16 @@ const PlaylistDetailPage = () => {
         onRightButtonClick={state?.selectPli ? handleCompleteClick : undefined}
         rightButtonDisabled={!selectedVideoId}
       />
-      <PlaylistInfo playlist={playlist} user={userModel} isOwner={isOwner} />
+      <PlaylistInfo
+        playlist={playlist}
+        thumbnailUrl={videos[0] && `https://img.youtube.com/vi/${videos[0]?.videoId}/0.jpg`}
+        user={userModel}
+        isOwner={isOwner}
+      />
       <PlaylistContents
-        videos={playlist.videos}
+        playlistId={playlist.playlistId}
+        videos={videos}
+        setVideos={setVideos}
         onVideoSelect={handleVideoSelect}
         selectedVideoId={selectedVideoId}
         isDraggable={isOwner && !state?.selectPli}
