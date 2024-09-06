@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import { FaRegHeart } from 'react-icons/fa';
-import { FiPlay } from 'react-icons/fi';
-import { HiOutlinePencil } from 'react-icons/hi2';
+import { HiOutlinePencil, HiOutlinePlay, HiOutlineHeart } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { getPostsByUserId, getPostsFilterdLikes } from '@/api/fetchPosts';
+import Spinner from '@/components/common/loading/Spinner';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
@@ -18,14 +18,13 @@ import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useAddPlaylist } from '@/hooks/usePostPlaylist';
 import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
-import { dummyPosts } from '@/utils/dummy';
 
 import ProfileInfo from '../components/profile/ProfileInfo';
 
 const tabs = [
   { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
-  { id: 'pli', label: '플리', icon: <FiPlay /> },
-  { id: 'likes', label: '좋아요', icon: <FaRegHeart /> },
+  { id: 'pli', label: '플리', icon: <HiOutlinePlay /> },
+  { id: 'likes', label: '좋아요', icon: <HiOutlineHeart /> },
 ];
 
 const ProfilePage: React.FC = () => {
@@ -35,7 +34,11 @@ const ProfilePage: React.FC = () => {
   const currentUser = useAuth();
   const { userData, toggleFollow } = useUserData(userId || currentUser?.uid || null);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [filteredPosts, setFilteredPosts] = useState<PostModel[]>([]);
+  const [userPosts, setUserPosts] = useState<PostModel[]>([]);
+  const [likedPosts, setLikedPosts] = useState<PostModel[]>([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [loadingLikedPosts, setLoadingLikedPosts] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists();
   const addPlaylistMutation = useAddPlaylist();
 
@@ -46,10 +49,37 @@ const ProfilePage: React.FC = () => {
   }, [currentUser, userData]);
 
   useEffect(() => {
-    if (userId) {
-      const profilePosts = dummyPosts.filter((post) => post.userId === userId);
-      setFilteredPosts(profilePosts);
-    }
+    const fetchUserPosts = async () => {
+      if (userId) {
+        try {
+          setLoadingPosts(true);
+          const posts = await getPostsByUserId({ userId });
+          setUserPosts(posts);
+        } catch (err) {
+          setError('Failed to load posts');
+          console.error(err);
+        } finally {
+          setLoadingPosts(false);
+        }
+      }
+    };
+    const fetchLikedPosts = async () => {
+      if (userId) {
+        try {
+          setLoadingLikedPosts(true);
+          const posts = await getPostsFilterdLikes({ userId });
+          setLikedPosts(posts);
+        } catch (err) {
+          setError('Failed to load liked posts');
+          console.error(err);
+        } finally {
+          setLoadingLikedPosts(false);
+        }
+      }
+    };
+
+    fetchUserPosts();
+    fetchLikedPosts();
   }, [userId]);
 
   const handleSettingsClick = () => {
@@ -93,9 +123,15 @@ const ProfilePage: React.FC = () => {
       <div>
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
           <TabContent id="post" activeTabId={activeTab}>
-            {filteredPosts.map((post) => (
-              <Post key={post.postId} post={post} id={post.postId} />
-            ))}
+            {loadingPosts ? (
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
+            ) : error ? (
+              <div>{error}</div>
+            ) : (
+              userPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
+            )}
           </TabContent>
           <TabContent id="pli" activeTabId={activeTab}>
             <AddPlaylistButton
@@ -103,13 +139,23 @@ const ProfilePage: React.FC = () => {
               onAddPlaylist={handleAddPlaylist}
             />
             {playlistsLoading ? (
-              <div>Loading playlists...</div>
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
             ) : (
               <Playlists playlists={playlists || []} />
             )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
-            <div>좋아요 내용</div>
+            {loadingLikedPosts ? (
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
+            ) : error ? (
+              <div>{error}</div>
+            ) : (
+              likedPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
+            )}
           </TabContent>
         </TabMenu>
       </div>
@@ -119,6 +165,14 @@ const ProfilePage: React.FC = () => {
 
 const addPlaylistButtonStyle = css`
   margin-bottom: 24px;
+`;
+
+const spinnerContainerStyle = css`
+  width: 100%;
+`;
+
+const spinnerStyle = css`
+  margin: 48px auto;
 `;
 
 export default ProfilePage;

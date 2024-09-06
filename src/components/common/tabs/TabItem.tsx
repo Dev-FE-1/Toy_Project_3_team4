@@ -3,7 +3,7 @@ import { Theme, css, SerializedStyles } from '@emotion/react';
 interface TabItemProps {
   id: string;
   label: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   isActive: boolean;
   onClick: (id: string) => void;
   customStyle?: SerializedStyles;
@@ -11,7 +11,7 @@ interface TabItemProps {
 
 const TabItem: React.FC<TabItemProps> = ({ id, label, icon, isActive, onClick, customStyle }) => (
   <button onClick={() => onClick(id)} css={[tabStyle(isActive), customStyle]}>
-    <span css={iconStyle(isActive)}>{icon}</span>
+    {icon && <span css={iconStyle(isActive)}>{icon}</span>}
     {label}
   </button>
 );

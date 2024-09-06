@@ -5,7 +5,7 @@ import TabItem from './TabItem';
 export interface TabItemData {
   id: string;
   label: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 interface TabListProps {

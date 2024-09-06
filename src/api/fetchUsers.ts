@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
 import { UserModel } from '@/types/user';
@@ -20,4 +20,12 @@ export const updateUserInfoByUserId = async ({
   const userDoc = doc(usersCollection, userId);
   await updateDoc(userDoc, { displayName, photoURL, email });
   return { userId, displayName, email, photoURL, subscriptions: [] };
+};
+
+export const fetchMultipleUsersByUserIds = async (userIds: string[]) => {
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('__name__', 'in', userIds));
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map((doc) => doc.data());
 };

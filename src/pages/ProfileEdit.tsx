@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { css, Theme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { HiOutlinePhoto } from 'react-icons/hi2';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import defaultImage from '@/assets/images/default-avatar.svg';
 import FullButton from '@/components/common/buttons/FullButton';
 import Input from '@/components/common/inputs/Input';
 import Textarea from '@/components/common/inputs/Textarea';
 import BackHeader from '@/components/layout/header/BackHeader';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
+import { useToastStore } from '@/stores/toastStore';
+import theme from '@/styles/theme';
 import { UserData } from '@/types/profile';
 
 const ProfileEditPage: React.FC = () => {
@@ -17,6 +20,7 @@ const ProfileEditPage: React.FC = () => {
   const location = useLocation();
   const currentUser = useAuth();
   const { updateUserData } = useUserData(currentUser?.uid || null);
+  const addToast = useToastStore((state) => state.addToast);
 
   const initialUserData = location.state?.userData as UserData | undefined;
 
@@ -59,9 +63,11 @@ const ProfileEditPage: React.FC = () => {
         bio,
         photoURL,
       });
+      addToast('프로필이 수정되었습니다.');
       navigate(`/profile/${currentUser.uid}`);
     } catch (error) {
       console.error('Error updating user data:', error);
+      addToast('프로필 수정 중 오류가 발생했습니다.');
     }
   };
 
@@ -78,13 +84,15 @@ const ProfileEditPage: React.FC = () => {
       <BackHeader title="프로필 수정" />
       <div css={pageContentStyle}>
         <div css={imageContainerStyle}>
-          {photoURL ? (
-            <img src={photoURL} alt="Profile" />
-          ) : (
-            <div css={placeholderImageStyle}>No Image</div>
-          )}
+          <div>
+            {photoURL ? (
+              <img src={photoURL} alt="Profile" />
+            ) : (
+              <img src={defaultImage} alt="" className="image-placeholder" />
+            )}
+          </div>
           <span onClick={handleImageClick}>
-            <HiOutlinePhoto />
+            <HiOutlinePhoto size={20} />
           </span>
         </div>
         <input
@@ -95,16 +103,26 @@ const ProfileEditPage: React.FC = () => {
           css={hiddenInputStyle}
           id="profile-image-upload"
         />
-        <button onClick={photoURL ? handleDeleteImage : handleImageClick} css={imageChangeButton}>
-          {photoURL ? '이미지 삭제' : '이미지 추가'}
+        <button onClick={handleDeleteImage} css={imageChangeButton}>
+          {photoURL && '이미지 삭제'}
         </button>
         <Input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="닉네임"
+          placeholder="닉네임을 입력해주세요"
+          customStyle={inputStyle}
+          label="닉네임"
         />
-        <Textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="소개" />
+        <Textarea
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          placeholder="소개를 입력해주세요"
+          label="소개"
+          customStyle={inputStyle}
+        />
+      </div>
+      <div css={buttonContainerStyle}>
         <FullButton styleType="primary" onClick={handleSaveProfile}>
           수정하기
         </FullButton>
@@ -119,31 +137,45 @@ const ProfileEditPage: React.FC = () => {
 const pageContentStyle = css`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px;
+  align-items: center;
+  gap: 12px;
   width: 100%;
-  max-width: 500px;
   margin: 0 auto;
+  padding-bottom: 156px;
 `;
 
-const imageContainerStyle = (theme: Theme) => css`
-  width: 120px;
-  margin: 0 auto;
+const imageContainerStyle = css`
   position: relative;
+  margin-top: 16px;
 
-  img {
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 120px;
     height: 120px;
+    background-color: ${theme.colors.lightestGray};
     border-radius: 50%;
-    object-fit: cover;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-placeholder {
+      width: 60%;
+      height: 60%;
+    }
   }
 
   span {
     position: absolute;
-    width: 40px;
-    height: 40px;
-    right: 0;
-    bottom: 3%;
+    width: 44px;
+    height: 44px;
+    right: -7px;
+    bottom: 3px;
     border-radius: 50%;
     background: ${theme.colors.darkestGray};
     color: ${theme.colors.white};
@@ -161,19 +193,7 @@ const imageContainerStyle = (theme: Theme) => css`
   }
 `;
 
-const placeholderImageStyle = (theme: Theme) => css`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background-color: #f0f0f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: ${theme.fontSizes.small};
-  color: ${theme.colors.darkestGray};
-`;
-
-const imageChangeButton = (theme: Theme) => css`
+const imageChangeButton = css`
   font-size: ${theme.fontSizes.small};
   color: ${theme.colors.darkestGray};
   background: none;
@@ -182,6 +202,18 @@ const imageChangeButton = (theme: Theme) => css`
 
 const hiddenInputStyle = css`
   display: none;
+`;
+
+const inputStyle = css`
+  padding: 8px 14px;
+`;
+
+const buttonContainerStyle = css`
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 32px);
+  max-width: calc(${theme.width.max} - 32px);
+  padding-bottom: 32px;
 `;
 
 export default ProfileEditPage;

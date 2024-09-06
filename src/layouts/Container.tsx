@@ -9,13 +9,16 @@ interface ContainerLayoutProps {
 
 const ContainerLayout: React.FC<ContainerLayoutProps> = ({ customStyle }) => {
   return (
-    <main css={[mainStyle, customStyle]}>
-      <Outlet />
-    </main>
+    <>
+      <div id="header"></div>
+      <main css={[mainStyle, customStyle]}>
+        <Outlet />
+      </main>
+    </>
   );
 };
 
-const mainStyle = css`
+export const mainStyle = css`
   width: 100%;
   max-width: ${theme.width.max};
   height: 100%;

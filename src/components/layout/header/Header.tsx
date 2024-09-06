@@ -39,18 +39,19 @@ const baseHeaderStyle = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 12px;
   height: 60px;
   padding: 0 16px;
 `;
 
 const leftSectionStyle = css`
+  display: flex;
+  align-items: center;
   flex: 0 0 auto;
 `;
 
 const centerSectionStyle = css`
   flex: 1 1 auto;
-  margin: 0 16px;
 `;
 
 const rightSectionStyle = css`

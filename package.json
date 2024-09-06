@@ -20,6 +20,7 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@tanstack/react-query": "^5.53.3",
     "@types/react-router-dom": "^5.3.3",
+    "algoliasearch": "^5.2.5",
     "express": "^4.19.2",
     "firebase": "^10.13.0",
     "lefthook": "^1.7.15",
