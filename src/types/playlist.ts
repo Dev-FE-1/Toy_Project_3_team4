@@ -13,7 +13,3 @@ export interface VideoModel {
   videoUrl: string;
   thumbnailUrl: string;
 }
-
-export interface DraggableVideoModel extends VideoModel {
-  id: string | number;
-}
