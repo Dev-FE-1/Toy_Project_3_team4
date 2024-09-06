@@ -193,7 +193,6 @@ export const fetchFilteredPostsTimelines = async ({
     const otherPosts = otherPostsSnapshot.docs.map(
       (doc) => ({ postId: doc.id, ...doc.data() }) as PostModel,
     );
-    console.log('otherPosts', otherPosts);
 
     return [...followingPosts, ...otherPosts];
   }
