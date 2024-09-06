@@ -9,7 +9,7 @@ export const useUserPlaylists = () => {
   const user = useAuth();
 
   return useQuery<PlaylistModel[]>({
-    queryKey: ['playlists', user?.uid],
+    queryKey: ['playlists'],
     queryFn: async () => {
       if (!user) {
         return [];
@@ -39,7 +39,7 @@ export const useUserPlaylists = () => {
 
 export const usePlaylistById = (playlistId?: string) => {
   return useQuery<PlaylistModel | null>({
-    queryKey: ['playlist', playlistId],
+    queryKey: ['playlists', playlistId],
     queryFn: async () => {
       if (!playlistId) return null;
 
