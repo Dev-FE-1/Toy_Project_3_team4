@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import { FaRegHeart } from 'react-icons/fa';
-import { FiPlay } from 'react-icons/fi';
-import { HiOutlinePencil } from 'react-icons/hi2';
+import { HiOutlinePencil, HiOutlinePlay, HiOutlineHeart } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getPostsByUserId, getPostsFilterdLikes } from '@/api/fetchPosts';
+import { getPostsByUserId, getPostsFilteredLikes } from '@/api/fetchPosts';
+import Spinner from '@/components/common/loading/Spinner';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
@@ -24,8 +23,8 @@ import ProfileInfo from '../components/profile/ProfileInfo';
 
 const tabs = [
   { id: 'post', label: '포스트', icon: <HiOutlinePencil /> },
-  { id: 'pli', label: '플리', icon: <FiPlay /> },
-  { id: 'likes', label: '좋아요', icon: <FaRegHeart /> },
+  { id: 'pli', label: '플리', icon: <HiOutlinePlay /> },
+  { id: 'likes', label: '좋아요', icon: <HiOutlineHeart /> },
 ];
 
 const ProfilePage: React.FC = () => {
@@ -68,7 +67,7 @@ const ProfilePage: React.FC = () => {
       if (userId) {
         try {
           setLoadingLikedPosts(true);
-          const posts = await getPostsFilterdLikes({ userId });
+          const posts = await getPostsFilteredLikes({ userId });
           setLikedPosts(posts);
         } catch (err) {
           setError('Failed to load liked posts');
@@ -125,7 +124,9 @@ const ProfilePage: React.FC = () => {
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
           <TabContent id="post" activeTabId={activeTab}>
             {loadingPosts ? (
-              <div>Loading posts...</div>
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
             ) : error ? (
               <div>{error}</div>
             ) : (
@@ -138,14 +139,18 @@ const ProfilePage: React.FC = () => {
               onAddPlaylist={handleAddPlaylist}
             />
             {playlistsLoading ? (
-              <div>Loading playlists...</div>
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
             ) : (
               <Playlists playlists={playlists || []} />
             )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
             {loadingLikedPosts ? (
-              <div>Loading liked posts...</div>
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
             ) : error ? (
               <div>{error}</div>
             ) : (
@@ -160,6 +165,14 @@ const ProfilePage: React.FC = () => {
 
 const addPlaylistButtonStyle = css`
   margin-bottom: 24px;
+`;
+
+const spinnerContainerStyle = css`
+  width: 100%;
+`;
+
+const spinnerStyle = css`
+  margin: 48px auto;
 `;
 
 export default ProfilePage;

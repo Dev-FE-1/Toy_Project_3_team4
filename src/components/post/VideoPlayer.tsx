@@ -1,9 +1,11 @@
 import { useState, useRef } from 'react';
 
 import { css } from '@emotion/react';
-import { FaPlay, FaPause } from 'react-icons/fa';
+import { FaPause } from 'react-icons/fa';
+import { HiPlay } from 'react-icons/hi2';
 import YouTube, { YouTubeEvent } from 'react-youtube';
 
+import theme from '@/styles/theme';
 import { extractVideoId } from '@/utils/youtubeUtils';
 
 import VideoThumbnail from '../playlist/VideoThumbnail';
@@ -46,21 +48,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <div
-        css={css`
-          display: ${showThumbnail ? 'block' : 'none'};
-        `}
-      >
-        <VideoThumbnail
-          url={`https://img.youtube.com/vi/${extractVideoId(video) || ''}/0.jpg`}
-          isPublic={true}
-        />
-      </div>
-      <div
-        css={css`
-          display: ${showThumbnail ? 'none' : 'block'};
-        `}
-      >
+      <VideoThumbnail
+        url={`https://img.youtube.com/vi/${extractVideoId(video) || ''}/0.jpg`}
+        isPublic={true}
+        customStyle={videoThumbnailStyle(showThumbnail)}
+      />
+      <div css={youtubeContainerStyle(showThumbnail)}>
         <YouTube
           videoId={extractVideoId(video) || ''}
           opts={{
@@ -86,7 +79,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
         />
       </div>
       <button css={playPauseButton(isPlaying, isHovering || showThumbnail)} onClick={togglePlay}>
-        {isPlaying ? <FaPause /> : <FaPlay />}
+        {isPlaying ? <FaPause /> : <HiPlay size={36} className="play" />}
       </button>
     </div>
   );
@@ -94,23 +87,41 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
 
 const videoContainerStyle = css`
   position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
+  margin-bottom: 8px;
   border-radius: 16px;
+  border: 1px solid ${theme.colors.lightGray};
   overflow: hidden;
-  margin-bottom: 12px;
 
   iframe {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 101%;
+    height: 101%;
   }
 `;
 
+const videoThumbnailStyle = (showThumbnail: boolean) => css`
+  display: ${showThumbnail ? 'block' : 'none'};
+
+  .image-container {
+    border: 0;
+    border-radius: 0;
+
+    img {
+      width: 101%;
+    }
+  }
+`;
+
+const youtubeContainerStyle = (showThumbnail: boolean) => css`
+  display: ${showThumbnail ? 'none' : 'block'};
+  width: 100%;
+  aspect-ratio: 16 / 9;
+`;
+
 const playPauseButton = (isPlaying: boolean, isHovering: boolean) => css`
-  color: white;
+  color: ${theme.colors.white};
   position: absolute;
   top: 50%;
   left: 50%;
@@ -118,8 +129,8 @@ const playPauseButton = (isPlaying: boolean, isHovering: boolean) => css`
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.16);
   backdrop-filter: blur(5px);
   font-size: 24px;
   display: flex;
@@ -132,6 +143,10 @@ const playPauseButton = (isPlaying: boolean, isHovering: boolean) => css`
   z-index: 2;
   opacity: ${isPlaying && !isHovering ? 0 : 1};
   pointer-events: ${isPlaying && !isHovering ? 'none' : 'auto'};
+
+  svg.play {
+    padding-left: 4px;
+  }
 `;
 
 export default VideoPlayer;

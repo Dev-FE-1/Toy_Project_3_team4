@@ -22,7 +22,7 @@ export const getPostByPostId = async ({ postId }: { postId: string }): Promise<P
   return { postId: postDocSnapshot.id, ...postDocSnapshot.data() } as PostModel;
 };
 
-export const getPostsFilterdLikes = async ({
+export const getPostsFilteredLikes = async ({
   userId,
   count = 10,
   lastPostId,

@@ -23,8 +23,8 @@ const LogoHeader: React.FC<LogoHeaderProps> = ({ showSettings = false, onSetting
 };
 
 const Logo: React.FC = () => (
-  <Link to="/">
-    <img src={logoSrc} alt="Logo" css={logoStyle} />
+  <Link to="/" css={logoStyle}>
+    <img src={logoSrc} alt="Logo" />
   </Link>
 );
 
@@ -37,7 +37,11 @@ const SettingsButton: React.FC<SettingsButtonProps> = ({ onClick }) => (
 );
 
 const logoStyle = css`
-  height: 30px;
+  display: flex;
+  align-items: center;
+  img {
+    height: 30px;
+  }
 `;
 
 export default LogoHeader;

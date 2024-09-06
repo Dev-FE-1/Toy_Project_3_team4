@@ -31,7 +31,7 @@ const Navbar = () => {
       <ul className="nav-list">
         <NavItem Icon={HiOutlineHome} path={PATH.HOME} />
         <NavItem Icon={HiMagnifyingGlass} path={PATH.SEARCH} />
-        <NavButtonItem Icon={CiSquarePlus} />
+        <NavButtonItem Icon={CiSquarePlus} stroke={0.5} />
         <NavItem Icon={HiOutlineRectangleStack} path={PATH.PLAYLIST} />
         <NavItem Icon={HiOutlineUserCircle} path={PATH.PROFILE} userId={userId || ''} />
       </ul>

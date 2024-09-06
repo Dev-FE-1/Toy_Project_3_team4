@@ -9,7 +9,7 @@ export const commonInputContainerStyle = css`
   .input-label {
     min-width: 60px;
     width: 15%;
-    padding-top: 6px;
+    padding-top: 10px;
     font-size: ${theme.fontSizes.small};
     font-weight: 500;
     color: ${theme.colors.darkestGray};

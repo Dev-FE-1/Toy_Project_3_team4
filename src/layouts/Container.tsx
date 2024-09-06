@@ -18,7 +18,7 @@ const ContainerLayout: React.FC<ContainerLayoutProps> = ({ customStyle }) => {
   );
 };
 
-const mainStyle = css`
+export const mainStyle = css`
   width: 100%;
   max-width: ${theme.width.max};
   height: 100%;
