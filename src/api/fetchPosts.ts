@@ -78,7 +78,7 @@ export const getPostsByUserId = async ({
 
 export const getPostsByFollowingUsers = async ({
   userId,
-  count = 100,
+  count = 10,
   lastPostId,
 }: {
   userId: string;
@@ -174,28 +174,6 @@ export const fetchFilteredPostsTimelines = async ({
     (doc) => ({ postId: doc.id, ...doc.data() }) as PostModel,
   );
 
-  if (followingPosts.length < count) {
-    const remainingCount = count - followingPosts.length;
-    const lastFollowingPost = followingPosts[followingPosts.length - 1];
-
-    let otherPostsQuery = query(
-      postsCollection,
-      where('userId', 'not-in', [userId, ...followingUserIds]),
-      orderBy('createdAt', 'desc'),
-      limit(remainingCount),
-    );
-
-    if (lastFollowingPost) {
-      otherPostsQuery = query(otherPostsQuery, startAfter(lastFollowingPost.createdAt));
-    }
-
-    const otherPostsSnapshot = await getDocs(otherPostsQuery);
-    const otherPosts = otherPostsSnapshot.docs.map(
-      (doc) => ({ postId: doc.id, ...doc.data() }) as PostModel,
-    );
-
-    return [...followingPosts, ...otherPosts];
-  }
   return followingPosts;
 };
 
