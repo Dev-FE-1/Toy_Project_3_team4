@@ -10,10 +10,15 @@ const IconButton: React.FC<{ icon: React.ReactNode; onClick: () => void }> = ({
 );
 
 const iconButtonStyle = (theme: Theme) => css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 24px;
   background: ${theme.colors.white};
   cursor: pointer;
   transition: 0.3s ease;
+  height: 100%;
+
   &:hover {
     color: ${theme.colors.primary};
   }

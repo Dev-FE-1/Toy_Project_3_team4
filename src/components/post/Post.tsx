@@ -1,37 +1,37 @@
 import { useEffect, useState } from 'react';
 
-import { css, SerializedStyles, Theme } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import {
   HiOutlineHeart,
   HiOutlineChatBubbleOvalLeft,
   HiHeart,
   HiChevronRight,
+  HiOutlineBookmark,
 } from 'react-icons/hi2';
-import { IoBookmarkOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
 import { getPlaylist } from '@/api/fetchPlaylist';
 import { updatePostsLikes } from '@/api/fetchPosts';
 import { fetchYouTubeVideoData } from '@/api/fetchYouTubeVideoData';
-import defaultProfile from '@/assets/images/default-avatar.svg';
+import IconButton from '@/components/common/buttons/IconButton';
+import VideoPlayer from '@/components/post/VideoPlayer';
+import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
+import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
 import { extractVideoId } from '@/utils/youtubeUtils';
 
-import VideoPlayer from './VideoPlayer';
-import IconButton from '../common/buttons/IconButton';
-import UserInfo from '../user/UserInfo';
-
 interface PostProps {
   id: string;
   post: PostModel;
   customStyle?: SerializedStyles;
+  isDetail?: boolean;
 }
 
-const Post: React.FC<PostProps> = ({ post }) => {
+const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const currentUser = useAuth();
@@ -82,20 +82,20 @@ const Post: React.FC<PostProps> = ({ post }) => {
   return (
     <div css={postContainerStyle}>
       <VideoPlayer video={post.video} />
-      <div>
+      <div className="contents-wrapper">
         <div css={metaInfoStyle}>
           <div css={metaInfoStyle}>
             <UserInfo
               name={userData?.displayName || 'UnKnown User'}
-              url={userData?.photoURL || defaultProfile}
-              imageSize="large"
+              url={userData?.photoURL}
+              imageSize="medium"
               userId={post.userId}
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
-          <IconButton icon={<IoBookmarkOutline size={20} />} onClick={() => {}} />
+          <IconButton icon={<HiOutlineBookmark size={20} />} onClick={() => {}} />
         </div>
-        <p css={contentStyle}>{post.content}</p>
+        <p css={contentStyle(isDetail)}>{post.content}</p>
         <p css={playlistStyle}>
           <Link to={post.video}>
             <span>{videoTitle}</span>
@@ -106,14 +106,14 @@ const Post: React.FC<PostProps> = ({ post }) => {
           <div css={buttonWrapStyle}>
             <button css={buttonStyle} onClick={toggleLike}>
               {isLiked ? (
-                <HiHeart css={likeButtonStyle(isLiked)} />
+                <HiHeart css={likeButtonStyle(isLiked)} size={20} />
               ) : (
-                <HiOutlineHeart css={likeButtonStyle(isLiked)} />
-              )}{' '}
-              {likesCount}
+                <HiOutlineHeart css={likeButtonStyle(isLiked)} size={20} />
+              )}
+              <span>{likesCount}</span>
             </button>
-            <button css={buttonStyle}>
-              <HiOutlineChatBubbleOvalLeft style={{ position: 'relative', bottom: '1px' }} />{' '}
+            <button css={buttonStyle} className="chat-bubble-button">
+              <HiOutlineChatBubbleOvalLeft size={20} />
               {post.comments?.length}
             </button>
           </div>
@@ -127,7 +127,11 @@ const Post: React.FC<PostProps> = ({ post }) => {
 };
 
 const postContainerStyle = css`
-  padding-bottom: 32px;
+  padding-bottom: 24px;
+
+  .contents-wrapper {
+    padding: 0 8px;
+  }
 `;
 
 const metaInfoStyle = css`
@@ -137,33 +141,55 @@ const metaInfoStyle = css`
   padding-bottom: 5px;
 `;
 
-const createdAtStyle = (theme: Theme) => css`
+const createdAtStyle = css`
   font-size: ${theme.fontSizes.small};
   color: ${theme.colors.darkGray};
   padding-left: 12px;
 `;
 
-const contentStyle = (theme: Theme) => css`
+const contentStyle = (isDetail: boolean) => css`
   font-size: ${theme.fontSizes.small};
-  padding-bottom: 8px;
+  margin-bottom: 8px;
+  text-align: justify;
+  ${!isDetail &&
+  `
+    display: -webkit-box;
+    max-height: calc(1.4em * 2); 
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  `}
 `;
 
-const playlistStyle = (theme: Theme) => css`
-  font-size: ${theme.fontSizes.micro};
+const playlistStyle = css`
+  font-size: ${theme.fontSizes.small};
   color: ${theme.colors.darkGray};
-  padding-bottom: 8px;
+  padding-bottom: 12px;
 
   a {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 4px;
+
+    span {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      line-height: 100%;
+    }
+
+    svg {
+      flex-shrink: 0;
+      stroke-width: 0.5;
+    }
   }
 `;
 
 const buttonWrapStyle = css`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 `;
 
 const buttonStyle = css`
@@ -171,10 +197,20 @@ const buttonStyle = css`
   align-items: center;
   gap: 4px;
   background: none;
-  min-width: 40px;
+  font-size: ${theme.fontSizes.small};
+
+  svg {
+    stroke-width: 1.7;
+  }
+
+  &.chat-bubble-button {
+    svg {
+      margin-bottom: 2px;
+    }
+  }
 `;
 
-const likeButtonStyle = (isLiked: boolean) => (theme: Theme) => css`
+const likeButtonStyle = (isLiked: boolean) => css`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -182,9 +218,9 @@ const likeButtonStyle = (isLiked: boolean) => (theme: Theme) => css`
   color: ${isLiked ? theme.colors.red : 'inherit'};
 `;
 
-const pliStyle = (theme: Theme) => css`
+const pliStyle = css`
   color: ${theme.colors.darkestGray};
-  font-size: ${theme.fontSizes.micro};
+  font-size: ${theme.fontSizes.small};
   text-decoration: underline;
 `;
 

@@ -1,14 +1,22 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
+import defaultImage from '@/assets/images/default-avatar.svg';
 import FitButton from '@/components/common/buttons/FitButton';
 import theme from '@/styles/theme';
 
+type ImageSizeType = 'default' | 'medium' | 'large';
+
+const imageSizes: Record<ImageSizeType, string> = {
+  default: '24px',
+  medium: '32px',
+  large: '42px',
+};
 interface UserInfoProps {
   name: string;
-  url: string;
+  url?: string;
   additionalInfo?: string | null;
-  imageSize?: 'default' | 'large';
+  imageSize?: ImageSizeType;
   customStyle?: SerializedStyles;
   userId?: string;
   showFollowButton?: boolean;
@@ -35,7 +43,13 @@ const UserInfo: React.FC<UserInfoProps> = ({
   return (
     <div css={[userInfoStyle(imageSize), customStyle]}>
       <div className="info-container" onClick={onClick || onClickUserName}>
-        <img src={url} alt={name} />
+        <div className="image-container">
+          {url ? (
+            <img src={url} alt="Profile" />
+          ) : (
+            <img src={defaultImage} alt="" className="image-placeholder" />
+          )}
+        </div>
         <div className="name-container">
           <span>{name}</span>
           {additionalInfo && <p>{additionalInfo}</p>}
@@ -55,23 +69,39 @@ const UserInfo: React.FC<UserInfoProps> = ({
   );
 };
 
-const userInfoStyle = (imageSize: string) => css`
+const userInfoStyle = (imageSize: ImageSizeType) => css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: ${imageSize === 'default' ? '8px' : '12px'};
+  gap: ${imageSize === 'default' || imageSize === 'medium' ? '8px' : '12px'};
 
   .info-container {
     display: flex;
     align-items: center;
-    gap: ${imageSize === 'default' ? '8px' : '12px'};
+    gap: ${imageSize === 'default' || imageSize === 'medium' ? '8px' : '12px'};
     padding: 0;
     cursor: pointer;
 
-    img {
-      width: ${imageSize === 'default' ? '24px' : '42px'};
-      height: ${imageSize === 'default' ? '24px' : '42px'};
+    .image-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: ${imageSizes[imageSize]};
+      height: ${imageSizes[imageSize]};
+      background-color: ${theme.colors.lightestGray};
       border-radius: 50%;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+
+        &.image-placeholder {
+          width: 60%;
+          height: 60%;
+        }
+      }
     }
 
     .name-container {
@@ -92,11 +122,6 @@ const userInfoStyle = (imageSize: string) => css`
   }
 
   @media screen and (min-width: ${theme.width.max}) {
-    img {
-      width: ${imageSize === 'default' ? '32px' : '42px'};
-      height: ${imageSize === 'default' ? '32px' : '42px'};
-    }
-
     .name-container {
       span {
         font-size: ${theme.fontSizes.base};

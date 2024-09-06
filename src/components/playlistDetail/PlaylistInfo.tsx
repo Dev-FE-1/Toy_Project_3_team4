@@ -23,7 +23,6 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
         url={videos[0]?.thumbnailUrl}
         isPublic={isPublic}
         customLabelStyle={labelStyle}
-        customStyle={thumbnailStyle}
       />
       <div className="info-container">
         <div className="title">
@@ -72,12 +71,6 @@ const labelStyle = css`
   left: 3%;
   width: 10%;
   padding-bottom: 10%;
-`;
-
-const thumbnailStyle = css`
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
 `;
 
 export default PlaylistInfo;
