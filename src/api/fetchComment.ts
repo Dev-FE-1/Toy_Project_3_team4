@@ -52,13 +52,17 @@ export const getComments = async (
   postId: string,
   count: number = 10,
   lastCommentId?: string,
-  parentCommentId?: string,
+  parentCommentId?: string | null,
 ): Promise<CommentModel[]> => {
   const commentsCollection = collection(db, 'posts', postId, 'comments');
   let q = query(commentsCollection, orderBy('createdAt', 'desc'), limit(count));
-  if (parentCommentId) {
+
+  if (parentCommentId === null) {
+    q = query(q, where('parentCommentId', '==', null));
+  } else if (parentCommentId) {
     q = query(q, where('parentCommentId', '==', parentCommentId));
   }
+
   if (lastCommentId) {
     const lastCommentDoc = await getDoc(doc(commentsCollection, lastCommentId));
     if (lastCommentDoc.exists()) {

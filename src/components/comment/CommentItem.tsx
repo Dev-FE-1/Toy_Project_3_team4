@@ -1,4 +1,3 @@
-// CommentItem.tsx
 import { css } from '@emotion/react';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';

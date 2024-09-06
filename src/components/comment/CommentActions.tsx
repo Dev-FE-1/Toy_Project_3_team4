@@ -1,4 +1,3 @@
-// CommentActions.tsx
 import { css } from '@emotion/react';
 
 interface CommentActionsProps {

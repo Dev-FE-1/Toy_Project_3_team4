@@ -1,10 +1,8 @@
-// CommentSection.tsx
 import { css } from '@emotion/react';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';
 import { useComments } from '@/hooks/useComments';
 import { useMultipleUsersData } from '@/hooks/useMultipleUsersData';
-import theme from '@/styles/theme';
 
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
@@ -33,7 +31,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
 
   return (
     <div css={commentSectionStyle}>
-      <h3 css={commentTitleStyle}>Comments</h3>
       <CommentInput
         newCommentContent={newCommentContent}
         setNewCommentContent={setNewCommentContent}
@@ -66,15 +63,11 @@ const commentSectionStyle = css`
   margin-top: 20px;
 `;
 
-const commentTitleStyle = () => css`
-  font-size: ${theme.fontSizes.large};
-  margin-bottom: 16px;
-`;
-
 const commentsListStyle = css`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
+  margin-top: 16px;
 `;
 
 export default CommentSection;

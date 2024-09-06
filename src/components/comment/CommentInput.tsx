@@ -1,4 +1,3 @@
-// CommentInput.tsx
 import { css } from '@emotion/react';
 import { HiOutlinePaperAirplane } from 'react-icons/hi2';
 
