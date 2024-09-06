@@ -76,6 +76,43 @@ export const getPostsByUserId = async ({
   return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
 };
 
+export const getPostsByNonFollowingUsers = async ({
+  userId,
+  count = 10,
+  lastPostId,
+}: {
+  userId: string;
+  count?: number;
+  lastPostId?: string;
+}): Promise<PostModel[]> => {
+  const userDoc = await getDoc(doc(db, 'users', userId));
+  if (!userDoc.exists()) {
+    console.warn('User not found');
+    return [];
+  }
+
+  const followingUserIds = userDoc.data().following || [];
+
+  const excludedUserIds = [userId, ...followingUserIds];
+
+  let q = query(
+    postsCollection,
+    orderBy('createdAt', 'desc'),
+    where('userId', 'not-in', excludedUserIds),
+    limit(count),
+  );
+
+  if (lastPostId) {
+    const lastPostDoc = await getDoc(doc(postsCollection, lastPostId));
+    if (lastPostDoc.exists()) {
+      q = query(q, startAfter(lastPostDoc));
+    }
+  }
+
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
+};
+
 export const getPostsByFollowingUsers = async ({
   userId,
   count = 10,
