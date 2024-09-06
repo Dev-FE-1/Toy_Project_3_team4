@@ -7,6 +7,7 @@ import { HiOutlinePencil } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getPostsByUserId, getPostsFilterdLikes } from '@/api/fetchPosts';
+import Spinner from '@/components/common/loading/Spinner';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
@@ -125,7 +126,9 @@ const ProfilePage: React.FC = () => {
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
           <TabContent id="post" activeTabId={activeTab}>
             {loadingPosts ? (
-              <div>Loading posts...</div>
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
             ) : error ? (
               <div>{error}</div>
             ) : (
@@ -138,14 +141,18 @@ const ProfilePage: React.FC = () => {
               onAddPlaylist={handleAddPlaylist}
             />
             {playlistsLoading ? (
-              <div>Loading playlists...</div>
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
             ) : (
               <Playlists playlists={playlists || []} />
             )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
             {loadingLikedPosts ? (
-              <div>Loading liked posts...</div>
+              <div css={spinnerContainerStyle}>
+                <Spinner customStyle={spinnerStyle} />
+              </div>
             ) : error ? (
               <div>{error}</div>
             ) : (
@@ -160,6 +167,14 @@ const ProfilePage: React.FC = () => {
 
 const addPlaylistButtonStyle = css`
   margin-bottom: 24px;
+`;
+
+const spinnerContainerStyle = css`
+  width: 100%;
+`;
+
+const spinnerStyle = css`
+  margin: 48px auto;
 `;
 
 export default ProfilePage;

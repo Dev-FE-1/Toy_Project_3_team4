@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { css } from '@emotion/react';
 import { useInView } from 'react-intersection-observer';
 
+import Spinner from '@/components/common/loading/Spinner';
 import LogoHeader from '@/components/layout/header/LogoHeader';
 import { PostsTimeLine } from '@/components/post/PostsTimeline';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,11 +12,11 @@ import theme from '@/styles/theme';
 
 const getLoadingMessage = (isFetchingNextPage: boolean, hasNextPage: boolean) => {
   if (isFetchingNextPage) {
-    return 'Loading more posts...';
+    return <Spinner customStyle={spinnerStyle} />;
   }
 
-  if (hasNextPage) {
-    return 'No more posts';
+  if (!hasNextPage) {
+    return '모든 포스트를 확인했습니다!';
   }
 
   return '';
@@ -39,19 +40,21 @@ const HomePage = () => {
   return (
     <>
       <LogoHeader />
-      {posts.length === 0 ? <div css={loadingTrigger}>No posts found</div> : null}
+      {posts.length === 0 ? <div css={loadingTriggerStyle}>포스트를 찾을 수 없습니다.</div> : null}
       <PostsTimeLine posts={posts} />
-      <div ref={ref} css={loadingTrigger}>
-        {getLoadingMessage(isFetchingNextPage, hasNextPage)}
-      </div>
+      <div ref={ref}>{getLoadingMessage(isFetchingNextPage, hasNextPage)}</div>
     </>
   );
 };
 
-export default HomePage;
-
-const loadingTrigger = css`
+const loadingTriggerStyle = css`
   text-align: center;
   padding: 16px;
   color: ${theme.colors.darkGray};
 `;
+
+const spinnerStyle = css`
+  margin: 0 auto;
+`;
+
+export default HomePage;
