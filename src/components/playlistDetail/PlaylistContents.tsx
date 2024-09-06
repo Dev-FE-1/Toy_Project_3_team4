@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 import { css } from '@emotion/react';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
-import DragAndDropWrapper from '@/components/dragAndDrop/DragAndDropWrapper';
-import DraggablePlaylistItem from '@/components/playlistDetail/DraggablePlaylistItem';
 import PlaylistContentsItem from '@/components/playlistDetail/PlaylistContentsItem';
-import { DraggableVideoModel, VideoModel } from '@/types/playlist';
+import theme from '@/styles/theme';
+import { VideoModel } from '@/types/playlist';
 
 interface PlaylistContentsProps {
   videos: VideoModel[];
@@ -20,20 +20,25 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
   onVideoSelect,
   selectedVideoId,
   isDraggable = false,
+  isOwner,
 }) => {
-  const [videos, setVideos] = useState(getDraggableVideos(initialVideos));
+  const [videos, setVideos] = useState(initialVideos);
+  const listRef = useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    setVideos(getDraggableVideos(initialVideos));
-  }, [initialVideos]);
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
 
-  const onDragEnd = (newOrder: DraggableVideoModel[]) => {
-    setVideos(newOrder);
+    const newVideos = Array.from(videos);
+    const [reorderedItem] = newVideos.splice(result.source.index, 1);
+    newVideos.splice(result.destination.index, 0, reorderedItem);
+
+    setVideos(newVideos);
+    // 서버에 새 순서 저장
   };
 
-  if (!isDraggable) {
+  if (!isDraggable || !isOwner) {
     return (
-      <ul css={playlistStyle}>
+      <ul css={playlistStyle} ref={listRef}>
         {videos.map((video) => (
           <PlaylistContentsItem
             key={video.videoId}
@@ -47,29 +52,67 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
     );
   }
 
+  const renderDraggableItem = (video: VideoModel, index: number) => (
+    <Draggable key={video.videoId} draggableId={video.videoId} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          css={css`
+            ${dragItemStyle}
+            ${snapshot.isDragging && draggedItemStyle}
+          `}
+        >
+          <PlaylistContentsItem
+            video={video}
+            isSelected={video.videoId === selectedVideoId}
+            onVideoSelect={onVideoSelect}
+            isDraggable={isDraggable}
+          />
+        </div>
+      )}
+    </Draggable>
+  );
+
   return (
-    <>
-      <ul css={playlistStyle}>
-        <DragAndDropWrapper dragList={videos} onDragEnd={onDragEnd} dragType="video">
-          {(video, ref, isDragging) => (
-            <DraggablePlaylistItem video={video} ref={ref} isDragging={isDragging} />
-          )}
-        </DragAndDropWrapper>
-      </ul>
-    </>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="playlist">
+        {(provided) => (
+          <ul
+            css={[playlistStyle, droppableStyle]}
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            {videos.map((video, index) => renderDraggableItem(video, index))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };
-
-const getDraggableVideos = (videos: VideoModel[]): DraggableVideoModel[] =>
-  videos.map((video) => ({ ...video, id: video.videoId }));
 
 const playlistStyle = css`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px 0 8px;
-  will-change: contents;
-  transform: translateZ(0);
+  -webkit-overflow-scrolling: touch;
+  margin-top: 24px;
+`;
+
+const droppableStyle = css`
+  position: relative;
+`;
+
+const dragItemStyle = css`
+  border-radius: 12px;
+  touch-action: none;
+  user-select: none;
+`;
+
+const draggedItemStyle = css`
+  z-index: ${theme.zIndex.base};
+  background-color: ${theme.colors.bgGray};
 `;
 
 export default PlaylistContents;

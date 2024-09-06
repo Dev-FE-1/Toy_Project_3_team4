@@ -1,4 +1,4 @@
-import { useState, forwardRef } from 'react';
+import { useState } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 import {
@@ -26,105 +26,105 @@ interface PlaylistContentItemProps {
   customStyle?: SerializedStyles;
 }
 
-const PlaylistContentsItem = forwardRef<HTMLLIElement, PlaylistContentItemProps>(
-  (
-    { video, isSelected = false, onVideoSelect = () => {}, isDraggable = false, customStyle },
-    ref,
-  ) => {
-    const playlistId = useParams<{ id: string }>().id || '';
-    const { data: videoData, isLoading, isError } = useYouTubeVideoData(video.videoId);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const navigate = useNavigate();
+const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
+  video,
+  isSelected = false,
+  onVideoSelect = () => {},
+  isDraggable = false,
+  customStyle,
+}) => {
+  const playlistId = useParams<{ id: string }>().id || '';
+  const { data: videoData, isLoading, isError } = useYouTubeVideoData(video.videoId);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-    const removeVideoMutation = useRemoveVideoFromPlaylist();
-    const handleOpenModal = () => setIsModalOpen(true);
-    const handleCloseModal = () => setIsModalOpen(false);
+  const removeVideoMutation = useRemoveVideoFromPlaylist();
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
-    const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      event.stopPropagation();
-      handleOpenModal();
-    };
+  const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handleOpenModal();
+  };
 
-    const handleClick = () => {
-      if (!isDraggable) {
-        onVideoSelect(video.videoId);
-      }
-    };
-
-    const handleRemoveVideo = () => {
-      removeVideoMutation.mutate({
-        playlistId,
-        video: {
-          videoId: video.videoId,
-          thumbnailUrl: video.thumbnailUrl,
-          videoUrl: video.videoUrl,
-        },
-      });
-      handleCloseModal();
-    };
-
-    if (isLoading) {
-      return <li>Loading...</li>;
+  const handleClick = () => {
+    if (!isDraggable) {
+      onVideoSelect(video.videoId);
     }
+  };
 
-    if (isError || !videoData) {
-      return <li>Error loading video data</li>;
-    }
-    return (
-      <>
-        <li
-          css={[playlistItemStyle, isSelected && selectedStyle, customStyle]}
-          ref={ref}
-          onClick={handleClick}
-        >
-          {isDraggable && <HiOutlineBars2 className="drag-bar" />}
-          <div className="video-container">
-            <VideoThumbnail url={video.thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
-            <div className="video-info">
-              <a href={`${isDraggable ? video.videoUrl : 'javascript:void(0)'}`}>
-                <div className="info-container">
-                  <h2>{videoData.title}</h2>
-                  <span>{videoData.creator}</span>
-                  <span>
-                    조회수 {videoData.views} · {formatRelativeDate(videoData.uploadDate)}
-                  </span>
-                </div>
-              </a>
-              <button onClick={onClickOption} className="ellipsis-button">
-                <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
-              </button>
-            </div>
+  const handleRemoveVideo = () => {
+    removeVideoMutation.mutate({
+      playlistId,
+      video: {
+        videoId: video.videoId,
+        thumbnailUrl: video.thumbnailUrl,
+        videoUrl: video.videoUrl,
+      },
+    });
+    handleCloseModal();
+  };
+
+  if (isLoading) {
+    return <li>Loading...</li>;
+  }
+
+  if (isError || !videoData) {
+    return <li>Error loading video data</li>;
+  }
+  return (
+    <>
+      <div
+        css={[playlistItemStyle, isSelected && selectedStyle, customStyle]}
+        onClick={handleClick}
+      >
+        {isDraggable && <HiOutlineBars2 className="drag-bar" />}
+        <div className="video-container">
+          <VideoThumbnail url={video.thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
+          <div className="video-info">
+            <a href={`${isDraggable ? video.videoUrl : ''}`}>
+              <div className="info-container">
+                <h2>{videoData.title}</h2>
+                <span>{videoData.creator}</span>
+                <span>
+                  조회수 {videoData.views} · {formatRelativeDate(videoData.uploadDate)}
+                </span>
+              </div>
+            </a>
+            <button onClick={onClickOption} className="ellipsis-button">
+              <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
+            </button>
           </div>
-        </li>
+        </div>
+      </div>
 
-        <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={null}>
-          <div css={modalContentContainer}>
-            <div
-              onClick={() => {
-                handleCloseModal();
-                navigate('/post/add/selectPli');
-              }}
-            >
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={null}>
+        <div css={modalContentContainer}>
+          <div
+            onClick={() => {
+              handleCloseModal();
+              navigate('/post/add/selectPli');
+            }}
+          >
+            <div className="icon-wrapper">
+              <HiOutlineBookmark />
+            </div>
+            플리에 추가하기
+          </div>
+          {isDraggable && (
+            <div onClick={handleRemoveVideo}>
               <div className="icon-wrapper">
-                <HiOutlineBookmark />
+                <HiOutlineTrash />
               </div>
-              플리에 추가하기
+              플리에서 삭제하기
             </div>
-            {isDraggable && (
-              <div onClick={handleRemoveVideo}>
-                <div className="icon-wrapper">
-                  <HiOutlineTrash />
-                </div>
-                플리에서 삭제하기
-              </div>
-            )}
-          </div>
-        </Modal>
-      </>
-    );
-  },
-);
+          )}
+        </div>
+      </Modal>
+    </>
+  );
+};
 
 const playlistItemStyle = css`
   position: relative;
@@ -154,8 +154,8 @@ const playlistItemStyle = css`
     gap: 4px;
     min-width: 0;
     padding-top: 4px;
-    justify-content: space-between; // 우측 상단에 버튼 배치
-    align-items: flex-start; // 우측 정렬
+    justify-content: space-between;
+    align-items: flex-start;
     padding-right: 20px;
 
     .ellipsis-button {
