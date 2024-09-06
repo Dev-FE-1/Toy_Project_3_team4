@@ -61,13 +61,13 @@ const CommentItem: React.FC<CommentItemProps> = ({
                       setEditingContent(comment.content);
                     }}
                   >
-                    <HiPencil /> Edit
+                    <HiPencil /> 댓글 수정
                   </DropdownMenu.Item>
                   <DropdownMenu.Item
                     css={menuItemStyle}
                     onSelect={() => handleDeleteComment(comment.id)}
                   >
-                    <HiTrash /> Delete
+                    <HiTrash /> 댓글 삭제
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
@@ -87,14 +87,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 customStyle={smallerButtonStyle}
                 onClick={() => handleUpdateComment(comment.id)}
               >
-                수정하기
+                저장
               </FullButton>
               <FullButton
                 styleType="disabled"
                 customStyle={smallerButtonStyle}
                 onClick={() => setEditingCommentId(null)}
               >
-                취소하기
+                취소
               </FullButton>
             </div>
           </>
