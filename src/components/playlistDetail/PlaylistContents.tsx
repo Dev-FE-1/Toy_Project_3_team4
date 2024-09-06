@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
 
@@ -12,6 +12,7 @@ interface PlaylistContentsProps {
   isDraggable?: boolean;
   onVideoSelect: (videoId: string) => void;
   selectedVideoId: string | null;
+  isOwner: boolean;
 }
 
 const PlaylistContents: React.FC<PlaylistContentsProps> = ({
@@ -21,6 +22,10 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
   isDraggable = false,
 }) => {
   const [videos, setVideos] = useState(getDraggableVideos(initialVideos));
+
+  useEffect(() => {
+    setVideos(getDraggableVideos(initialVideos));
+  }, [initialVideos]);
 
   const onDragEnd = (newOrder: DraggableVideoModel[]) => {
     setVideos(newOrder);
@@ -41,6 +46,7 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
       </ul>
     );
   }
+
   return (
     <>
       <ul css={playlistStyle}>

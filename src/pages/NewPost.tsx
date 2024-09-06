@@ -52,7 +52,7 @@ const NewPost = () => {
         onCloseClick={handleOnClose}
         title="새 포스트"
         rightButtonText="공유하기"
-        onrightButtonClick={handleOnShare}
+        onRightButtonClick={handleOnShare}
         rightButtonDisabled={!isShareButtonEnabled}
       />
       <div>

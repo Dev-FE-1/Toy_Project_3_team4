@@ -21,15 +21,7 @@ import TermsOfServicePage from '@/pages/TermsOfServicePage';
 import ProtectedRoute from '@/routes/ProtectedRoute';
 import PublicRoute from '@/routes/PublicRoute';
 
-const NotFound = () => (
-  <div>
-    <h1>페이지가 존재하지 않아요</h1>
-    <h2>
-      이 화면은 존재하지 않거나 접근할 수 없는 경로에 접근하는 경우에 표시됩니다. 정확한 경로에
-      접근하셨는지, 로그인 상태인지, 비정상적인 접근을 한 것은 아닌지 확인해보시길 바랍니다.
-    </h2>
-  </div>
-);
+import AddVideosPage from './pages/AddVideos';
 
 const router = createBrowserRouter([
   {
@@ -97,6 +89,10 @@ const router = createBrowserRouter([
                 element: <PlaylistDetailPage />,
               },
             ],
+          },
+          {
+            path: `${PATH.ADD_VIDEOS}/:id`,
+            element: <AddVideosPage />,
           },
           {
             path: PATH.PROFILE,

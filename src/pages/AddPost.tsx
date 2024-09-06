@@ -83,9 +83,9 @@ const AddPostPage: React.FC = () => {
     <>
       <CloseHeader
         onCloseClick={handleOnClose}
-        title="동영상 링크"
+        title="동영상 추가"
         rightButtonText="완료"
-        onrightButtonClick={handleOnShare}
+        onRightButtonClick={handleOnShare}
         rightButtonDisabled={!videoId || !playlistId}
       />
       <div css={addPostContainer}>

@@ -9,8 +9,9 @@ import TabMenu from '@/components/common/tabs/TabMenu';
 import LogoHeader from '@/components/layout/header/LogoHeader';
 import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
-import { useAddPlaylist } from '@/hooks/useAddPlaylist';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
+import { useAddPlaylist } from '@/hooks/usePostPlaylist';
+import { useSubscribedPlaylists } from '@/hooks/useSubscribedPlaylists';
 
 const tabs = [
   { id: 'my', label: '내 플리', icon: <HiOutlineBookmark /> },
@@ -21,8 +22,19 @@ const PlaylistPage = () => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const navigate = useNavigate();
 
-  const { data: myPlaylists, isLoading, error } = useUserPlaylists();
+  const {
+    data: myPlaylists,
+    isLoading: myPlaylistsLoading,
+    error: myPlaylistsError,
+  } = useUserPlaylists();
+  const {
+    data: subscribedPlaylists,
+    isLoading: subscribedPlaylistsLoading,
+    error: subscribedPlaylistsError,
+  } = useSubscribedPlaylists();
+
   const addPlaylistMutation = useAddPlaylist();
+
   const handlePlaylistClick = (playlistId: string) => {
     navigate(`/playlist/${playlistId}`);
   };
@@ -31,11 +43,11 @@ const PlaylistPage = () => {
     addPlaylistMutation.mutate({ title, isPublic });
   };
 
-  if (isLoading) {
+  if (myPlaylistsLoading || subscribedPlaylistsLoading) {
     return <p>Loading...</p>;
   }
 
-  if (error) {
+  if (myPlaylistsError || subscribedPlaylistsError) {
     return <p>Error loading playlists</p>;
   }
 
@@ -51,7 +63,7 @@ const PlaylistPage = () => {
           <Playlists playlists={myPlaylists || []} onPlaylistClick={handlePlaylistClick} />
         </TabContent>
         <TabContent id="subscribe" activeTabId={activeTab}>
-          <Playlists playlists={[]} />
+          <Playlists playlists={subscribedPlaylists || []} onPlaylistClick={handlePlaylistClick} />
         </TabContent>
       </TabMenu>
     </>

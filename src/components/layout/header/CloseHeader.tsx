@@ -8,7 +8,7 @@ interface CloseHeaderProps {
   onCloseClick: () => void;
   title: string;
   rightButtonText?: string;
-  onrightButtonClick?: () => void;
+  onRightButtonClick?: () => void;
   customStyle?: SerializedStyles;
   rightButtonDisabled?: boolean;
 }
@@ -17,7 +17,7 @@ const CloseHeader: React.FC<CloseHeaderProps> = ({
   title,
   onCloseClick,
   rightButtonText,
-  onrightButtonClick,
+  onRightButtonClick,
   customStyle,
   rightButtonDisabled = false,
 }) => {
@@ -27,10 +27,10 @@ const CloseHeader: React.FC<CloseHeaderProps> = ({
       centerSection={title && <Title text={title} />}
       rightSection={
         rightButtonText &&
-        onrightButtonClick && (
+        onRightButtonClick && (
           <ActionButton
             text={rightButtonText}
-            onClick={onrightButtonClick}
+            onClick={onRightButtonClick}
             disabled={rightButtonDisabled}
           />
         )

@@ -3,6 +3,7 @@ export const PATH = {
   SEARCH: '/search',
   ADD_POST: '/post/add',
   SELECT_PLI: '/post/add/selectPli',
+  ADD_VIDEOS: '/addVideos',
   PLAYLIST: '/playlist',
   PROFILE: '/profile/:userId',
   PROFILE_EDIT: '/profile/:userId/edit',

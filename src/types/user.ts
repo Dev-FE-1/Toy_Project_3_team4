@@ -5,4 +5,5 @@ export interface UserModel extends UserData {
   displayName: string;
   email: string;
   photoURL: string;
+  subscriptions: string[];
 }

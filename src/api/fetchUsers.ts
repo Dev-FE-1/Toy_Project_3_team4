@@ -29,7 +29,7 @@ export const updateUserInfoByUserId = async ({
 }: UserModel): Promise<UserModel> => {
   const userDoc = doc(usersCollection, userId);
   await updateDoc(userDoc, { displayName, photoURL, email });
-  return { userId, displayName, email, photoURL };
+  return { userId, displayName, email, photoURL, subscriptions: [] };
 };
 
 export const fetchMultipleUsersByUserIds = async (userIds: string[]) => {
