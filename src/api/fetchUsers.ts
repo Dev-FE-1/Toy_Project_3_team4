@@ -1,9 +1,19 @@
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
+import { UserData } from '@/types/profile';
 import { UserModel } from '@/types/user';
 
 const usersCollection = collection(db, 'users');
+
+export const fetchUserData = async (userId: string): Promise<UserData | null> => {
+  const userDoc = doc(db, 'users', userId);
+  const docSnapshot = await getDoc(userDoc);
+  if (docSnapshot.exists()) {
+    return docSnapshot.data() as UserData;
+  }
+  return null;
+};
 
 export const getUserInfoByUserId = async ({ userId }: { userId: string }): Promise<UserModel> => {
   const userDoc = doc(usersCollection, userId);

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],
-    "module": "CommonJS", // 모듈 시스템 (CommonJS)
+    "module": "CommonJS",
     "skipLibCheck": true,
 
     /* Paths */
@@ -12,7 +12,7 @@
     },
 
     /* Bundler mode */
-    "moduleResolution": "node", // 모듈 해석 방법 (Node.js)
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -26,9 +26,6 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true
   },
-  "include": [
-    "functions/", // server 디렉토리의 모든 파일 포함
-    "vite.config.ts" // Vite 설정 파일 포함
-  ],
+  "include": ["functions/", "vite.config.ts"],
   "exclude": ["node_modules"]
 }

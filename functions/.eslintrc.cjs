@@ -28,8 +28,8 @@ module.exports = {
     tsconfigRootDir: __dirname,
   },
   ignorePatterns: [
-    '/lib/**/*', // Ignore built files.
-    '/generated/**/*', // Ignore generated files.
+    '/lib/**/*', 
+    '/generated/**/*',
     '.eslintrc.cjs',
   ],
   plugins: ['@typescript-eslint', 'import', 'prettier'],

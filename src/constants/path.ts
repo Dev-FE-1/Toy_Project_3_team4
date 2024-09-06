@@ -12,4 +12,5 @@ export const PATH = {
   FOLLOW: '/profile/:userId/follow',
   PRIVACY_POLICY: '/privacyPolicy',
   TERM_OF_SERVICE: '/termOfService',
+  COMMENT: '/comment',
 } as const;

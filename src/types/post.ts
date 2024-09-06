@@ -1,5 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 
+import { CommentModel } from '@/types/comment';
+
 export interface PostModel {
   postId: string;
   userId: string;
@@ -8,15 +10,8 @@ export interface PostModel {
   content: string;
   createdAt: Timestamp;
   likes: string[];
-  comments: Comment[];
+  comments: CommentModel;
   video: string;
-}
-
-export interface Comment {
-  commentId: string;
-  userId: string;
-  content: string;
-  likes: string;
 }
 
 export interface Video {

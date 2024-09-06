@@ -15,7 +15,9 @@ import { updatePostsLikes } from '@/api/fetchPosts';
 import IconButton from '@/components/common/buttons/IconButton';
 import VideoPlayer from '@/components/post/VideoPlayer';
 import UserInfo from '@/components/user/UserInfo';
+import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
+import { useComments } from '@/hooks/useComments';
 import { useFetchVideoTitle } from '@/hooks/useFetchVideoTitle';
 import { usePlaylistById } from '@/hooks/usePlaylists';
 import {
@@ -43,10 +45,10 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const { userData } = useUserData(post.userId);
   const { data: playlist } = usePlaylistById(post.playlistId);
   const videoTitle = useFetchVideoTitle(post.video);
-
   const { data: isPlaylistSubscribed, refetch } = useCheckSubscription(post.playlistId);
   const subscribeMutation = useSubscribePlaylist(post.playlistId);
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
+  const { comments } = useComments(post.postId);
 
   useEffect(() => {
     if (currentUser) {
@@ -121,10 +123,14 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               )}
               <span>{likesCount}</span>
             </button>
-            <button css={buttonStyle} className="chat-bubble-button">
+            <Link
+              to={`${PATH.COMMENT}?postId=${post.postId}`}
+              css={buttonStyle}
+              className="chat-bubble-button"
+            >
               <HiOutlineChatBubbleOvalLeft size={20} />
-              {post.comments?.length}
-            </button>
+              {comments.length}
+            </Link>
           </div>
           <p css={pliStyle}>
             {playlist?.title} (<span>{playlist?.videos.length}</span>)
