@@ -5,10 +5,9 @@ import { FaPause } from 'react-icons/fa';
 import { HiPlay } from 'react-icons/hi2';
 import YouTube, { YouTubeEvent } from 'react-youtube';
 
+import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import theme from '@/styles/theme';
 import { extractVideoId } from '@/utils/youtubeUtils';
-
-import VideoThumbnail from '../playlist/VideoThumbnail';
 
 interface VideoPlayerProps {
   video: string;

@@ -1,4 +1,5 @@
 import { css, SerializedStyles } from '@emotion/react';
+import { PiYoutubeLogo } from 'react-icons/pi';
 
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import theme from '@/styles/theme';
@@ -20,28 +21,35 @@ const Playlists: React.FC<PlaylistListProps> = ({
   isColumn = true,
 }) => {
   return (
-    <div css={[playlistStyle, customStyle]}>
-      {playlists.length > 0 &&
-        playlists.map(({ playlistId, title, videos, isPublic }) => (
-          <div
-            key={`playlist-${playlistId}`}
-            css={itemStyle(isColumn)}
-            onClick={() => (onPlaylistClick ? onPlaylistClick(playlistId, title) : null)}
-          >
-            <VideoThumbnail
-              url={videos[0]?.thumbnailUrl}
-              isPublic={isPublic}
-              type="stack"
-              customStyle={customVideoStyle}
-            />
-            <div className="playlist-info">
-              <h2>{title}</h2>
-              <p>{videos.length}개의 비디오</p>
+    <>
+      <div css={[playlistStyle, customStyle]}>
+        {playlists.length > 0 &&
+          playlists.map(({ playlistId, title, videos, isPublic }) => (
+            <div
+              key={`playlist-${playlistId}`}
+              css={itemStyle(isColumn)}
+              onClick={() => (onPlaylistClick ? onPlaylistClick(playlistId, title) : null)}
+            >
+              <VideoThumbnail
+                url={videos[0]?.thumbnailUrl}
+                isPublic={isPublic}
+                type="stack"
+                customStyle={customVideoStyle}
+              />
+              <div className="playlist-info">
+                <h2>{title}</h2>
+                <p>{videos.length}개의 비디오</p>
+              </div>
             </div>
-          </div>
-        ))}
-      {playlists.length === 0 && <p>마음에 드는 플리를 구독해 보세요!</p>}
-    </div>
+          ))}
+      </div>
+      {playlists.length === 0 && (
+        <div css={messageStyle}>
+          <PiYoutubeLogo size={48} />
+          <p>마음에 드는 플리를 구독해 보세요!</p>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -82,6 +90,20 @@ const itemStyle = (isColumn: boolean) => css`
         font-size: ${theme.fontSizes.small};
       }
     }
+  }
+`;
+
+const messageStyle = css`
+  text-align: center;
+  margin-top: 60px;
+  color: ${theme.colors.darkestGray};
+
+  svg {
+    stroke-width: 0.5px;
+  }
+
+  p {
+    margin-top: 4px;
   }
 `;
 
