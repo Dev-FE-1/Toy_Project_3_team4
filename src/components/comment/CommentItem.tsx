@@ -110,6 +110,7 @@ const commentStyle = css`
   display: flex;
   align-items: flex-start;
   padding: 12px 0;
+  transform: translateX(5px);
 `;
 
 const avatarStyle = css`
@@ -123,7 +124,6 @@ const avatarStyle = css`
 const commentContentStyle = css`
   flex-grow: 1;
   min-width: 0;
-  padding-right: 16px;
 `;
 
 const headerStyle = css`

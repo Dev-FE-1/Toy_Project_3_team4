@@ -28,7 +28,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         value={newCommentContent}
         onChange={(e) => setNewCommentContent(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Write a comment..."
+        placeholder="댓글을 입력하세요..."
       />
       <button css={sendButtonStyle} onClick={handleCreateComment}>
         <HiOutlinePaperAirplane />
