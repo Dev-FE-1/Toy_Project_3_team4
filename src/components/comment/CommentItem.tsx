@@ -3,6 +3,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HiDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';
+import FullButton from '@/components/common/buttons/FullButton';
 import theme from '@/styles/theme';
 import { CommentModel } from '@/types/comment';
 import { formatCreatedAt } from '@/utils/date';
@@ -81,8 +82,20 @@ const CommentItem: React.FC<CommentItemProps> = ({
               onChange={(e) => setEditingContent(e.target.value)}
             />
             <div css={editButtonsStyle}>
-              <button onClick={() => handleUpdateComment(comment.id)}>Save</button>
-              <button onClick={() => setEditingCommentId(null)}>Cancel</button>
+              <FullButton
+                styleType="primary"
+                customStyle={smallerButtonStyle}
+                onClick={() => handleUpdateComment(comment.id)}
+              >
+                수정하기
+              </FullButton>
+              <FullButton
+                styleType="disabled"
+                customStyle={smallerButtonStyle}
+                onClick={() => setEditingCommentId(null)}
+              >
+                취소하기
+              </FullButton>
             </div>
           </>
         ) : (
@@ -97,7 +110,6 @@ const commentStyle = css`
   display: flex;
   align-items: flex-start;
   padding: 12px 0;
-  border-bottom: 1px solid ${theme.colors.lightGray};
 `;
 
 const avatarStyle = css`
@@ -111,6 +123,7 @@ const avatarStyle = css`
 const commentContentStyle = css`
   flex-grow: 1;
   min-width: 0;
+  padding-right: 16px;
 `;
 
 const headerStyle = css`
@@ -148,16 +161,18 @@ const menuTriggerStyle = css`
   padding: 4px;
   color: ${theme.colors.darkGray};
   flex-shrink: 0;
+  margin-left: 8px;
   &:hover {
     color: ${theme.colors.black};
   }
 `;
 
 const commentTextStyle = css`
-  font-size: ${theme.fontSizes.small};
+  color: ${theme.colors.darkestGray};
   line-height: 1.4;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  padding-right: 24px;
 `;
 
 const menuContentStyle = css`
@@ -209,6 +224,13 @@ const editTextareaStyle = css`
 const editButtonsStyle = css`
   display: flex;
   gap: 8px;
+`;
+
+const smallerButtonStyle = css`
+  height: 25px;
+  padding: 0 10px;
+  font-size: ${theme.fontSizes.small};
+  width: auto;
 `;
 
 export default CommentItem;

@@ -115,6 +115,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             <button css={buttonStyle} className="chat-bubble-button">
               <HiOutlineChatBubbleOvalLeft size={20} />
               {post.comments?.length}
+              {/* 여기를 클릭 했을 때 댓글 페이지로 이동 */}
             </button>
           </div>
           <p css={pliStyle}>
