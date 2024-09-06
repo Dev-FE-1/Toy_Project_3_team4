@@ -18,6 +18,10 @@ export const signInWithGoogle = async () => {
         email: user.email,
         photoURL: user.photoURL,
         userId: user.uid,
+        bio: '',
+        subscriptions: [] as string[],
+        followers: [] as string[],
+        following: [] as string[],
       });
 
       const playlistsCollection = collection(db, 'playlists');
