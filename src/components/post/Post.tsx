@@ -11,7 +11,7 @@ import {
 } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
-import { updatePostsLikes } from '@/api/fetchPosts';
+import { getCommentsCount, updatePostsLikes } from '@/api/fetchPosts';
 import IconButton from '@/components/common/buttons/IconButton';
 import VideoPlayer from '@/components/post/VideoPlayer';
 import UserInfo from '@/components/user/UserInfo';
@@ -48,6 +48,15 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const { data: isPlaylistSubscribed, refetch } = useCheckSubscription(post.playlistId);
   const subscribeMutation = useSubscribePlaylist(post.playlistId);
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
+  const [commentsCount, setCommentsCount] = useState(0);
+
+  useEffect(() => {
+    const commentsNumber = async () => {
+      const comments = await getCommentsCount(post.postId);
+      setCommentsCount(comments);
+    };
+    commentsNumber();
+  }, [post.postId, post.comments]);
 
   useEffect(() => {
     if (currentUser) {
@@ -128,7 +137,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               className="chat-bubble-button"
             >
               <HiOutlineChatBubbleOvalLeft size={20} />
-              {post.comments?.length}
+              {commentsCount}
             </Link>
           </div>
           <p css={pliStyle}>
