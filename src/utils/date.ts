@@ -4,9 +4,16 @@ export const formatRelativeDate = (dateString: string): string => {
   const date = new Date(dateString);
   const now = Timestamp.now().toDate();
   const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffMinutes = Math.floor(diffTime / (1000 * 60));
+  const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 1) return '하루 전';
+  console.log(dateString, diffDays, diffTime);
+
+  if (diffMinutes < 1) return '방금 전';
+  if (diffMinutes < 60) return `${diffMinutes}분 전`;
+  if (diffHours < 24) return `${diffHours}시간 전`;
+  if (diffDays === 1) return '어제';
   if (diffDays <= 7) return `${diffDays}일 전`;
   if (diffDays <= 30) return `${Math.floor(diffDays / 7)}주 전`;
   if (diffDays <= 365) return `${Math.floor(diffDays / 30)}개월 전`;
