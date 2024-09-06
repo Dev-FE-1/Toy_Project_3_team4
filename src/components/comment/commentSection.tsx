@@ -4,7 +4,7 @@ import defaultProfile from '@/assets/images/default-avatar.svg';
 import { useComments } from '@/hooks/useComments';
 import { useMultipleUsersData } from '@/hooks/useMultipleUsersData';
 
-import CommentInput from './CommentInput';
+import { CommentInput } from './CommentInput';
 import CommentItem from './CommentItem';
 
 interface CommentSectionProps {

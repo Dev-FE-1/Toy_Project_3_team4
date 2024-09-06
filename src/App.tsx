@@ -1,10 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { CommentPage } from '@/components/comment/CommentPage';
 import { PATH } from '@/constants/path';
 import ContainerLayout from '@/layouts/Container';
 import RootLayout from '@/layouts/Root';
 import AddPostPage from '@/pages/AddPost';
+import { Comment } from '@/pages/Comment';
 import FollowPage from '@/pages/Follow';
 import HomePage from '@/pages/Home';
 import NewPost from '@/pages/NewPost';
@@ -100,7 +100,7 @@ const router = createBrowserRouter([
           },
           {
             path: PATH.COMMENT,
-            element: <CommentPage />,
+            element: <Comment />,
           },
         ],
       },

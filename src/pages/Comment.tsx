@@ -12,7 +12,7 @@ const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
-export const CommentPage = () => {
+export const Comment = () => {
   const query = useQuery();
   const postId = query.get('postId');
   const [post, setPost] = useState<PostModel | null>(null);

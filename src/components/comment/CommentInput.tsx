@@ -9,17 +9,25 @@ interface CommentInputProps {
   handleCreateComment: () => void;
 }
 
-const CommentInput: React.FC<CommentInputProps> = ({
+export const CommentInput: React.FC<CommentInputProps> = ({
   newCommentContent,
   setNewCommentContent,
   handleCreateComment,
 }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleCreateComment();
+    }
+  };
+
   return (
     <div css={newCommentStyle}>
       <textarea
         css={textareaStyle}
         value={newCommentContent}
         onChange={(e) => setNewCommentContent(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder="Write a comment..."
       />
       <button css={sendButtonStyle} onClick={handleCreateComment}>
@@ -34,31 +42,23 @@ const newCommentStyle = css`
   margin-bottom: 20px;
 `;
 
-const textareaStyle = () => css`
-  width: 100%;
-  padding: 12px;
+const textareaStyle = css`
+  flex: 1;
+  padding: 10px;
   border: 1px solid ${theme.colors.lightGray};
-  border-radius: 8px;
-  font-size: ${theme.fontSizes.small};
-  resize: vertical;
+  border-radius: 4px;
+  resize: none;
 `;
 
-const sendButtonStyle = () => css`
+const sendButtonStyle = css`
   background: ${theme.colors.primary};
-  color: white;
   border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 8px;
-  cursor: pointer;
-
-  &:hover {
-    background: ${theme.colors.black};
-  }
+  margin-left: 10px;
 `;
-
-export default CommentInput;
