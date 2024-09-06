@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { css } from '@emotion/react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
@@ -8,6 +8,7 @@ import TabMenu from '@/components/common/tabs/TabMenu';
 import BackHeader from '@/components/layout/header/BackHeader';
 import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useUserData } from '@/hooks/useUserData';
 import { UserData } from '@/types/profile';
 
@@ -15,13 +16,22 @@ const FollowPage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { userData, followingUsers, followerUsers, toggleFollow, isFollowing } = useUserData(
-    userId || null,
-  );
+  const { userData, followingUsers, followerUsers, toggleFollow, isFollowing, refetchUserData } =
+    useUserData(userId || null);
   const currentUser = useAuth();
 
   const initialActiveTab = searchParams.get('active') || 'following';
-  const [activeTab, setActiveTab] = useState(initialActiveTab);
+  const {
+    value: activeTab,
+    debouncedValue: debouncedActiveTab,
+    onChange: setActiveTab,
+  } = useDebounce({
+    initialValue: initialActiveTab,
+  });
+
+  useEffect(() => {
+    refetchUserData();
+  }, [debouncedActiveTab, refetchUserData]);
 
   const handleFollowToggle = useCallback(
     async (targetUserId: string) => {
