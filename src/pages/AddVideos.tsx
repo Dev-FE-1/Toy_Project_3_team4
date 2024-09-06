@@ -28,8 +28,9 @@ const AddVideosPage: React.FC = () => {
     if (playlistId && videos.length > 0) {
       addVideosToPlaylist(videos, {
         onSuccess: () => {
-          // 성공 후 플레이리스트 페이지로 이동
-          navigate(`/playlist/${playlistId}`);
+          navigate(`/playlist/${playlistId}`, {
+            state: { from: '/playlist' },
+          });
         },
         onError: (error) => {
           console.error('비디오 추가 실패: ', error);
@@ -118,9 +119,6 @@ const AddVideosPage: React.FC = () => {
               onVideoSelect={() => {}}
               isSelected={false}
               isDraggable={false}
-              customStyle={css`
-                margin-bottom: 16px;
-              `}
             />
           ))}
         </ul>

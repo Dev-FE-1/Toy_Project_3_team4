@@ -83,7 +83,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
         <div className="video-container">
           <VideoThumbnail url={video.thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
           <div className="video-info">
-            <a href={`${isDraggable ? video.videoUrl : ''}`}>
+            <a href={`${isDraggable ? video.videoUrl : 'javascript:void(0)'}`}>
               <div className="info-container">
                 <h2>{videoData.title}</h2>
                 <span>{videoData.creator}</span>
