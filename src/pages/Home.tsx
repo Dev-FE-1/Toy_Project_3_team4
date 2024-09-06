@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 
 import { css } from '@emotion/react';
 import { useInView } from 'react-intersection-observer';
@@ -10,16 +10,28 @@ import { useAuth } from '@/hooks/useAuth';
 import { useFilteredPostsTimelinesQuery } from '@/hooks/useFilteredPostsTimelines';
 import theme from '@/styles/theme';
 
-const getLoadingMessage = (isFetchingNextPage: boolean, hasNextPage: boolean) => {
+const MemoizedPostsTimeLine = memo(PostsTimeLine);
+
+const LoadingMessage = ({
+  isFetchingNextPage,
+  hasNextPage,
+}: {
+  isFetchingNextPage: boolean;
+  hasNextPage: boolean;
+}) => {
   if (isFetchingNextPage) {
     return <Spinner customStyle={spinnerStyle} />;
   }
 
   if (!hasNextPage) {
-    return '모든 포스트를 확인했습니다!';
+    return (
+      <div css={completionMessageStyle}>
+        <span>모든 포스트를 확인했습니다! </span>
+      </div>
+    );
   }
 
-  return '';
+  return null;
 };
 
 const HomePage = () => {
@@ -40,21 +52,41 @@ const HomePage = () => {
   return (
     <>
       <LogoHeader />
-      {posts.length === 0 ? <div css={loadingTriggerStyle}>포스트를 찾을 수 없습니다.</div> : null}
-      <PostsTimeLine posts={posts} />
-      <div ref={ref}>{getLoadingMessage(isFetchingNextPage, hasNextPage)}</div>
+      {posts.length === 0 ? (
+        <div css={noPostsMessageStyle}>
+          <span>😔</span> 포스트를 찾을 수 없습니다. <span>😔</span>
+        </div>
+      ) : null}
+      <MemoizedPostsTimeLine posts={posts} />
+      <div ref={ref}>
+        <LoadingMessage isFetchingNextPage={isFetchingNextPage} hasNextPage={hasNextPage} />
+      </div>
     </>
   );
 };
 
-const loadingTriggerStyle = css`
+const noPostsMessageStyle = css`
+  text-align: center;
+  padding: 24px;
+  color: ${theme.colors.darkGray};
+  font-size: 18px;
+  background-color: ${theme.colors.lightGray};
+  border-radius: 8px;
+  margin: 16px;
+`;
+
+const completionMessageStyle = css`
   text-align: center;
   padding: 16px;
   color: ${theme.colors.darkGray};
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  margin: 16px;
 `;
 
 const spinnerStyle = css`
-  margin: 0 auto;
+  margin: 16px auto;
 `;
 
 export default HomePage;
