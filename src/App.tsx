@@ -106,10 +106,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: '*',
-    element: <NotFound />,
-  },
 ]);
 
 const App = () => <RouterProvider router={router} />;
