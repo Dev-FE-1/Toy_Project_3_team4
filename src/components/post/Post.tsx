@@ -16,6 +16,7 @@ import { fetchYouTubeVideoData } from '@/api/fetchYouTubeVideoData';
 import IconButton from '@/components/common/buttons/IconButton';
 import VideoPlayer from '@/components/post/VideoPlayer';
 import UserInfo from '@/components/user/UserInfo';
+import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
 import theme from '@/styles/theme';
@@ -79,6 +80,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
     setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
     await updatePostsLikes({ postId: post.postId, userId: currentUser?.uid || '' });
   };
+
   return (
     <div css={postContainerStyle}>
       <VideoPlayer video={post.video} />
@@ -112,11 +114,14 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               )}
               <span>{likesCount}</span>
             </button>
-            <button css={buttonStyle} className="chat-bubble-button">
+            <Link
+              to={`${PATH.COMMENT}?postId=${post.postId}`}
+              css={buttonStyle}
+              className="chat-bubble-button"
+            >
               <HiOutlineChatBubbleOvalLeft size={20} />
               {post.comments?.length}
-              {/* 여기를 클릭 했을 때 댓글 페이지로 이동 */}
-            </button>
+            </Link>
           </div>
           <p css={pliStyle}>
             {playlist?.title} (<span>{playlist?.videos.length}</span>)

@@ -103,8 +103,8 @@ const router = createBrowserRouter([
             element: <ProfilePage />,
           },
           {
-            path: 'comments',
-            element: <CommentSection postId="postId" />,
+            path: PATH.COMMENT,
+            element: <CommentSection />,
           },
         ],
       },
