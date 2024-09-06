@@ -8,6 +8,8 @@ interface UseFilteredPostsTimelinesProps {
   nextCursor: string | null;
 }
 
+const POSTS_FETCH_LIMIT = 3;
+
 export const useFilteredPostsTimelinesQuery = ({ userId }: { userId: string }) => {
   return useInfiniteQuery<UseFilteredPostsTimelinesProps>({
     queryKey: ['filteredPostsTimelines', userId],
@@ -15,21 +17,21 @@ export const useFilteredPostsTimelinesQuery = ({ userId }: { userId: string }) =
       let posts;
       const followingUserPosts = await getPostsByFollowingUsers({
         userId,
-        count: 1,
+        count: POSTS_FETCH_LIMIT,
         lastPostId: pageParam as string | undefined,
       });
       posts = followingUserPosts;
-      if (followingUserPosts.length <= 0) {
+      if (followingUserPosts.length < POSTS_FETCH_LIMIT) {
         const noneFollowingUserPosts = await getPostsByNonFollowingUsers({
           userId,
-          count: 1,
+          count: POSTS_FETCH_LIMIT,
           lastPostId: pageParam as string | undefined,
         });
         posts = noneFollowingUserPosts;
       }
       return {
         posts: posts,
-        nextCursor: posts.length > 0 ? posts[posts.length - 1].postId : null,
+        nextCursor: posts.length === POSTS_FETCH_LIMIT ? posts[posts.length - 1].postId : null,
       };
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor,

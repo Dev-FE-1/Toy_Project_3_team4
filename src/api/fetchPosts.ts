@@ -137,7 +137,7 @@ export const getPostsByFollowingUsers = async ({
   let q = query(
     postsCollection,
     orderBy('createdAt', 'desc'),
-    where('userId', 'in', followingUserIds),
+    where('userId', 'in', [userId, ...followingUserIds]),
     limit(count),
   );
 
