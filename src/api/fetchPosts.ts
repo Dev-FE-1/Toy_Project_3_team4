@@ -233,12 +233,3 @@ export const fetchMultiplePostsByPostIds = async (postIds: string[]) => {
 
   return querySnapshot.docs.map((doc) => doc.data());
 };
-
-export const getCommentsCount = async (postId: string): Promise<number> => {
-  const postDoc = doc(postsCollection, postId);
-  const commentsCollection = collection(postDoc, 'comments');
-  const q = query(commentsCollection);
-
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.size;
-};

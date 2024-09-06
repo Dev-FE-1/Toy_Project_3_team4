@@ -11,12 +11,13 @@ import {
 } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
-import { getCommentsCount, updatePostsLikes } from '@/api/fetchPosts';
+import { updatePostsLikes } from '@/api/fetchPosts';
 import IconButton from '@/components/common/buttons/IconButton';
 import VideoPlayer from '@/components/post/VideoPlayer';
 import UserInfo from '@/components/user/UserInfo';
 import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
+import { useComments } from '@/hooks/useComments';
 import { useFetchVideoTitle } from '@/hooks/useFetchVideoTitle';
 import { usePlaylistById } from '@/hooks/usePlaylists';
 import {
@@ -44,19 +45,10 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const { userData } = useUserData(post.userId);
   const { data: playlist } = usePlaylistById(post.playlistId);
   const videoTitle = useFetchVideoTitle(post.video);
-
   const { data: isPlaylistSubscribed, refetch } = useCheckSubscription(post.playlistId);
   const subscribeMutation = useSubscribePlaylist(post.playlistId);
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
-  const [commentsCount, setCommentsCount] = useState(0);
-
-  useEffect(() => {
-    const commentsNumber = async () => {
-      const comments = await getCommentsCount(post.postId);
-      setCommentsCount(comments);
-    };
-    commentsNumber();
-  }, [post.postId, post.comments]);
+  const { comments } = useComments(post.postId);
 
   useEffect(() => {
     if (currentUser) {
@@ -137,7 +129,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               className="chat-bubble-button"
             >
               <HiOutlineChatBubbleOvalLeft size={20} />
-              {commentsCount}
+              {comments.length}
             </Link>
           </div>
           <p css={pliStyle}>
