@@ -54,6 +54,7 @@ const buttonStyle = (theme: Theme) => ({
   secondary: css`
     background-color: ${theme.colors.lightestGray};
     color: ${theme.colors.darkestGray};
+    cursor: default;
   `,
 });
 

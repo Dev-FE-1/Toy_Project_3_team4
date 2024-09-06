@@ -16,7 +16,7 @@ import Modal from '@/components/common/Modal';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
-import { useUpdatePlaylist } from '@/hooks/usePostPlaylist'; // 업데이트 훅 포함
+import { useUpdatePlaylist } from '@/hooks/usePostPlaylist';
 import { useSubscribePlaylist, useUnsubscribePlaylist } from '@/hooks/useSubscribePlaylist';
 import { useUserById } from '@/hooks/useUserById';
 import { useDeletePlaylist } from '@/hooks/useVideoToPlaylist';
@@ -97,7 +97,6 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
         url={videos[0]?.thumbnailUrl}
         isPublic={isPublic}
         customLabelStyle={labelStyle}
-        customStyle={thumbnailStyle}
       />
       <div className="info-container">
         <div className="title">
@@ -123,7 +122,6 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
         </div>
       </div>
 
-      {/* 수정 모달 */}
       <Modal isOpen={isEditModalOpen} onClose={handleCloseEditModal} title="플리 수정하기">
         <div css={editModalContentContainer}>
           <input
@@ -145,7 +143,6 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
         </div>
       </Modal>
 
-      {/* 옵션 모달 */}
       <Modal isOpen={isOptionsModalOpen} onClose={handleCloseOptionsModal} title={null}>
         <div css={optionsModalContentContainer}>
           <div onClick={handleAddVideo}>
@@ -173,12 +170,9 @@ const playlistInfoStyle = css`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: relative;
 
       h1 {
         font-size: ${theme.fontSizes.large};
-        display: flex;
-        align-items: center;
       }
     }
   }
@@ -202,12 +196,6 @@ const labelStyle = css`
   left: 3%;
   width: 10%;
   padding-bottom: 10%;
-`;
-
-const thumbnailStyle = css`
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
 `;
 
 const iconStyle = css`
