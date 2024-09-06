@@ -88,7 +88,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
   const handleDeletePlaylist = () => {
     deletePlaylistMutation.mutate();
     handleCloseOptionsModal();
-    navigate('/playlists');
+    navigate('/playlist');
   };
 
   return (
