@@ -17,6 +17,8 @@ import SignInPage from '@/pages/SignIn';
 import ProtectedRoute from '@/routes/ProtectedRoute';
 import PublicRoute from '@/routes/PublicRoute';
 
+import AddVideosPage from './pages/AddVideos';
+
 const router = createBrowserRouter([
   {
     element: <ContainerLayout />,
@@ -65,6 +67,10 @@ const router = createBrowserRouter([
                 element: <PlaylistDetailPage />,
               },
             ],
+          },
+          {
+            path: `${PATH.ADD_VIDEOS}/:id`,
+            element: <AddVideosPage />,
           },
           {
             path: PATH.PROFILE,
