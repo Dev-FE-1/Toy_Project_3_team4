@@ -13,9 +13,9 @@ import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
 import Post from '@/components/post/Post';
 import { PATH } from '@/constants/path';
-import { useAddPlaylist } from '@/hooks/useAddPlaylist';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
+import { useAddPlaylist } from '@/hooks/usePostPlaylist';
 import { useUserData } from '@/hooks/useUserData';
 import { PostModel } from '@/types/post';
 

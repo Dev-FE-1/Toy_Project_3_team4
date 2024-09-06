@@ -55,7 +55,6 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
         const followerData = await Promise.all((user.followers || []).map((id) => getUserData(id)));
         setFollowerUsers(followerData.filter(Boolean) as UserData[]);
       } else {
-        console.log('User document does not exist');
         setUserData(null);
       }
 

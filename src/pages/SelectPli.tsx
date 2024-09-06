@@ -10,9 +10,9 @@ import BackHeader from '@/components/layout/header/BackHeader';
 import CloseHeader from '@/components/layout/header/CloseHeader';
 import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
-import { useAddPlaylist } from '@/hooks/useAddPlaylist';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
+import { useAddPlaylist } from '@/hooks/usePostPlaylist';
 
 const tabs = [
   { id: 'my', label: '내 플리', icon: <HiOutlineBookmark /> },

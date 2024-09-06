@@ -1,15 +1,18 @@
-import { css, Theme } from '@emotion/react';
+import { css } from '@emotion/react';
 
-const IconButton: React.FC<{ icon: React.ReactNode; onClick: () => void }> = ({
+import theme from '@/styles/theme';
+
+const IconButton: React.FC<{ icon: React.ReactNode; onClick: () => void; enabled?: boolean }> = ({
   icon,
   onClick,
+  enabled = false,
 }) => (
-  <button onClick={onClick} css={iconButtonStyle}>
+  <button onClick={onClick} css={[iconButtonStyle, enabled && enabledStyle]}>
     {icon}
   </button>
 );
 
-const iconButtonStyle = (theme: Theme) => css`
+const iconButtonStyle = css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,10 +21,10 @@ const iconButtonStyle = (theme: Theme) => css`
   cursor: pointer;
   transition: 0.3s ease;
   height: 100%;
+`;
 
-  &:hover {
-    color: ${theme.colors.primary};
-  }
+const enabledStyle = css`
+  color: ${theme.colors.primary};
 `;
 
 export default IconButton;

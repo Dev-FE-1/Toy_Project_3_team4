@@ -7,22 +7,26 @@ import {
   HiHeart,
   HiChevronRight,
   HiOutlineBookmark,
+  HiBookmark,
 } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
-import { getPlaylist } from '@/api/fetchPlaylist';
 import { updatePostsLikes } from '@/api/fetchPosts';
-import { fetchYouTubeVideoData } from '@/api/fetchYouTubeVideoData';
 import IconButton from '@/components/common/buttons/IconButton';
 import VideoPlayer from '@/components/post/VideoPlayer';
 import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
+import { useFetchVideoTitle } from '@/hooks/useFetchVideoTitle';
+import { usePlaylistById } from '@/hooks/usePlaylists';
+import {
+  useSubscribePlaylist,
+  useUnsubscribePlaylist,
+  useCheckSubscription,
+} from '@/hooks/useSubscribePlaylist';
 import { useUserData } from '@/hooks/useUserData';
 import theme from '@/styles/theme';
-import { PlaylistModel } from '@/types/playlist';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
-import { extractVideoId } from '@/utils/youtubeUtils';
 
 interface PostProps {
   id: string;
@@ -34,39 +38,15 @@ interface PostProps {
 const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes.length);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
-  const [playlist, setPlaylist] = useState<PlaylistModel>();
-  const [videoTitle, setVideoTitle] = useState('');
+  const { data: playlist } = usePlaylistById(post.playlistId);
+  const videoTitle = useFetchVideoTitle(post.video);
 
-  useEffect(() => {
-    const fetchPlaylist = async () => {
-      const playlist = await getPlaylist({ playlistId: post.playlistId });
-      setPlaylist(playlist);
-    };
-
-    fetchPlaylist();
-  }, [post.playlistId]);
-
-  useEffect(() => {
-    const getVideoTitle = async () => {
-      try {
-        const videoId = extractVideoId(post.video);
-        if (videoId) {
-          const videoData = await fetchYouTubeVideoData(videoId);
-          setVideoTitle(videoData.title);
-        } else {
-          console.error('Invalid video URL');
-          setVideoTitle('유효하지 않은 비디오 URL');
-        }
-      } catch (error) {
-        console.error('비디오 제목을 가져오는데 실패했습니다:', error);
-        setVideoTitle('비디오 제목을 불러올 수 없습니다');
-      }
-    };
-
-    getVideoTitle();
-  }, [post.video]);
+  const { data: isPlaylistSubscribed, refetch } = useCheckSubscription(post.playlistId);
+  const subscribeMutation = useSubscribePlaylist(post.playlistId);
+  const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
 
   useEffect(() => {
     if (currentUser) {
@@ -74,11 +54,36 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
     }
   }, [currentUser, post.likes]);
 
+  useEffect(() => {
+    if (isPlaylistSubscribed !== undefined) {
+      setIsSubscribed(isPlaylistSubscribed);
+    }
+  }, [isPlaylistSubscribed]);
+
+  const toggleSubscription = () => {
+    if (isSubscribed) {
+      unsubscribeMutation.mutate(undefined, {
+        onSuccess: () => {
+          setIsSubscribed(false);
+          refetch();
+        },
+      });
+    } else {
+      subscribeMutation.mutate(undefined, {
+        onSuccess: () => {
+          setIsSubscribed(true);
+          refetch();
+        },
+      });
+    }
+  };
+
   const toggleLike = async () => {
     setIsLiked(!isLiked);
     setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
     await updatePostsLikes({ postId: post.postId, userId: currentUser?.uid || '' });
   };
+
   return (
     <div css={postContainerStyle}>
       <VideoPlayer video={post.video} />
@@ -93,7 +98,11 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
-          <IconButton icon={<HiOutlineBookmark size={20} />} onClick={() => {}} />
+          <IconButton
+            icon={isSubscribed ? <HiBookmark size={20} /> : <HiOutlineBookmark size={20} />}
+            onClick={toggleSubscription}
+            enabled={isSubscribed}
+          />
         </div>
         <p css={contentStyle(isDetail)}>{post.content}</p>
         <p css={playlistStyle}>

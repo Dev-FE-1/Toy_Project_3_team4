@@ -36,6 +36,7 @@ const Modal: React.FC<ModalProps> = ({
           <Dialog.Content className="dialog__content">
             {title && <Dialog.Title className="dialog__title">{title}</Dialog.Title>}
             <VisuallyHidden>
+              <Dialog.Title>{title}</Dialog.Title>
               <Dialog.Description>{title}</Dialog.Description>
             </VisuallyHidden>
             <div className="dialog__body">{children}</div>
