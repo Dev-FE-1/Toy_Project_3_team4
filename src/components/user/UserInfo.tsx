@@ -61,6 +61,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
           onClick={() => {
             onFollowToggle(userId);
           }}
+          customStyle={buttonStyle}
         >
           {isFollowing ? '팔로잉' : '팔로우'}
         </FitButton>
@@ -132,6 +133,10 @@ const userInfoStyle = (imageSize: ImageSizeType) => css`
       }
     }
   }
+`;
+
+const buttonStyle = css`
+  font-weight: 600;
 `;
 
 export default UserInfo;

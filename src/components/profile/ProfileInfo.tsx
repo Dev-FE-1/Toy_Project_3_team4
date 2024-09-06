@@ -59,13 +59,13 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
             <p css={usernameStyle}>{userData.displayName}</p>
             <div css={followInfoStyle}>
               <Link
-                to={`/profile/${profileUserId}/follow?following=${userData?.following?.length || 0}&followers=${userData?.followers?.length || 0}`}
+                to={`/profile/${profileUserId}/follow?following=${userData?.following?.length || 0}&followers=${userData?.followers?.length || 0}&active=following`}
               >
                 <span css={followCountStyle}>{userData?.following?.length || 0}</span>
                 <span css={followLabelStyle}>팔로잉</span>
               </Link>
               <Link
-                to={`/profile/${profileUserId}/follow?following=${userData?.following?.length || 0}&followers=${userData?.followers?.length || 0}`}
+                to={`/profile/${profileUserId}/follow?following=${userData?.following?.length || 0}&followers=${userData?.followers?.length || 0}&active=followers`}
               >
                 <span css={followCountStyle}>{userData?.followers?.length || 0}</span>
                 <span css={followLabelStyle}>팔로워</span>

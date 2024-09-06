@@ -1,7 +1,7 @@
 import { useCallback, useState, useMemo } from 'react';
 
 import { css } from '@emotion/react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
@@ -13,11 +13,14 @@ import { UserData } from '@/types/profile';
 
 const FollowPage = () => {
   const { userId } = useParams<{ userId: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { userData, followingUsers, followerUsers, toggleFollow, isFollowing } = useUserData(
     userId || null,
   );
-  const [activeTab, setActiveTab] = useState('following');
+
+  const initialActiveTab = searchParams.get('active') || 'following';
+  const [activeTab, setActiveTab] = useState(initialActiveTab);
   const currentUser = useAuth();
 
   const handleFollowToggle = useCallback(
