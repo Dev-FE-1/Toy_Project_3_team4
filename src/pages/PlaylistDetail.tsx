@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 
@@ -20,16 +20,31 @@ const PlaylistDetailPage = () => {
   const { data: playlistUser } = useUserById(playlist?.userId || '');
   const user = useAuth();
 
+  const [videos, setVideos] = useState(playlist?.videos || []);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (playlist && playlist.videos) {
+      setVideos(playlist.videos);
+    }
+  }, [playlist]);
+
   if (isLoading) {
-    return <p>로딩 중입니다...</p>;
+    return;
   }
 
   if (isError || !playlist) {
     console.warn('플레이리스트를 찾을 수 없습니다.');
     return <p>플레이리스트를 찾을 수 없습니다.</p>;
   }
+
+  const handleBack = () => {
+    navigate(`/playlist`, { replace: true });
+
+    setTimeout(() => {
+      navigate(`/playlist`, { replace: true });
+    }, 0);
+  };
 
   const userModel: UserModel = {
     userId: playlistUser?.userId ?? '',
@@ -50,17 +65,26 @@ const PlaylistDetailPage = () => {
   };
 
   const isOwner = user?.uid === playlist?.userId;
+
   return (
     <>
       <BackHeader
         title={state?.selectPli ? '동영상 선택' : undefined}
         rightButtonText={'완료'}
+        onBackClick={handleBack}
         onRightButtonClick={state?.selectPli ? handleCompleteClick : undefined}
         rightButtonDisabled={!selectedVideoId}
       />
-      <PlaylistInfo playlist={playlist} user={userModel} isOwner={isOwner} />
+      <PlaylistInfo
+        playlist={playlist}
+        thumbnailUrl={videos[0] && `https://img.youtube.com/vi/${videos[0]?.videoId}/0.jpg`}
+        user={userModel}
+        isOwner={isOwner}
+      />
       <PlaylistContents
-        videos={playlist.videos}
+        playlistId={playlist.playlistId}
+        videos={videos}
+        setVideos={setVideos}
         onVideoSelect={handleVideoSelect}
         selectedVideoId={selectedVideoId}
         isDraggable={isOwner && !state?.selectPli}

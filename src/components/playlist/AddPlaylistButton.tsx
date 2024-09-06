@@ -48,7 +48,7 @@ const AddPlaylistButton: React.FC<AddPlaylistButtonProps> = ({ customStyle, onAd
     <>
       <div css={[buttonContainerStyle, customStyle]}>
         <button id="add" onClick={onClick}>
-          <HiOutlinePlus />
+          <HiOutlinePlus size={20} />
         </button>
         <label htmlFor="add">새로운 플리 추가</label>
       </div>
@@ -96,6 +96,10 @@ const buttonContainerStyle = css`
     font-size: ${theme.fontSizes.micro};
     color: ${theme.colors.darkestGray};
     background-color: ${theme.colors.lightGray};
+
+    svg {
+      stroke-width: 1.7;
+    }
   }
 
   label {

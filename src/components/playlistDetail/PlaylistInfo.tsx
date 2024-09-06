@@ -27,11 +27,18 @@ import { UserModel } from '@/types/user';
 interface PlaylistInfoProps {
   playlist: PlaylistModel;
   user: UserModel;
-  customStyle?: SerializedStyles;
+  thumbnailUrl: string;
   isOwner: boolean;
+  customStyle?: SerializedStyles;
 }
 
-const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle, isOwner }) => {
+const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
+  playlist,
+  user,
+  thumbnailUrl,
+  isOwner,
+  customStyle,
+}) => {
   const { title, videos, isPublic } = playlist;
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -94,7 +101,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({ playlist, user, customStyle
   return (
     <div css={[playlistInfoStyle, customStyle]}>
       <VideoThumbnail
-        url={videos[0]?.thumbnailUrl}
+        url={thumbnailUrl || videos[0]?.thumbnailUrl}
         isPublic={isPublic}
         customLabelStyle={labelStyle}
       />
