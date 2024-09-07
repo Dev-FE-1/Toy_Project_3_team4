@@ -36,9 +36,10 @@ const LoadingMessage = ({
 
 const HomePage = () => {
   const user = useAuth();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFilteredPostsTimelinesQuery({
-    userId: user?.uid || '',
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useFilteredPostsTimelinesQuery({
+      userId: user?.uid || '',
+    });
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
   const { ref, inView } = useInView();
@@ -49,15 +50,20 @@ const HomePage = () => {
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
+  if (isLoading) {
+    return <Spinner customStyle={spinnerStyle} />;
+  }
+
   return (
     <>
       <LogoHeader />
-      {posts.length === 0 ? (
+      {posts.length === 0 && !isLoading ? (
         <div css={noPostsMessageStyle}>
           <span>😔</span> 포스트를 찾을 수 없습니다. <span>😔</span>
         </div>
-      ) : null}
-      <MemoizedPostsTimeLine posts={posts} />
+      ) : (
+        <MemoizedPostsTimeLine posts={posts} />
+      )}
       <div ref={ref}>
         <LoadingMessage isFetchingNextPage={isFetchingNextPage} hasNextPage={hasNextPage} />
       </div>
