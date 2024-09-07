@@ -52,6 +52,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         placeholder="답글을 작성해주세요"
         onCompositionStart={handleCompositionStart}
         onCompositionEnd={handleCompositionEnd}
+        data-testid="comment-input"
       />
       <button onClick={onSubmit}>
         <HiOutlinePaperAirplane />

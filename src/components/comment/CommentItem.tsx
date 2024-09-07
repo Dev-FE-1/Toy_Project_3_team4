@@ -53,7 +53,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           {comment.userId === currentUserId && (
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
-                <button css={menuTriggerStyle}>
+                <button css={menuTriggerStyle} data-testid="comment-dropdown-button">
                   <HiDotsVertical size={18} />
                 </button>
               </DropdownMenu.Trigger>
@@ -110,6 +110,7 @@ const commentStyle = css`
   display: flex;
   align-items: flex-start;
   padding: 8px 0;
+  transform: translateX(4px);
 `;
 
 const avatarStyle = css`
