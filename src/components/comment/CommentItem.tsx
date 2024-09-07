@@ -2,10 +2,12 @@ import { css } from '@emotion/react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HiDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
 import { HiXMark } from 'react-icons/hi2';
+import { Link } from 'react-router-dom';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';
 import { CommentInput } from '@/components/comment/CommentInput';
 import FitButton from '@/components/common/buttons/FitButton';
+import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
 import { CommentModel } from '@/types/comment';
 import { formatCreatedAt } from '@/utils/date';
@@ -43,7 +45,9 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div css={commentContentStyle}>
         <div css={headerStyle}>
           <div css={userInfoStyle}>
-            <span css={nameStyle}>{userData?.displayName || 'Unknown User'}</span>
+            <Link to={PATH.PROFILE.replace(':userId', comment.userId)}>
+              <span css={nameStyle}>{userData?.displayName || 'Unknown User'}</span>
+            </Link>
             <span css={timeStyle}>{formatCreatedAt(comment.createdAt)}</span>
           </div>
           {comment.userId === currentUserId && (
@@ -140,6 +144,7 @@ const nameStyle = css`
   font-weight: 600;
   margin-right: 8px;
   white-space: nowrap;
+  line-height: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
@@ -148,6 +153,7 @@ const timeStyle = css`
   color: ${theme.colors.darkGray};
   font-size: ${theme.fontSizes.micro};
   white-space: nowrap;
+  line-height: 100%;
 `;
 
 const menuTriggerStyle = css`
