@@ -1,9 +1,13 @@
 import { css } from '@emotion/react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HiDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
+import { HiXMark } from 'react-icons/hi2';
+import { Link } from 'react-router-dom';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';
-import FullButton from '@/components/common/buttons/FullButton';
+import { CommentInput } from '@/components/comment/CommentInput';
+import FitButton from '@/components/common/buttons/FitButton';
+import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
 import { CommentModel } from '@/types/comment';
 import { formatCreatedAt } from '@/utils/date';
@@ -18,6 +22,8 @@ interface CommentItemProps {
   handleUpdateComment: (commentId: string) => void;
   handleDeleteComment: (commentId: string) => void;
   userData: { displayName: string; photoURL: string };
+  handleCompositionStart: () => void;
+  handleCompositionEnd: () => void;
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({
@@ -30,6 +36,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
   handleUpdateComment,
   handleDeleteComment,
   userData,
+  handleCompositionStart,
+  handleCompositionEnd,
 }) => {
   return (
     <div css={commentStyle}>
@@ -41,14 +49,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div css={commentContentStyle}>
         <div css={headerStyle}>
           <div css={userInfoStyle}>
-            <span css={nameStyle}>{userData?.displayName || 'Unknown User'}</span>
+            <Link to={PATH.PROFILE.replace(':userId', comment.userId)}>
+              <span css={nameStyle}>{userData?.displayName || 'Unknown User'}</span>
+            </Link>
             <span css={timeStyle}>{formatCreatedAt(comment.createdAt)}</span>
           </div>
           {comment.userId === currentUserId && (
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <button css={menuTriggerStyle}>
-                  <HiDotsVertical />
+                  <HiDotsVertical size={18} />
                 </button>
               </DropdownMenu.Trigger>
 
@@ -75,29 +85,23 @@ const CommentItem: React.FC<CommentItemProps> = ({
           )}
         </div>
         {editingCommentId === comment.id ? (
-          <>
-            <textarea
-              css={editTextareaStyle}
-              value={editingContent}
-              onChange={(e) => setEditingContent(e.target.value)}
+          <div css={editCommentContainerStyle}>
+            <CommentInput
+              comment={editingContent}
+              onChange={setEditingContent}
+              onSubmit={() => handleUpdateComment(comment.id)}
+              customStyle={editInputStyle}
+              handleCompositionStart={handleCompositionStart}
+              handleCompositionEnd={handleCompositionEnd}
             />
-            <div css={editButtonsStyle}>
-              <FullButton
-                styleType="primary"
-                customStyle={smallerButtonStyle}
-                onClick={() => handleUpdateComment(comment.id)}
-              >
-                저장
-              </FullButton>
-              <FullButton
-                styleType="disabled"
-                customStyle={smallerButtonStyle}
-                onClick={() => setEditingCommentId(null)}
-              >
-                취소
-              </FullButton>
-            </div>
-          </>
+            <FitButton
+              styleType="secondary"
+              onClick={() => setEditingCommentId(null)}
+              customStyle={cancelButtonStyle}
+            >
+              <HiXMark size={20} />
+            </FitButton>
+          </div>
         ) : (
           <p css={commentTextStyle}>{comment.content}</p>
         )}
@@ -109,15 +113,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
 const commentStyle = css`
   display: flex;
   align-items: flex-start;
-  padding: 12px 0;
-  transform: translateX(5px);
+  padding: 8px 0;
 `;
 
 const avatarStyle = css`
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  margin-right: 12px;
+  margin-right: 8px;
   flex-shrink: 0;
 `;
 
@@ -137,42 +140,55 @@ const userInfoStyle = css`
   display: flex;
   align-items: center;
   min-width: 0;
+  margin-top: 2px;
   flex: 1;
 `;
 
 const nameStyle = css`
-  font-weight: bold;
+  color: ${theme.colors.darkestGray};
+  font-size: ${theme.fontSizes.small};
+  font-weight: 600;
   margin-right: 8px;
   white-space: nowrap;
+  line-height: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
 const timeStyle = css`
   color: ${theme.colors.darkGray};
-  font-size: ${theme.fontSizes.small};
+  font-size: ${theme.fontSizes.micro};
   white-space: nowrap;
+  line-height: 100%;
 `;
 
 const menuTriggerStyle = css`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  color: ${theme.colors.darkGray};
   flex-shrink: 0;
+  height: 18px;
   margin-left: 8px;
-  &:hover {
-    color: ${theme.colors.black};
-  }
+  border: none;
+  color: ${theme.colors.darkGray};
+  background: none;
+  cursor: pointer;
 `;
 
 const commentTextStyle = css`
-  color: ${theme.colors.darkestGray};
-  line-height: 1.4;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  padding-right: 24px;
+  padding-right: 32px;
+  text-align: justify;
+  font-size: ${theme.fontSizes.small};
+`;
+
+const editCommentContainerStyle = css`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+`;
+
+const editInputStyle = css`
+  background-color: ${theme.colors.white};
 `;
 
 const menuContentStyle = css`
@@ -211,26 +227,20 @@ const menuItemStyle = css`
   }
 `;
 
-const editTextareaStyle = css`
-  width: 100%;
-  padding: 8px;
+const cancelButtonStyle = css`
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: 1px solid ${theme.colors.lightGray};
-  border-radius: 4px;
-  font-size: ${theme.fontSizes.small};
-  resize: vertical;
-  margin-bottom: 8px;
-`;
+  background-color: ${theme.colors.bgGray};
+  cursor: pointer;
 
-const editButtonsStyle = css`
-  display: flex;
-  gap: 8px;
-`;
-
-const smallerButtonStyle = css`
-  height: 25px;
-  padding: 0 10px;
-  font-size: ${theme.fontSizes.small};
-  width: auto;
+  svg {
+    stroke-width: 0.2;
+  }
 `;
 
 export default CommentItem;

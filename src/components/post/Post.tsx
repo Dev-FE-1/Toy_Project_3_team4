@@ -87,6 +87,8 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
     await updatePostsLikes({ postId: post.postId, userId: currentUser?.uid || '' });
   };
 
+  const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
+
   return (
     <div css={postContainerStyle}>
       <VideoPlayer video={post.video} />
@@ -109,7 +111,9 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
           )}
         </div>
-        <p css={contentStyle(isDetail)}>{post.content}</p>
+        <p css={contentStyle(isDetail)}>
+          {isDetail ? post.content : <Link to={postDetailPath}>{post.content}</Link>}
+        </p>
         <p css={playlistStyle}>
           <Link to={post.video} target="_blank">
             <span>{videoTitle}</span>
@@ -126,11 +130,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               )}
               <span>{likesCount}</span>
             </button>
-            <Link
-              to={`${PATH.COMMENT}?postId=${post.postId}`}
-              css={buttonStyle}
-              className="chat-bubble-button"
-            >
+            <Link to={postDetailPath} css={buttonStyle} className="chat-bubble-button">
               <HiOutlineChatBubbleOvalLeft size={20} />
               {comments.length}
             </Link>
@@ -178,6 +178,10 @@ const contentStyle = (isDetail: boolean) => css`
     text-overflow: ellipsis;
     overflow: hidden;
   `}
+
+  @media screen and (min-width: ${theme.width.large}) {
+    font-size: ${theme.fontSizes.base};
+  }
 `;
 
 const playlistStyle = css`
