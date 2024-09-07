@@ -70,6 +70,7 @@ const NewPost = () => {
           css={textareaStyle}
           value={description}
           onChange={handleDescriptionChange}
+          data-testid="post-content-input"
         />
       </div>
     </>
