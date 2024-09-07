@@ -4,12 +4,12 @@ import { PATH } from '@/constants/path';
 import ContainerLayout from '@/layouts/Container';
 import RootLayout from '@/layouts/Root';
 import AddPostPage from '@/pages/AddPost';
-import { Comment } from '@/pages/Comment';
 import FollowPage from '@/pages/Follow';
 import HomePage from '@/pages/Home';
 import NewPost from '@/pages/NewPost';
 import PlaylistPage from '@/pages/Playlist';
 import PlaylistDetailPage from '@/pages/PlaylistDetail';
+import PostDetailPage from '@/pages/PostDetail';
 import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
 import ProfilePage from '@/pages/Profile';
 import ProfileEditPage from '@/pages/ProfileEdit';
@@ -99,8 +99,8 @@ const router = createBrowserRouter([
             element: <ProfilePage />,
           },
           {
-            path: PATH.COMMENT,
-            element: <Comment />,
+            path: PATH.POST_DETAIL,
+            element: <PostDetailPage />,
           },
         ],
       },
