@@ -5,6 +5,7 @@ export const PATH = {
   SELECT_PLI: '/post/add/selectPli',
   ADD_VIDEOS: '/addVideos',
   PLAYLIST: '/playlist',
+  ADD_VIDEO_SELECT_PLI: '/playlist/selectPli',
   PROFILE: '/profile/:userId',
   PROFILE_EDIT: '/profile/:userId/edit',
   SIGN_IN: '/signin',

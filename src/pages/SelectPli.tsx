@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { css } from '@emotion/react';
 import { HiOutlineBookmark, HiOutlinePlay } from 'react-icons/hi2';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
@@ -13,6 +13,8 @@ import Playlists from '@/components/playlist/Playlists';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useAddPlaylist } from '@/hooks/usePostPlaylist';
+import { useAddVideosToMyPlaylist } from '@/hooks/useVideoToPlaylist';
+import { makeVideoObj } from '@/utils/video';
 
 const tabs = [
   { id: 'my', label: '내 플리', icon: <HiOutlineBookmark /> },
@@ -23,24 +25,28 @@ const SelectPliPage = () => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const videoId = searchParams.get('videoId');
-
+  const { videoId } = useParams();
+  const videoObject = makeVideoObj(videoId || '');
   const state = location.state as { type?: 'byLink' | 'fromPli' };
   const user = useAuth();
   const { data: myPlaylists, error } = useUserPlaylists();
   const addPlaylistMutation = useAddPlaylist();
+
+  const addVideoToPlaylistMutation = useAddVideosToMyPlaylist();
 
   const handleAddPlaylist = (title: string, isPublic: boolean) => {
     addPlaylistMutation.mutate({ title, isPublic });
   };
 
   const handlePlaylistClick = (playlistId: string, title: string) => {
-    state?.type === 'byLink'
-      ? navigate(
-          `/post/add?pli=${playlistId}&title=${encodeURIComponent(title)}&videoId=${videoId}`,
-        )
-      : navigate(`/playlist/${playlistId}`, { state: { selectPli: true } });
+    if (videoId) {
+      addVideoToPlaylistMutation.mutate({ playlistId, videos: [videoObject] });
+      navigate(`/playlist/${playlistId}`, { state: { selectPli: false } });
+    } else if (state?.type === 'byLink') {
+      navigate(`/post/add?pli=${playlistId}&title=${encodeURIComponent(title)}&videoId=${videoId}`);
+    } else {
+      navigate(`/playlist/${playlistId}`, { state: { selectPli: true } });
+    }
   };
 
   function handleBackClick() {
@@ -56,6 +62,22 @@ const SelectPliPage = () => {
   }
 
   const filteredPlaylists = myPlaylists?.filter((playlist) => playlist.videos.length > 0) || [];
+
+  if (videoId) {
+    return (
+      <>
+        <BackHeader onBackClick={handleBackClick} title="저장할 플리 선택" />
+        <AddPlaylistButton customStyle={addPlaylistButtonStyle} onAddPlaylist={handleAddPlaylist} />
+        <Playlists
+          playlists={myPlaylists || []}
+          customStyle={playlistStyle}
+          customVideoStyle={videoStyle}
+          onPlaylistClick={handlePlaylistClick}
+          isColumn={false}
+        />
+      </>
+    );
+  }
 
   return (
     <>

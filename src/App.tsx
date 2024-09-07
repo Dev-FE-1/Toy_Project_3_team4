@@ -91,6 +91,10 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: `${PATH.ADD_VIDEO_SELECT_PLI}/:videoId`,
+            element: <SelectPliPage />,
+          },
+          {
             path: `${PATH.ADD_VIDEOS}/:id`,
             element: <AddVideosPage />,
           },
