@@ -7,12 +7,16 @@ interface CommentInputProps {
   newCommentContent: string;
   setNewCommentContent: (content: string) => void;
   handleCreateComment: () => void;
+  handleCompositionStart: () => void;
+  handleCompositionEnd: () => void;
 }
 
 export const CommentInput: React.FC<CommentInputProps> = ({
   newCommentContent,
   setNewCommentContent,
   handleCreateComment,
+  handleCompositionStart,
+  handleCompositionEnd,
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -29,6 +33,8 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         onChange={(e) => setNewCommentContent(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="댓글을 입력하세요..."
+        onCompositionStart={handleCompositionStart}
+        onCompositionEnd={handleCompositionEnd}
       />
       <button css={sendButtonStyle} onClick={handleCreateComment}>
         <HiOutlinePaperAirplane />

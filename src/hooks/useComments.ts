@@ -1,4 +1,3 @@
-// useComments.ts
 import { useState } from 'react';
 
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -11,6 +10,7 @@ export const useComments = (postId: string) => {
   const [newCommentContent, setNewCommentContent] = useState('');
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editingContent, setEditingContent] = useState('');
+  const [isComposing, setIsComposing] = useState(false);
   const currentUser = useAuth();
 
   const { data: comments = [], refetch } = useQuery<CommentModel[]>({
@@ -44,7 +44,7 @@ export const useComments = (postId: string) => {
   });
 
   const handleCreateComment = () => {
-    if (!currentUser || !newCommentContent.trim()) return;
+    if (!currentUser || !newCommentContent.trim() || isComposing) return;
     createCommentMutation.mutate();
   };
 
@@ -56,6 +56,9 @@ export const useComments = (postId: string) => {
   const handleDeleteComment = (commentId: string) => {
     deleteCommentMutation.mutate(commentId);
   };
+
+  const handleCompositionStart = () => setIsComposing(true);
+  const handleCompositionEnd = () => setIsComposing(false);
 
   return {
     currentUser,
@@ -69,5 +72,7 @@ export const useComments = (postId: string) => {
     handleCreateComment,
     handleUpdateComment,
     handleDeleteComment,
+    handleCompositionStart,
+    handleCompositionEnd,
   };
 };

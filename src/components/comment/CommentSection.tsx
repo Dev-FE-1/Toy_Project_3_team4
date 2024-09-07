@@ -24,6 +24,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
     handleCreateComment,
     handleUpdateComment,
     handleDeleteComment,
+    handleCompositionStart,
+    handleCompositionEnd,
   } = useComments(postId || '');
 
   const userIds = Array.from(new Set(comments.map((comment) => comment.userId)));
@@ -35,6 +37,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
         newCommentContent={newCommentContent}
         setNewCommentContent={setNewCommentContent}
         handleCreateComment={handleCreateComment}
+        handleCompositionStart={handleCompositionStart}
+        handleCompositionEnd={handleCompositionEnd}
       />
       <div css={commentsListStyle}>
         {comments.map((comment) => {
