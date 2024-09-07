@@ -3,6 +3,7 @@ import { PiYoutubeLogo } from 'react-icons/pi';
 
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useAuth } from '@/hooks/useAuth';
+import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 
@@ -42,7 +43,7 @@ const Playlists: React.FC<PlaylistListProps> = ({
                   customStyle={customVideoStyle}
                 />
                 <div className="playlist-info">
-                  <h2>{title}</h2>
+                  <h2 css={textEllipsis(1)}>{title}</h2>
                   <p>{videos.length}개의 비디오</p>
                 </div>
               </div>
