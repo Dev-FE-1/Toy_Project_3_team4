@@ -67,10 +67,11 @@ const playlistStyle = css`
 const itemStyle = (isColumn: boolean) => css`
   display: flex;
   flex-direction: ${isColumn ? 'column' : 'row'};
+  align-items: ${isColumn ? '' : 'center'};
   cursor: pointer;
 
   .playlist-info {
-    padding: 0 6px;
+    padding: ${isColumn ? '0 6px' : '0'};
     margin-top: ${isColumn ? '4px' : '0'};
     margin-left: ${isColumn ? '0' : '8px'};
 
