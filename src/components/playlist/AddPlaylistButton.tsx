@@ -17,7 +17,7 @@ const AddPlaylistButton: React.FC<{
 }> = ({ customStyle, onAddPlaylist }) => {
   const user = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const [title, setTitle] = useState('');
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
