@@ -48,7 +48,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <button css={menuTriggerStyle}>
-                  <HiDotsVertical />
+                  <HiDotsVertical size={18} />
                 </button>
               </DropdownMenu.Trigger>
 
@@ -110,7 +110,6 @@ const commentStyle = css`
   display: flex;
   align-items: flex-start;
   padding: 12px 0;
-  transform: translateX(5px);
 `;
 
 const avatarStyle = css`
@@ -141,7 +140,8 @@ const userInfoStyle = css`
 `;
 
 const nameStyle = css`
-  font-weight: bold;
+  color: ${theme.colors.darkestGray};
+  font-weight: 600;
   margin-right: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -155,24 +155,25 @@ const timeStyle = css`
 `;
 
 const menuTriggerStyle = css`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  color: ${theme.colors.darkGray};
   flex-shrink: 0;
+  height: 18px;
   margin-left: 8px;
-  &:hover {
-    color: ${theme.colors.black};
-  }
+  border: none;
+  color: ${theme.colors.darkGray};
+  background: none;
+  cursor: pointer;
 `;
 
 const commentTextStyle = css`
-  color: ${theme.colors.darkestGray};
-  line-height: 1.4;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  padding-right: 24px;
+  padding-right: 32px;
+  text-align: justify;
+  font-size: ${theme.fontSizes.small};
+
+  @media screen and (min-width: ${theme.width.large}) {
+    font-size: ${theme.fontSizes.base};
+  }
 `;
 
 const menuContentStyle = css`

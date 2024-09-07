@@ -175,6 +175,10 @@ const contentStyle = (isDetail: boolean) => css`
     text-overflow: ellipsis;
     overflow: hidden;
   `}
+
+  @media screen and (min-width: ${theme.width.large}) {
+    font-size: ${theme.fontSizes.base};
+  }
 `;
 
 const playlistStyle = css`
