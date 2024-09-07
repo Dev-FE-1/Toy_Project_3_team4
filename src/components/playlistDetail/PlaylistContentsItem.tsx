@@ -11,6 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Modal from '@/components/common/Modal';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
+import { PATH } from '@/constants/path';
 import { useRemoveVideoFromPlaylist } from '@/hooks/useRemoveVideoFromPlaylist';
 import { useYouTubeVideoData } from '@/hooks/useYouTubeVideoData';
 import { textEllipsis } from '@/styles/GlobalStyles';
@@ -104,7 +105,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
           <div
             onClick={() => {
               handleCloseModal();
-              navigate('/post/add/selectPli');
+              navigate(`${PATH.ADD_VIDEO_SELECT_PLI}/${video.videoId}`);
             }}
           >
             <div className="icon-wrapper">
