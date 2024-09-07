@@ -1,4 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+
+import { test as authTest } from './auth.setup';
 
 test.describe('SignInPage', () => {
   test.beforeEach(async ({ page }) => {
@@ -29,4 +31,15 @@ test.describe('SignInPage', () => {
     await expect(activeSlide).toBeVisible();
     await expect(activeSlide).toContainText('내 취향을 공유하고');
   });
+});
+
+authTest.describe('SignInPage - 파이어베이스 로그인', () => {
+  authTest(
+    '로그인 후 페이지의 url은 "/"이어야한다',
+    async ({ page, auth }: { page: Page; auth }) => {
+      await page.goto('/signin');
+      await auth.login(page);
+      await expect(page).toHaveURL('/');
+    },
+  );
 });
