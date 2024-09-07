@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 
 import { test as authTest } from './auth.setup';
 
+const MAX_SCROLL_ATTEMPTS = 500;
+
 test.describe('HomePage - 로그인 되지 않은 상태', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -39,8 +41,16 @@ authTest.describe('HomePage - 로그인된 상태', () => {
   authTest('스크롤 시 추가 포스트를 로드해야 한다', async ({ page }) => {
     await page.waitForSelector('[data-testid="post"]');
     const initialPostCount = await page.locator('[data-testid="post"]').count();
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(3000);
+
+    const lastPost = page.locator('[data-testid="post"]').last();
+    await lastPost.scrollIntoViewIfNeeded();
+
+    await page.waitForFunction(
+      (initialCount) => document.querySelectorAll('[data-testid="post"]').length > initialCount,
+      initialPostCount,
+      { timeout: 5000 },
+    );
+
     const newPostCount = await page.locator('[data-testid="post"]').count();
     expect(newPostCount).toBeGreaterThan(initialPostCount);
   });
@@ -52,7 +62,7 @@ authTest.describe('HomePage - 로그인된 상태', () => {
     let previousPostCount = 0;
     let currentPostCount = 0;
     let scrollAttempts = 0;
-    const maxScrollTries = 100;
+    const maxScrollTries = MAX_SCROLL_ATTEMPTS;
 
     while (scrollAttempts < maxScrollTries) {
       previousPostCount = currentPostCount;
@@ -62,13 +72,15 @@ authTest.describe('HomePage - 로그인된 상태', () => {
         break;
       }
 
-      await page.evaluate(() => {
-        window.scrollTo(0, document.body.scrollHeight);
-        const scrollEvent = new Event('scroll');
-        window.dispatchEvent(scrollEvent);
-      });
+      const lastPost = page.locator('[data-testid="post"]').last();
+      await lastPost.scrollIntoViewIfNeeded();
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
-      await page.waitForTimeout(2000);
+      await page.waitForFunction(
+        (initialCount) => document.querySelectorAll('[data-testid="post"]').length >= initialCount,
+        currentPostCount,
+        { timeout: 5000 },
+      );
 
       try {
         await page.waitForFunction(
