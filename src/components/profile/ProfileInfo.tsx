@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { css, Theme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 
-import defaultImage from '@/assets/images/default-avatar.svg';
+import Avatar from '@/components/common/Avatar';
 import FitButton from '@/components/common/buttons/FitButton';
 import { useAuth } from '@/hooks/useAuth';
 import theme from '@/styles/theme';
@@ -48,13 +48,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
     <>
       <div css={profileContainerStyle}>
         <div css={ProfileWrapStyle}>
-          <div css={profileImageStyle}>
-            {userData.photoURL ? (
-              <img src={userData.photoURL} alt="Profile" />
-            ) : (
-              <img src={defaultImage} alt="" className="image-placeholder" />
-            )}
-          </div>
+          <Avatar url={userData.photoURL} size="extraLarge" />
           <div css={profileInfoStyle}>
             <p css={usernameStyle}>{userData.displayName}</p>
             <div css={followInfoStyle}>
@@ -106,33 +100,11 @@ const ProfileWrapStyle = css`
   gap: 12px;
 `;
 
-const profileImageStyle = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: ${theme.colors.lightestGray};
-
-  .image-placeholder {
-    width: 60%;
-    height: 60%;
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
-
 const profileInfoStyle = css`
   flex: 1;
 `;
 
-const usernameStyle = (theme: Theme) => css`
+const usernameStyle = css`
   font-size: ${theme.fontSizes.base};
   font-weight: 700;
   margin-bottom: 4px;
@@ -143,17 +115,17 @@ const followInfoStyle = css`
   gap: 16px;
 `;
 
-const followCountStyle = (theme: Theme) => css`
+const followCountStyle = css`
   font-weight: 700;
   font-size: ${theme.fontSizes.small};
   margin-right: 4px;
 `;
 
-const followLabelStyle = (theme: Theme) => css`
+const followLabelStyle = css`
   font-size: ${theme.fontSizes.small};
 `;
 
-const introduceStyle = (theme: Theme) => css`
+const introduceStyle = css`
   font-size: ${theme.fontSizes.small};
   font-weight: 500;
   color: ${theme.colors.darkestGray};

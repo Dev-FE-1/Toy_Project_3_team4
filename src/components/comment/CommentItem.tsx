@@ -4,8 +4,8 @@ import { HiDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
 import { HiXMark } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
-import defaultProfile from '@/assets/images/default-avatar.svg';
 import { CommentInput } from '@/components/comment/CommentInput';
+import Avatar from '@/components/common/Avatar';
 import FitButton from '@/components/common/buttons/FitButton';
 import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
@@ -37,11 +37,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
 }) => {
   return (
     <div css={commentStyle}>
-      <img
-        css={avatarStyle}
-        src={userData?.photoURL || defaultProfile}
-        alt={userData?.displayName}
-      />
+      <Avatar url={userData?.photoURL} size="medium" customStyle={avatarStyle} />
       <div css={commentContentStyle}>
         <div css={headerStyle}>
           <div css={userInfoStyle}>
@@ -111,11 +107,7 @@ const commentStyle = css`
 `;
 
 const avatarStyle = css`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
   margin-right: 8px;
-  flex-shrink: 0;
 `;
 
 const commentContentStyle = css`

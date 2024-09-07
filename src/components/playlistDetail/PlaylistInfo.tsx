@@ -171,8 +171,9 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
 };
 
 const playlistInfoStyle = css`
-  .info-container {
-    padding: 12px 8px 0;
+  > .info-container {
+    margin: 8px 0 8px 8px;
+
     .title {
       display: flex;
       justify-content: space-between;
@@ -188,7 +189,7 @@ const playlistInfoStyle = css`
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-top: 4px;
+    margin-top: 8px;
     line-height: 100%;
     font-size: ${theme.fontSizes.small};
   }
