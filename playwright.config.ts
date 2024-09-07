@@ -10,7 +10,7 @@ export default defineConfig<Credentials>({
   timeout: 30 * 1000,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  reporter: [['html', { open: 'never' }]],
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
