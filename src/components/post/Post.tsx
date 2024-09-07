@@ -88,9 +88,10 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   };
 
   const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
+  console.log('postDetailPath', postDetailPath);
 
   return (
-    <div css={postContainerStyle}>
+    <div css={postContainerStyle} data-testid="post">
       <VideoPlayer video={post.video} />
       <div className="contents-wrapper">
         <div css={metaInfoStyle}>
