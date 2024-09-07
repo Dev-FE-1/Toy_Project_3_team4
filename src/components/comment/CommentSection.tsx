@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import defaultProfile from '@/assets/images/default-avatar.svg';
 import { useComments } from '@/hooks/useComments';
 import { useMultipleUsersData } from '@/hooks/useMultipleUsersData';
+import { useUserData } from '@/hooks/useUserData';
 
 import { CommentInput } from './CommentInput';
 import CommentItem from './CommentItem';
@@ -27,15 +28,19 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
   } = useComments(postId || '');
 
   const userIds = Array.from(new Set(comments.map((comment) => comment.userId)));
+  const { userData: currentUserData } = useUserData(currentUser?.uid || null);
   const { usersData } = useMultipleUsersData(userIds);
 
   return (
     <div css={commentSectionStyle}>
-      <CommentInput
-        newCommentContent={newCommentContent}
-        setNewCommentContent={setNewCommentContent}
-        handleCreateComment={handleCreateComment}
-      />
+      <div css={commentContainerStyle}>
+        <img src={currentUserData?.photoURL || ''} alt={currentUserData?.displayName || ''} />
+        <CommentInput
+          comment={newCommentContent}
+          onChange={setNewCommentContent}
+          onSubmit={handleCreateComment}
+        />
+      </div>
       <div css={commentsListStyle}>
         {comments.map((comment) => {
           const userData = usersData[comment.userId];
@@ -63,10 +68,21 @@ const commentSectionStyle = css`
   margin-top: 20px;
 `;
 
+const commentContainerStyle = css`
+  display: flex;
+  gap: 8px;
+
+  img {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+  }
+`;
+
 const commentsListStyle = css`
   display: flex;
   flex-direction: column;
-  gap: 8px;
   margin-top: 16px;
 `;
 

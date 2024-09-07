@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { getPostByPostId } from '@/api/fetchPosts';
 import CommentSection from '@/components/comment/CommentSection';
@@ -8,13 +8,8 @@ import BackHeader from '@/components/layout/header/BackHeader';
 import Post from '@/components/post/Post';
 import { PostModel } from '@/types/post';
 
-const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
-};
-
-export const Comment = () => {
-  const query = useQuery();
-  const postId = query.get('postId');
+const PostDetailPage = () => {
+  const { postId } = useParams();
   const [post, setPost] = useState<PostModel | null>(null);
 
   useEffect(() => {
@@ -31,8 +26,10 @@ export const Comment = () => {
   return (
     <>
       <BackHeader title="" />
-      {post && <Post id={postId || ''} post={post} />}
+      {post && <Post id={postId || ''} post={post} isDetail={true} />}
       <CommentSection postId={postId || ''} />
     </>
   );
 };
+
+export default PostDetailPage;
