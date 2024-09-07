@@ -39,7 +39,7 @@ const ProfilePage: React.FC = () => {
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [loadingLikedPosts, setLoadingLikedPosts] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists();
+  const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists(userId);
   const addPlaylistMutation = useAddPlaylist();
 
   useEffect(() => {
