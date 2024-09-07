@@ -31,6 +31,33 @@ export const useAddVideosToPlaylist = (playlistId: string) => {
   });
 };
 
+export const useAddVideosToMyPlaylist = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ playlistId, videos }: { playlistId: string; videos: VideoModel[] }) => {
+      const playlistDocRef = doc(db, 'playlists', playlistId);
+      await updateDoc(playlistDocRef, {
+        videos: arrayUnion(...videos),
+      });
+    },
+    onSuccess: (_, { playlistId, videos }) => {
+      queryClient.invalidateQueries({ queryKey: ['playlists', playlistId] });
+
+      queryClient.setQueryData(['playlists', playlistId], (oldData: PlaylistModel | undefined) => {
+        if (!oldData) return;
+        return {
+          ...oldData,
+          videos: [...oldData.videos, ...videos],
+        };
+      });
+    },
+    onError: (error) => {
+      console.error('Failed to add videos to playlist: ', error);
+    },
+  });
+};
+
 export const useDeletePlaylist = (playlistId: string) => {
   const queryClient = useQueryClient();
 
@@ -40,7 +67,7 @@ export const useDeletePlaylist = (playlistId: string) => {
       await deleteDoc(playlistDocRef);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['playlists'] });
+      queryClient.invalidateQueries({ queryKey: ['playlists', playlistId] });
     },
   });
 };

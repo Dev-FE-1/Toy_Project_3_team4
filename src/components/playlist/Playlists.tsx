@@ -2,6 +2,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { PiYoutubeLogo } from 'react-icons/pi';
 
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
+import { useAuth } from '@/hooks/useAuth';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 
@@ -20,28 +21,32 @@ const Playlists: React.FC<PlaylistListProps> = ({
   onPlaylistClick,
   isColumn = true,
 }) => {
+  const currentUser = useAuth();
+
   return (
     <>
       <div css={[playlistStyle, customStyle]}>
         {playlists.length > 0 &&
-          playlists.map(({ playlistId, title, videos, isPublic }) => (
-            <div
-              key={`playlist-${playlistId}`}
-              css={itemStyle(isColumn)}
-              onClick={() => (onPlaylistClick ? onPlaylistClick(playlistId, title) : null)}
-            >
-              <VideoThumbnail
-                url={videos[0]?.thumbnailUrl}
-                isPublic={isPublic}
-                type="stack"
-                customStyle={customVideoStyle}
-              />
-              <div className="playlist-info">
-                <h2>{title}</h2>
-                <p>{videos.length}개의 비디오</p>
+          playlists
+            .filter(({ isPublic, userId }) => isPublic || userId === currentUser?.uid)
+            .map(({ playlistId, title, videos, isPublic }) => (
+              <div
+                key={`playlist-${playlistId}`}
+                css={itemStyle(isColumn)}
+                onClick={() => (onPlaylistClick ? onPlaylistClick(playlistId, title) : null)}
+              >
+                <VideoThumbnail
+                  url={videos[0]?.thumbnailUrl}
+                  isPublic={isPublic}
+                  type="stack"
+                  customStyle={customVideoStyle}
+                />
+                <div className="playlist-info">
+                  <h2>{title}</h2>
+                  <p>{videos.length}개의 비디오</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
       </div>
       {playlists.length === 0 && (
         <div css={messageStyle}>

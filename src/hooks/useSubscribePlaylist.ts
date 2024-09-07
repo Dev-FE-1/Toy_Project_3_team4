@@ -63,13 +63,13 @@ export const useCheckSubscription = (playlistId: string) => {
     queryFn: async () => {
       if (!user) return false;
 
-      const subscriptionsRef = collection(db, 'subscriptions');
-      const q = query(subscriptionsRef, where('userId', '==', user.uid));
+      const userDocRef = collection(db, 'users');
+      const q = query(userDocRef, where('userId', '==', user.uid));
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
         const subscriptionDoc = querySnapshot.docs[0].data();
-        return subscriptionDoc.playlists.includes(playlistId);
+        return subscriptionDoc.subscriptions.includes(playlistId);
       }
 
       return false;

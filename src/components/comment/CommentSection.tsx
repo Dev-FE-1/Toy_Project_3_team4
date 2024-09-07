@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';
+import Avatar from '@/components/common/Avatar';
 import { useComments } from '@/hooks/useComments';
 import { useMultipleUsersData } from '@/hooks/useMultipleUsersData';
+import { useUserData } from '@/hooks/useUserData';
 
 import { CommentInput } from './CommentInput';
 import CommentItem from './CommentItem';
@@ -24,18 +26,26 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
     handleCreateComment,
     handleUpdateComment,
     handleDeleteComment,
+    handleCompositionStart,
+    handleCompositionEnd,
   } = useComments(postId || '');
 
   const userIds = Array.from(new Set(comments.map((comment) => comment.userId)));
+  const { userData: currentUserData } = useUserData(currentUser?.uid || null);
   const { usersData } = useMultipleUsersData(userIds);
 
   return (
     <div css={commentSectionStyle}>
-      <CommentInput
-        newCommentContent={newCommentContent}
-        setNewCommentContent={setNewCommentContent}
-        handleCreateComment={handleCreateComment}
-      />
+      <div css={commentContainerStyle}>
+        <Avatar url={currentUserData?.photoURL} customStyle={avatarStyle} />
+        <CommentInput
+          comment={newCommentContent}
+          onChange={setNewCommentContent}
+          onSubmit={handleCreateComment}
+          handleCompositionStart={handleCompositionStart}
+          handleCompositionEnd={handleCompositionEnd}
+        />
+      </div>
       <div css={commentsListStyle}>
         {comments.map((comment) => {
           const userData = usersData[comment.userId];
@@ -51,6 +61,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
               handleUpdateComment={handleUpdateComment}
               handleDeleteComment={handleDeleteComment}
               userData={userData || { displayName: '익명', photoURL: defaultProfile }}
+              handleCompositionStart={handleCompositionStart}
+              handleCompositionEnd={handleCompositionEnd}
             />
           );
         })}
@@ -63,10 +75,19 @@ const commentSectionStyle = css`
   margin-top: 20px;
 `;
 
+const commentContainerStyle = css`
+  display: flex;
+  gap: 8px;
+`;
+
+const avatarStyle = css`
+  width: 40px;
+  height: 40px;
+`;
+
 const commentsListStyle = css`
   display: flex;
   flex-direction: column;
-  gap: 8px;
   margin-top: 16px;
 `;
 
