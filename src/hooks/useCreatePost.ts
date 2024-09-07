@@ -76,7 +76,7 @@ export const useCreatePost = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['playlists'] });
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['filteredPostsTimelines', user?.uid] });
     },
   });
 };
