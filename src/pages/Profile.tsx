@@ -86,6 +86,10 @@ const ProfilePage: React.FC = () => {
     navigate(PATH.SETTINGS);
   };
 
+  const handlePlaylistClick = (playlistId: string) => {
+    navigate(`/playlist/${playlistId}`);
+  };
+
   const handleEditClick = () => {
     if (currentUser && userData) {
       navigate(`/profile/${currentUser.uid}/edit`, { state: { userData } });
@@ -143,7 +147,7 @@ const ProfilePage: React.FC = () => {
                 <Spinner customStyle={spinnerStyle} />
               </div>
             ) : (
-              <Playlists playlists={playlists || []} />
+              <Playlists playlists={playlists || []} onPlaylistClick={handlePlaylistClick} />
             )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
