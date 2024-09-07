@@ -36,9 +36,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
       <div css={commentContainerStyle}>
         <img src={currentUserData?.photoURL || ''} alt={currentUserData?.displayName || ''} />
         <CommentInput
-          newCommentContent={newCommentContent}
-          setNewCommentContent={setNewCommentContent}
-          handleCreateComment={handleCreateComment}
+          comment={newCommentContent}
+          onChange={setNewCommentContent}
+          onSubmit={handleCreateComment}
         />
       </div>
       <div css={commentsListStyle}>
@@ -70,13 +70,12 @@ const commentSectionStyle = css`
 
 const commentContainerStyle = css`
   display: flex;
-  gap: 12px;
+  gap: 8px;
 
   img {
     width: 40px;
     height: 40px;
     flex-shrink: 0;
-    padding-top: 2px;
     border-radius: 50%;
   }
 `;
