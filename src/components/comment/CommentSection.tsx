@@ -25,6 +25,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
     handleCreateComment,
     handleUpdateComment,
     handleDeleteComment,
+    handleCompositionStart,
+    handleCompositionEnd,
   } = useComments(postId || '');
 
   const userIds = Array.from(new Set(comments.map((comment) => comment.userId)));
@@ -39,6 +41,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
           comment={newCommentContent}
           onChange={setNewCommentContent}
           onSubmit={handleCreateComment}
+          handleCompositionStart={handleCompositionStart}
+          handleCompositionEnd={handleCompositionEnd}
         />
       </div>
       <div css={commentsListStyle}>
@@ -56,6 +60,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
               handleUpdateComment={handleUpdateComment}
               handleDeleteComment={handleDeleteComment}
               userData={userData || { displayName: '익명', photoURL: defaultProfile }}
+              handleCompositionStart={handleCompositionStart}
+              handleCompositionEnd={handleCompositionEnd}
             />
           );
         })}

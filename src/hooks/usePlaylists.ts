@@ -5,18 +5,24 @@ import { db } from '@/api/firebaseApp';
 import { useAuth } from '@/hooks/useAuth';
 import { PlaylistModel } from '@/types/playlist';
 
-export const useUserPlaylists = () => {
-  const user = useAuth();
+export const useUserPlaylists = (userId?: string) => {
+  const currentUser = useAuth();
 
   return useQuery<PlaylistModel[]>({
-    queryKey: ['playlists'],
+    queryKey: ['playlists', userId || currentUser?.uid],
     queryFn: async () => {
-      if (!user) {
+      const userIdToUse = userId || currentUser?.uid;
+
+      if (!userIdToUse) {
         return [];
       }
 
       const playlistsRef = collection(db, 'playlists');
-      const q = query(playlistsRef, where('userId', '==', user.uid), orderBy('createdAt', 'desc'));
+      const q = query(
+        playlistsRef,
+        where('userId', '==', userIdToUse),
+        orderBy('createdAt', 'desc'),
+      );
 
       const querySnapshot = await getDocs(q);
 
@@ -31,9 +37,10 @@ export const useUserPlaylists = () => {
           videos: data.videos,
         } as PlaylistModel;
       });
+
       return playlists;
     },
-    enabled: !!user,
+    enabled: !!currentUser || !!userId,
   });
 };
 

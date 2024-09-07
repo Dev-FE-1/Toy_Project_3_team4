@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 import { HiOutlinePlus } from 'react-icons/hi2';
@@ -7,19 +7,38 @@ import FullButton from '@/components/common/buttons/FullButton';
 import ToggleButton from '@/components/common/buttons/ToggleButton';
 import Modal from '@/components/common/Modal';
 import { useAuth } from '@/hooks/useAuth';
+import { useUserPlaylists } from '@/hooks/usePlaylists';
+import { errorMessageStyle } from '@/styles/input';
 import theme from '@/styles/theme';
 
-interface AddPlaylistButtonProps {
+const AddPlaylistButton: React.FC<{
   customStyle?: SerializedStyles;
   onAddPlaylist: (title: string, isPublic: boolean) => void;
-}
-
-const AddPlaylistButton: React.FC<AddPlaylistButtonProps> = ({ customStyle, onAddPlaylist }) => {
+}> = ({ customStyle, onAddPlaylist }) => {
   const user = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const [title, setTitle] = useState('');
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const { data: playlists } = useUserPlaylists();
+
+  useEffect(() => {
+    if (playlists) {
+      const existingTitles = playlists.map((playlist) => playlist.title);
+      if (title.trim() === '') {
+        setIsButtonEnabled(false);
+        setErrorMessage('');
+      } else if (existingTitles.includes(title.trim())) {
+        setErrorMessage('이미 존재하는 플레이리스트 제목입니다.');
+        setIsButtonEnabled(false);
+      } else {
+        setErrorMessage('');
+        setIsButtonEnabled(true);
+      }
+    }
+  }, [title, playlists]);
 
   const onClick = () => {
     setIsModalOpen(true);
@@ -28,13 +47,13 @@ const AddPlaylistButton: React.FC<AddPlaylistButtonProps> = ({ customStyle, onAd
   const onClose = () => {
     setIsModalOpen(false);
     setTitle('');
+    setErrorMessage('');
     setIsButtonEnabled(false);
   };
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = event.target.value;
     setTitle(newTitle);
-    setIsButtonEnabled(newTitle.trim() !== '');
   };
 
   const handleAddPlaylist = () => {
@@ -60,6 +79,7 @@ const AddPlaylistButton: React.FC<AddPlaylistButtonProps> = ({ customStyle, onAd
             onChange={handleTitleChange}
             placeholder="플리 제목을 입력하세요"
           />
+          {errorMessage && <p css={errorMessageStyles}>{errorMessage}</p>}
           <div className="toggleStyle">
             전체 공개
             <ToggleButton enabled={isPublic} setEnabled={setIsPublic} />
@@ -141,5 +161,7 @@ const modalContentContainer = css`
     justify-content: space-between;
   }
 `;
+
+const errorMessageStyles = errorMessageStyle;
 
 export default AddPlaylistButton;

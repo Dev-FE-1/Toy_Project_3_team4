@@ -52,9 +52,10 @@ const LoadingMessage = ({
 
 const HomePage = () => {
   const user = useAuth();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFilteredPostsTimelinesQuery({
-    userId: user?.uid || '',
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useFilteredPostsTimelinesQuery({
+      userId: user?.uid || '',
+    });
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
   const { ref, inView } = useInView();
@@ -64,6 +65,10 @@ const HomePage = () => {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, hasNextPage]);
+
+  if (isLoading) {
+    return <Spinner customStyle={spinnerStyle} />;
+  }
 
   return (
     <>

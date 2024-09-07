@@ -98,6 +98,8 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
     navigate('/playlist');
   };
 
+  const isUnmodifiable = title === '분류되지 않은 목록';
+
   return (
     <div css={[playlistInfoStyle, customStyle]}>
       <VideoThumbnail
@@ -109,7 +111,9 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
         <div className="title">
           <h1>
             {title}
-            {isOwner && <HiOutlinePencil css={iconStyle} onClick={handleOpenEditModal} />}
+            {isOwner && !isUnmodifiable && (
+              <HiOutlinePencil css={iconStyle} onClick={handleOpenEditModal} />
+            )}
           </h1>
           {!isOwner && (
             <FitButton
@@ -129,26 +133,28 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
         </div>
       </div>
 
-      <Modal isOpen={isEditModalOpen} onClose={handleCloseEditModal} title="플리 수정하기">
-        <div css={editModalContentContainer}>
-          <input
-            type="text"
-            value={newTitle}
-            onChange={handleTitleChange}
-            placeholder="플리 제목을 입력하세요"
-          />
-          <div className="toggleStyle">
-            전체 공개
-            <ToggleButton enabled={isPublicPlaylist} setEnabled={setIsPublicPlaylist} />
+      {!isUnmodifiable && (
+        <Modal isOpen={isEditModalOpen} onClose={handleCloseEditModal} title="플리 수정하기">
+          <div css={editModalContentContainer}>
+            <input
+              type="text"
+              value={newTitle}
+              onChange={handleTitleChange}
+              placeholder="플리 제목을 입력하세요"
+            />
+            <div className="toggleStyle">
+              전체 공개
+              <ToggleButton enabled={isPublicPlaylist} setEnabled={setIsPublicPlaylist} />
+            </div>
+            <FullButton styleType="primary" onClick={handleUpdatePlaylist}>
+              수정하기
+            </FullButton>
+            <FullButton styleType="cancel" onClick={handleCloseEditModal}>
+              취소하기
+            </FullButton>
           </div>
-          <FullButton styleType="primary" onClick={handleUpdatePlaylist}>
-            수정하기
-          </FullButton>
-          <FullButton styleType="cancel" onClick={handleCloseEditModal}>
-            취소하기
-          </FullButton>
-        </div>
-      </Modal>
+        </Modal>
+      )}
 
       <Modal isOpen={isOptionsModalOpen} onClose={handleCloseOptionsModal} title={null}>
         <div css={optionsModalContentContainer}>
@@ -158,12 +164,14 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
             </div>
             플리에 동영상 추가하기
           </div>
-          <div onClick={handleDeletePlaylist}>
-            <div className="icon-wrapper">
-              <HiOutlineTrash />
+          {!isUnmodifiable && (
+            <div onClick={handleDeletePlaylist}>
+              <div className="icon-wrapper">
+                <HiOutlineTrash />
+              </div>
+              플리 삭제하기
             </div>
-            플리 삭제하기
-          </div>
+          )}
         </div>
       </Modal>
     </div>

@@ -9,7 +9,7 @@ import {
   HiOutlineBookmark,
   HiBookmark,
 } from 'react-icons/hi2';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { updatePostsLikes } from '@/api/fetchPosts';
 import IconButton from '@/components/common/buttons/IconButton';
@@ -40,15 +40,16 @@ interface PostProps {
 const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes.length);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState<boolean | undefined>(false);
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
   const { data: playlist } = usePlaylistById(post.playlistId);
   const videoTitle = useFetchVideoTitle(post.video);
-  const { data: isPlaylistSubscribed, refetch } = useCheckSubscription(post.playlistId);
+  const { data: isPlaylistSubscribed, isLoading } = useCheckSubscription(post.playlistId);
   const subscribeMutation = useSubscribePlaylist(post.playlistId);
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
   const { comments } = useComments(post.postId);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser) {
@@ -57,9 +58,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   }, [currentUser, post.likes]);
 
   useEffect(() => {
-    if (isPlaylistSubscribed !== undefined) {
-      setIsSubscribed(isPlaylistSubscribed);
-    }
+    setIsSubscribed(isPlaylistSubscribed);
   }, [isPlaylistSubscribed]);
 
   const toggleSubscription = () => {
@@ -67,17 +66,19 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
       unsubscribeMutation.mutate(undefined, {
         onSuccess: () => {
           setIsSubscribed(false);
-          refetch();
         },
       });
     } else {
       subscribeMutation.mutate(undefined, {
         onSuccess: () => {
           setIsSubscribed(true);
-          refetch();
         },
       });
     }
+  };
+
+  const handleButtonClick = () => {
+    navigate(`${PATH.PLAYLIST}/${post.playlistId}`);
   };
 
   const toggleLike = async () => {
@@ -102,17 +103,19 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
-          <IconButton
-            icon={isSubscribed ? <HiBookmark size={20} /> : <HiOutlineBookmark size={20} />}
-            onClick={toggleSubscription}
-            enabled={isSubscribed}
-          />
+          {!isLoading && currentUser?.uid !== post.userId && (
+            <IconButton
+              icon={isSubscribed ? <HiBookmark size={20} /> : <HiOutlineBookmark size={20} />}
+              onClick={toggleSubscription}
+              enabled={isSubscribed}
+            />
+          )}
         </div>
         <p css={contentStyle(isDetail)}>
           {isDetail ? post.content : <Link to={postDetailPath}>{post.content}</Link>}
         </p>
         <p css={playlistStyle}>
-          <Link to={post.video}>
+          <Link to={post.video} target="_blank">
             <span>{videoTitle}</span>
             <HiChevronRight />
           </Link>
@@ -132,9 +135,9 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               {comments.length}
             </Link>
           </div>
-          <p css={pliStyle}>
+          <button css={pliStyle} onClick={handleButtonClick}>
             {playlist?.title} (<span>{playlist?.videos.length}</span>)
-          </p>
+          </button>
         </div>
       </div>
     </div>
@@ -241,6 +244,8 @@ const pliStyle = css`
   color: ${theme.colors.darkestGray};
   font-size: ${theme.fontSizes.small};
   text-decoration: underline;
+  background: none;
+  cursor: pointer;
 `;
 
 export default Post;

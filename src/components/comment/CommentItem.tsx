@@ -22,6 +22,8 @@ interface CommentItemProps {
   handleUpdateComment: (commentId: string) => void;
   handleDeleteComment: (commentId: string) => void;
   userData: { displayName: string; photoURL: string };
+  handleCompositionStart: () => void;
+  handleCompositionEnd: () => void;
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({
@@ -34,6 +36,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
   handleUpdateComment,
   handleDeleteComment,
   userData,
+  handleCompositionStart,
+  handleCompositionEnd,
 }) => {
   return (
     <div css={commentStyle}>
@@ -87,6 +91,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
               onChange={setEditingContent}
               onSubmit={() => handleUpdateComment(comment.id)}
               customStyle={editInputStyle}
+              handleCompositionStart={handleCompositionStart}
+              handleCompositionEnd={handleCompositionEnd}
             />
             <FitButton
               styleType="secondary"

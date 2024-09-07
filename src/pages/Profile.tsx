@@ -39,7 +39,7 @@ const ProfilePage: React.FC = () => {
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [loadingLikedPosts, setLoadingLikedPosts] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists();
+  const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists(userId);
   const addPlaylistMutation = useAddPlaylist();
 
   useEffect(() => {
@@ -84,6 +84,10 @@ const ProfilePage: React.FC = () => {
 
   const handleSettingsClick = () => {
     navigate(PATH.SETTINGS);
+  };
+
+  const handlePlaylistClick = (playlistId: string) => {
+    navigate(`/playlist/${playlistId}`);
   };
 
   const handleEditClick = () => {
@@ -143,7 +147,7 @@ const ProfilePage: React.FC = () => {
                 <Spinner customStyle={spinnerStyle} />
               </div>
             ) : (
-              <Playlists playlists={playlists || []} />
+              <Playlists playlists={playlists || []} onPlaylistClick={handlePlaylistClick} />
             )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>

@@ -13,6 +13,8 @@ interface CommentInputProps {
   onChange: (comment: string) => void;
   onSubmit: () => void;
   customStyle?: SerializedStyles;
+  handleCompositionStart: () => void;
+  handleCompositionEnd: () => void;
 }
 
 export const CommentInput: React.FC<CommentInputProps> = ({
@@ -20,6 +22,8 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   onChange,
   onSubmit,
   customStyle,
+  handleCompositionStart,
+  handleCompositionEnd,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -46,6 +50,8 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="답글을 작성해주세요"
+        onCompositionStart={handleCompositionStart}
+        onCompositionEnd={handleCompositionEnd}
       />
       <button onClick={onSubmit}>
         <HiOutlinePaperAirplane />
