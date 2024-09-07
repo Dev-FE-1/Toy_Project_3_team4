@@ -66,12 +66,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
                       setEditingCommentId(comment.id);
                       setEditingContent(comment.content);
                     }}
+                    data-testid="edit-comment-button"
                   >
                     <HiPencil /> 댓글 수정
                   </DropdownMenu.Item>
                   <DropdownMenu.Item
                     css={menuItemStyle}
                     onSelect={() => handleDeleteComment(comment.id)}
+                    data-testid="delete-comment-button"
                   >
                     <HiTrash /> 댓글 삭제
                   </DropdownMenu.Item>
@@ -99,7 +101,9 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </FitButton>
           </div>
         ) : (
-          <p css={commentTextStyle}>{comment.content}</p>
+          <p css={commentTextStyle} data-testid="comment-content">
+            {comment.content}
+          </p>
         )}
       </div>
     </div>
