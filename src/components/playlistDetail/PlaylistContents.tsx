@@ -101,7 +101,7 @@ const playlistStyle = css`
   display: flex;
   flex-direction: column;
   -webkit-overflow-scrolling: touch;
-  margin-top: 24px;
+  margin-top: 16px;
 `;
 
 const droppableStyle = css`

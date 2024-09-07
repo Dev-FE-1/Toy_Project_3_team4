@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';
+import Avatar from '@/components/common/Avatar';
 import { useComments } from '@/hooks/useComments';
 import { useMultipleUsersData } from '@/hooks/useMultipleUsersData';
 import { useUserData } from '@/hooks/useUserData';
@@ -36,7 +37,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
   return (
     <div css={commentSectionStyle}>
       <div css={commentContainerStyle}>
-        <img src={currentUserData?.photoURL || ''} alt={currentUserData?.displayName || ''} />
+        <Avatar url={currentUserData?.photoURL} customStyle={avatarStyle} />
         <CommentInput
           comment={newCommentContent}
           onChange={setNewCommentContent}
@@ -77,13 +78,11 @@ const commentSectionStyle = css`
 const commentContainerStyle = css`
   display: flex;
   gap: 8px;
+`;
 
-  img {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    border-radius: 50%;
-  }
+const avatarStyle = css`
+  width: 40px;
+  height: 40px;
 `;
 
 const commentsListStyle = css`
