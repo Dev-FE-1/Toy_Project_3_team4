@@ -49,9 +49,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const { userData } = useUserData(post.userId);
   const { data: playlist, isLoading: isPlaylistLoading } = usePlaylistById(post.playlistId);
   const videoTitle = useFetchVideoTitle(post.video);
-  const { data: isPlaylistSubscribed, isLoading: isSubscriptionLoading } = useCheckSubscription(
-    post.playlistId,
-  );
+  const { data: isPlaylistSubscribed } = useCheckSubscription(post.playlistId);
   const subscribeMutation = useSubscribePlaylist(post.playlistId);
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
   const { comments } = useComments(post.postId);
@@ -101,8 +99,11 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const isUnknownPlaylist = playlist
     ? !playlist.videos.some((value) => value.videoId === videoObj.videoId)
     : true;
+
   const isPublicPlaylist =
     !(isPrivatePlaylist && currentUser?.uid !== post.userId) && !isUnknownPlaylist;
+
+  const showBookmark = isPublicPlaylist && currentUser?.uid !== post.userId && !isUnknownPlaylist;
 
   const playlistLabel = isPlaylistLoading
     ? '플레이리스트 로딩 중...'
@@ -131,7 +132,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
-          {!isSubscriptionLoading && isPublicPlaylist && (
+          {showBookmark && (
             <IconButton
               icon={isSubscribed ? <HiBookmark size={20} /> : <HiOutlineBookmark size={20} />}
               onClick={toggleSubscription}
@@ -146,14 +147,10 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
           {isDetail ? post.content : <Link to={postDetailPath}>{post.content}</Link>}
         </p>
         <p css={playlistStyle}>
-          {isClickable ? (
-            <Link to={post.video} target="_blank">
-              <span>{videoTitle}</span>
-              <HiChevronRight />
-            </Link>
-          ) : (
+          <Link to={post.video} target="_blank">
             <span>{videoTitle}</span>
-          )}
+            <HiChevronRight />
+          </Link>
         </p>
         <div css={metaInfoStyle}>
           <div css={buttonWrapStyle}>
