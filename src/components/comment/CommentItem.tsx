@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react';
+
 import { css } from '@emotion/react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HiDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
@@ -11,7 +13,6 @@ import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
 import { CommentModel } from '@/types/comment';
 import { formatCreatedAt } from '@/utils/date';
-
 interface CommentItemProps {
   comment: CommentModel;
   currentUserId: string | undefined;
@@ -39,8 +40,30 @@ const CommentItem: React.FC<CommentItemProps> = ({
   handleCompositionStart,
   handleCompositionEnd,
 }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const commentRef = useRef<HTMLDivElement>(null);
+
+  const onDeleteClick = () => {
+    setIsDeleting(true);
+    if (commentRef.current) {
+      commentRef.current.style.height = `${commentRef.current.scrollHeight}px`;
+      commentRef.current.style.transition = 'all 0.5s ease-out';
+      setTimeout(() => {
+        if (commentRef.current) {
+          commentRef.current.style.height = '0px';
+          commentRef.current.style.opacity = '0';
+          commentRef.current.style.padding = '0';
+          commentRef.current.style.margin = '0';
+        }
+      }, 0);
+    }
+    setTimeout(() => {
+      handleDeleteComment(comment.id);
+    }, 500);
+  };
+
   return (
-    <div css={commentStyle}>
+    <div css={[commentStyle, isDeleting && deletingStyle]}>
       <Avatar url={userData?.photoURL} size="medium" customStyle={avatarStyle} />
       <div css={commentContentStyle}>
         <div css={headerStyle}>
@@ -74,6 +97,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     css={menuItemStyle}
                     onSelect={() => handleDeleteComment(comment.id)}
                     data-testid="delete-comment-button"
+                    onClick={onDeleteClick}
                   >
                     <HiTrash /> 댓글 삭제
                   </DropdownMenu.Item>
@@ -119,6 +143,11 @@ const commentStyle = css`
 
 const avatarStyle = css`
   margin-right: 8px;
+`;
+
+const deletingStyle = css`
+  transition: all 0.5s ease-out;
+  overflow: hidden;
 `;
 
 const commentContentStyle = css`
