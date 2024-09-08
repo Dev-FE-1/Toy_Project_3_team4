@@ -204,6 +204,10 @@ const buttonContainerStyle = css`
   width: calc(100% - 32px);
   max-width: calc(${theme.width.max} - 32px);
   padding-bottom: 32px;
+
+  button:first-child {
+    margin-bottom: 8px;
+  }
 `;
 
 export default ProfileEditPage;

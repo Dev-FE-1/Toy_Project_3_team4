@@ -30,7 +30,7 @@ const Navbar = () => {
     <nav css={[navStyle, maxWidthStyle(false)]}>
       <ul className="nav-list">
         <NavItem Icon={HiOutlineHome} path={PATH.HOME} />
-        <NavItem Icon={HiMagnifyingGlass} path={PATH.SEARCH} />
+        <NavItem Icon={HiMagnifyingGlass} path={PATH.SEARCH} iconType="fill" />
         <NavButtonItem Icon={CiSquarePlus} stroke={0.5} />
         <NavItem Icon={HiOutlineRectangleStack} path={PATH.PLAYLIST} />
         <NavItem Icon={HiOutlineUserCircle} path={PATH.PROFILE} userId={userId || ''} />
@@ -66,12 +66,6 @@ const navStyle = css`
         padding-top: 10px;
         color: ${theme.colors.darkGray};
         text-decoration: none;
-
-        &.active {
-          svg {
-            color: ${theme.colors.primary};
-          }
-        }
       }
     }
   }

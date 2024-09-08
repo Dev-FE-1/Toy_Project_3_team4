@@ -156,7 +156,7 @@ export const emptyMessageStyle = css`
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 60px;
+  margin: 60px 0;
   color: ${theme.colors.darkestGray};
   font-size: 32px;
 

@@ -1,11 +1,12 @@
 import { css } from '@emotion/react';
 
 import Modal from '@/components/common/modals/Modal';
+import theme from '@/styles/theme';
 
 interface OptionModalPoops {
   isOpen: boolean;
   onClose: () => void;
-  title: string | null;
+  title?: string | null;
   options: {
     label: string;
     Icon: React.ComponentType;
@@ -35,7 +36,6 @@ const modalContentContainer = css`
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
-  width: 343px;
   margin: 24px 16px 32px;
 
   & > div {
@@ -48,7 +48,7 @@ const modalContentContainer = css`
     .icon-wrapper {
       height: 50px;
       width: 50px;
-      background-color: #f1f3f5;
+      background-color: ${theme.colors.lightestGray};
       border-radius: 16px;
       display: flex;
       justify-content: center;
@@ -56,8 +56,9 @@ const modalContentContainer = css`
       margin-right: 12px;
 
       svg {
-        height: 18px;
-        width: 18px;
+        width: 20px;
+        height: 20px;
+        color: ${theme.colors.darkestGray};
       }
     }
   }

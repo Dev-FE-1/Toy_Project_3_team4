@@ -174,7 +174,6 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
       <OptionModal
         isOpen={isOptionsModalOpen}
         onClose={handleCloseOptionsModal}
-        title={null}
         options={optionsModalOptions}
       />
     </div>
