@@ -15,7 +15,7 @@ interface PlaylistContentsProps {
   isDraggable?: boolean;
   onVideoSelect: (videoId: string) => void;
   selectedVideoId: string | null;
-  isOwner: boolean;
+  selectPli?: boolean;
 }
 
 const PlaylistContents: React.FC<PlaylistContentsProps> = ({
@@ -25,7 +25,7 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
   onVideoSelect,
   selectedVideoId,
   isDraggable = false,
-  isOwner,
+  selectPli = false,
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -40,7 +40,7 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
     updatePlaylistOrder(playlistId, newVideos);
   };
 
-  if (!isDraggable || !isOwner) {
+  if (!isDraggable) {
     return (
       <ul css={playlistStyle} ref={listRef}>
         {videos.map((video) => (
@@ -50,6 +50,7 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
             isSelected={video.videoId === selectedVideoId}
             onVideoSelect={onVideoSelect}
             isDraggable={isDraggable}
+            selectPli={selectPli}
           />
         ))}
       </ul>
