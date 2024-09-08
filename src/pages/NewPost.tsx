@@ -7,6 +7,7 @@ import CloseHeader from '@/components/layout/header/CloseHeader';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useAuth } from '@/hooks/useAuth';
 import { useCreatePost } from '@/hooks/useCreatePost';
+import { useToastStore } from '@/stores/toastStore';
 
 const NewPost = () => {
   const [searchParams] = useSearchParams();
@@ -17,6 +18,7 @@ const NewPost = () => {
   const [description, setDescription] = useState('');
   const createPostMutation = useCreatePost();
   const user = useAuth();
+  const addToast = useToastStore((state) => state.addToast);
 
   useEffect(() => {
     setIsShareButtonEnabled(!!description.trim());
@@ -33,9 +35,11 @@ const NewPost = () => {
         {
           onSuccess: () => {
             navigate(`/`);
+            addToast('새 포스트가 등록되었습니다.');
           },
           onError: (error) => {
             console.error('포스트 및 플레이리스트 업데이트 실패: ', error);
+            addToast('포스트 등록에 실패했습니다.');
           },
         },
       );

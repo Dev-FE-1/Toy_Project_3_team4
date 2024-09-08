@@ -8,6 +8,7 @@ import FitButton from '@/components/common/buttons/FitButton';
 import CloseHeader from '@/components/layout/header/CloseHeader';
 import PlaylistContentsItem from '@/components/playlistDetail/PlaylistContentsItem';
 import { useAddVideosToPlaylist } from '@/hooks/useVideoToPlaylist';
+import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
 import { VideoModel } from '@/types/playlist';
 import { extractVideoId, validateVideoId } from '@/utils/youtubeUtils';
@@ -20,6 +21,7 @@ const AddVideosPage: React.FC = () => {
   const [videoId, setVideoId] = useState<string | null>(null);
   const [videos, setVideos] = useState<VideoModel[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const addToast = useToastStore((state) => state.addToast);
 
   const { mutate: addVideosToPlaylist, isPending } = useAddVideosToPlaylist(playlistId);
 
@@ -39,6 +41,7 @@ const AddVideosPage: React.FC = () => {
         },
       });
     }
+    addToast('동영상이 추가되었습니다.');
   };
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

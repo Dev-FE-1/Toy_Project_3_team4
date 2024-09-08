@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useAddPlaylist } from '@/hooks/usePostPlaylist';
 import { useAddVideosToMyPlaylist } from '@/hooks/useVideoToPlaylist';
+import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
 import { makeVideoObj } from '@/utils/video';
 
@@ -34,9 +35,11 @@ const SelectPliPage = () => {
   const addPlaylistMutation = useAddPlaylist();
 
   const addVideoToPlaylistMutation = useAddVideosToMyPlaylist();
+  const addToast = useToastStore((state) => state.addToast);
 
   const handleAddPlaylist = (title: string, isPublic: boolean) => {
     addPlaylistMutation.mutate({ title, isPublic });
+    addToast('새로운 플리를 추가했습니다.');
   };
 
   const handlePlaylistClick = (playlistId: string, title: string) => {
