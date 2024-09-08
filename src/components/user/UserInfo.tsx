@@ -37,7 +37,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
   return (
     <div css={[userInfoStyle(imageSize), customStyle]}>
       <div className="info-container" onClick={onClick || onClickUserName}>
-        <Avatar url={url} />
+        <Avatar url={url} size={imageSize} />
         <div className="name-container">
           <span>{name}</span>
           {additionalInfo && <p>{additionalInfo}</p>}
