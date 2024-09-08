@@ -37,11 +37,7 @@ const PlaylistDetailPage = () => {
   }
 
   const handleBack = () => {
-    navigate(`/playlist`, { replace: true });
-
-    setTimeout(() => {
-      navigate(`/playlist`, { replace: true });
-    }, 0);
+    navigate(`/playlist`);
   };
 
   const userModel: UserModel = {
