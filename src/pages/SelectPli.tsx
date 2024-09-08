@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useAddPlaylist } from '@/hooks/usePostPlaylist';
 import { useAddVideosToMyPlaylist } from '@/hooks/useVideoToPlaylist';
+import theme from '@/styles/theme';
 import { makeVideoObj } from '@/utils/video';
 
 const tabs = [
@@ -134,7 +135,7 @@ const addPlaylistButtonStyle = css`
 const playlistStyle = css`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 12px;
+  gap: 16px;
 
   a {
     display: flex;
@@ -143,7 +144,9 @@ const playlistStyle = css`
   }
 
   .playlist-info {
-    margin-left: 12px;
+    @media screen and (min-width: ${theme.width.large}) {
+      margin-left: 12px;
+    }
   }
 `;
 
@@ -151,6 +154,14 @@ const videoStyle = css`
   width: 100px;
   height: auto;
   flex-shrink: 0;
+
+  .image-container {
+    border-radius: 8px;
+  }
+
+  @media screen and (min-width: ${theme.width.large}) {
+    width: 110px;
+  }
 `;
 
 export default SelectPliPage;

@@ -112,7 +112,13 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
           <h1>
             {title}
             {isOwner && !isUnmodifiable && (
-              <HiOutlinePencil css={iconStyle} onClick={handleOpenEditModal} />
+              <FitButton
+                onClick={handleOpenEditModal}
+                styleType="secondary"
+                customStyle={editButtonStyle}
+              >
+                <HiOutlinePencil size={16} />
+              </FitButton>
             )}
           </h1>
           {!isOwner && (
@@ -185,7 +191,6 @@ const playlistInfoStyle = css`
     .title {
       display: flex;
       justify-content: space-between;
-      align-items: center;
 
       h1 {
         font-size: ${theme.fontSizes.large};
@@ -214,15 +219,27 @@ const labelStyle = css`
   padding-bottom: 10%;
 `;
 
-const iconStyle = css`
+const editButtonStyle = css`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
   margin-left: 8px;
-  font-size: 18px;
+  border: 1px solid ${theme.colors.lightGray};
+  background-color: ${theme.colors.bgGray};
   cursor: pointer;
+
+  svg {
+    stroke-width: 2;
+  }
 `;
 
 const verticalButtonStyle = css`
   font-size: 24px;
   cursor: pointer;
+  margin-top: 2px;
 `;
 
 const editModalContentContainer = css`

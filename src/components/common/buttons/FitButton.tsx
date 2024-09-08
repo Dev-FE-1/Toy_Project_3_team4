@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 
-import { css, SerializedStyles, Theme } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
+
+import theme from '@/styles/theme';
 
 interface FitButtonProps {
   children: ReactNode;
@@ -21,18 +23,14 @@ const FitButton: React.FC<FitButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      css={(theme: Theme) => [
-        baseButtonStyle(theme),
-        buttonStyle(theme)[styleType],
-        customStyle || [],
-      ]}
+      css={[baseButtonStyle, buttonStyle[styleType], customStyle || []]}
     >
       {children}
     </button>
   );
 };
 
-const baseButtonStyle = (theme: Theme) => css`
+const baseButtonStyle = css`
   display: inline-flex;
   padding: 8px 14px;
   align-items: center;
@@ -41,12 +39,12 @@ const baseButtonStyle = (theme: Theme) => css`
   border: 0;
   cursor: pointer;
   font-size: ${theme.fontSizes.small};
-  font-weight: normal;
+  font-weight: 600;
   line-height: 100%;
   letter-spacing: -0.18px;
 `;
 
-const buttonStyle = (theme: Theme) => ({
+const buttonStyle = {
   primary: css`
     background-color: ${theme.colors.primary};
     color: ${theme.colors.white};
@@ -56,6 +54,6 @@ const buttonStyle = (theme: Theme) => ({
     color: ${theme.colors.darkestGray};
     cursor: default;
   `,
-});
+};
 
 export default FitButton;
