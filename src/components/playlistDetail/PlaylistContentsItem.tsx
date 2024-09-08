@@ -18,6 +18,7 @@ import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { VideoModel } from '@/types/playlist';
 import { formatRelativeDate } from '@/utils/date';
+import { formatVideoViewCount } from '@/utils/youtubeUtils';
 
 interface PlaylistContentItemProps {
   video: VideoModel;
@@ -89,7 +90,8 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
                 <h2>{videoData.title}</h2>
                 <span>{videoData.creator}</span>
                 <span>
-                  조회수 {videoData.views} · {formatRelativeDate(videoData.uploadDate)}
+                  조회수 {formatVideoViewCount(videoData.views)} ·{' '}
+                  {formatRelativeDate(videoData.uploadDate)}
                 </span>
               </div>
             </a>
