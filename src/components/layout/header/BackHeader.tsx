@@ -24,7 +24,7 @@ const BackHeader: React.FC<BackHeaderProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const onClick = () => onBackClick?.() || navigate(-1);
+  const onClick = () => (onBackClick ? onBackClick() : navigate(-1));
 
   return (
     <Header
