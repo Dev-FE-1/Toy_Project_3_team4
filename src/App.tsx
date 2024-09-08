@@ -4,6 +4,7 @@ import { PATH } from '@/constants/path';
 import ContainerLayout from '@/layouts/Container';
 import RootLayout from '@/layouts/Root';
 import AddPostPage from '@/pages/AddPost';
+import Error from '@/pages/Error';
 import FollowPage from '@/pages/Follow';
 import HomePage from '@/pages/Home';
 import NewPost from '@/pages/NewPost';
@@ -26,6 +27,7 @@ import AddVideosPage from './pages/AddVideos';
 const router = createBrowserRouter([
   {
     element: <ContainerLayout />,
+    errorElement: <Error />,
     children: [
       {
         path: PATH.SIGN_IN,
@@ -60,6 +62,7 @@ const router = createBrowserRouter([
   {
     path: PATH.HOME,
     element: <ProtectedRoute />,
+    errorElement: <Error />,
     children: [
       {
         element: <RootLayout />,
