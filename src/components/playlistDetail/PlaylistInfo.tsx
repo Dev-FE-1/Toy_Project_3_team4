@@ -20,6 +20,7 @@ import { useUpdatePlaylist } from '@/hooks/usePostPlaylist';
 import { useSubscribePlaylist, useUnsubscribePlaylist } from '@/hooks/useSubscribePlaylist';
 import { useUserById } from '@/hooks/useUserById';
 import { useDeletePlaylist } from '@/hooks/useVideoToPlaylist';
+import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 import { UserModel } from '@/types/user';
@@ -55,6 +56,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
 
   const currentUser = useAuth();
   const currentUserData = useUserById(currentUser?.uid ?? null);
+  const addToast = useToastStore((state) => state.addToast);
 
   useEffect(() => {
     if (currentUserData.data?.subscriptions?.includes(playlist.playlistId)) {
@@ -96,6 +98,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
     deletePlaylistMutation.mutate();
     handleCloseOptionsModal();
     navigate('/playlist');
+    addToast('플레이리스트가 삭제되었습니다.');
   };
 
   const isUnmodifiable = title === '분류되지 않은 목록';
