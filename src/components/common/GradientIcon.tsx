@@ -7,9 +7,15 @@ interface GradientIconProps {
   Icon: IconType;
   size?: number | string;
   angle?: number;
+  type?: 'stroke' | 'fill';
 }
 
-const GradientIcon: React.FC<GradientIconProps> = ({ Icon, size = 12, angle = 62 }) => {
+const GradientIcon: React.FC<GradientIconProps> = ({
+  Icon,
+  size = 12,
+  angle = 62,
+  type = 'stroke',
+}) => {
   const { x1, y1, x2, y2 } = calculateGradientCoordinates(angle);
 
   return (
@@ -20,13 +26,17 @@ const GradientIcon: React.FC<GradientIconProps> = ({ Icon, size = 12, angle = 62
           <stop offset="91.84%" stopColor="#4F46E5" />
         </linearGradient>
       </defs>
-      <Icon css={iconStyle} />
+      <Icon css={type === 'stroke' ? strokeStyle : fillStyle} />
     </svg>
   );
 };
 
-const iconStyle = css`
+const strokeStyle = css`
   stroke: url(#iconGradient);
+`;
+
+const fillStyle = css`
+  fill: url(#iconGradient);
 `;
 
 export default GradientIcon;
