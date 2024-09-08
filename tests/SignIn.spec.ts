@@ -42,4 +42,11 @@ authTest.describe('SignInPage - 파이어베이스 로그인', () => {
       await expect(page).toHaveURL('/');
     },
   );
+  authTest('로그 아웃 후 페이지 url은 /siginin이어야 한다.', async ({ page, auth }) => {
+    await page.goto('/signin');
+    await auth.login(page);
+    await expect(page).toHaveURL('/');
+    await auth.logout(page);
+    await expect(page).toHaveURL('/signin');
+  });
 });

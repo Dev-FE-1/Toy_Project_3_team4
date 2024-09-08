@@ -25,7 +25,7 @@ authTest.describe('PostDetailPage - 로그인된 상태', () => {
     await page.goto('/signin');
     await auth.login(page);
     await page.goto(`${POST_PATH}`);
-    await expect(page).toHaveURL(`${POST_PATH}`);
+    await page.waitForURL(`${POST_PATH}`);
   });
 
   authTest(`페이지의 url은 '/post/${POST_ID}'이어야 한다`, async ({ page }) => {
