@@ -74,7 +74,6 @@ authTest.describe('HomePage - 로그인된 상태', () => {
 
       const lastPost = page.locator('[data-testid="post"]').last();
       await lastPost.scrollIntoViewIfNeeded();
-      await lastPost.scrollIntoViewIfNeeded();
 
       await page.waitForFunction(
         (initialCount) => document.querySelectorAll('[data-testid="post"]').length >= initialCount,

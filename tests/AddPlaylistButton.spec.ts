@@ -21,10 +21,6 @@ authTest.describe('플레이리스트 추가', () => {
       await page.click('[data-testid="tab-item"]:has-text("플리")');
       await page.click('[data-testid="add-playlist-button"]');
       await page.fill('[data-testid="playlist-title-input"]', PLAYLIST_TITLE);
-
-      await page.click('[data-testid="playlist-visibility-toggle"]');
-      await page.click('[data-testid="playlist-visibility-toggle"]');
-
       await page.click('[data-testid="full-button"]:has-text("추가하기")');
       await expect(page.locator('[data-testid="playlists-container"]')).toContainText(
         PLAYLIST_TITLE,
