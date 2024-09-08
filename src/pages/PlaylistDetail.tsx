@@ -13,7 +13,6 @@ import { UserModel } from '@/types/user';
 const PlaylistDetailPage = () => {
   const { id: playlistId } = useParams<{ id: string }>();
   const location = useLocation();
-  console.log(location);
   const state = location.state as { selectPli?: boolean };
   const navigate = useNavigate();
   const { data: playlist, isLoading, isError } = usePlaylistById(playlistId);
