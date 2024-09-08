@@ -220,7 +220,7 @@ const playlistItemStyle = css`
 `;
 
 const selectedStyle = css`
-  background-color: #e0e0e0;
+  background-color: ${theme.colors.lightestGray};
   border-radius: 8px;
   transition: background-color 0.3s ease;
 `;
