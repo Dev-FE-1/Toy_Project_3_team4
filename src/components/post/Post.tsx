@@ -26,6 +26,7 @@ import {
   useCheckSubscription,
 } from '@/hooks/useSubscribePlaylist';
 import { useUserData } from '@/hooks/useUserData';
+import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
@@ -135,8 +136,9 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               {comments.length}
             </Link>
           </div>
-          <button css={pliStyle} onClick={handleButtonClick}>
-            {playlist?.title} (<span>{playlist?.videos.length}</span>)
+          <button css={[pliStyle]} onClick={handleButtonClick}>
+            <span css={textEllipsis(1)}>{playlist?.title}</span> (
+            <span>{playlist?.videos.length}</span>)
           </button>
         </div>
       </div>
@@ -241,11 +243,13 @@ const likeButtonStyle = (isLiked: boolean) => css`
 `;
 
 const pliStyle = css`
+  display: flex;
+  max-width: 200px;
   color: ${theme.colors.darkestGray};
   font-size: ${theme.fontSizes.small};
-  text-decoration: underline;
   background: none;
   cursor: pointer;
+  text-decoration: underline;
 `;
 
 export default Post;
