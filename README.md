@@ -6,6 +6,17 @@
 
 플리 (Pli)는 사용자들이 만든 자신만의 유튜브 영상 링크 기반 플레이 리스트를 공유하고, 구독하여 자신만의 타임 라인을 만들고 네트워킹 할 수 있는 SNS 서비스입니다.
 
+## 팀명: 피자사조
+
+### 프로젝트 팀 소개 및 역할분담
+
+| [<img src="https://avatars.githubusercontent.com/u/59277499?v=4" width="150" height="150"/>](https://github.com/nakyeonko3) | [<img src="https://avatars.githubusercontent.com/u/108856689?v=4" width="150" height="150"/>](https://github.com/devdeun) | [<img src="https://avatars.githubusercontent.com/u/107895537?v=4" width="150" height="150"/>](https://github.com/HSjjs98) | [<img src="https://avatars.githubusercontent.com/u/171234168?v=4" width="150" height="150"/>](https://github.com/wonjichoe) |
+| :-----------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: |
+|                                          [@nakyeonko3](https://github.com/nakyeonko3)                                           |                                          [@devdeun](https://github.com/devdeun)                                          |                                        [@HSjjs98](https://github.com/HSjjs98)                                        |                                         [@wonjichoe](https://github.com/wonjichoe)                                         |
+|      프로젝트 세팅<br/>공통 컴포넌트 개발 (Modal)<br/>테스트 코드 작성<br/>별도의 서버 구성       |             UI 디자인 및 공통 스타일 설정<br/>공통 컴포넌트 개발: Navbar, Layout, Input, Textarea, Spinner, Loading, Avatar, GradientIcon<br/>라우팅<br/>페이지 퍼블리싱: 플레이리스트 페이지, 플레이리스트 상세 페이지, 포스트 상세 페이지, 서비스 이용약관 및 개인정보처리방침 페이지<br/>페이지 기능 구현 및 퍼블리싱: 로그인 페이지, 검색 페이지, 404 페이지<br/>페이지 기능 구현 및 퍼블리싱: 로그인 페이지, 검색 페이지, 404 페이지<br/>전체 디자인 수정<br/>기타 기능 오류 수정               |             공통 컴포넌트 개발 (Button(FitButton, FullButton, ToggleButton), Toast)<br/>포스트 추가<br/>플레이리스트에 비디오 추가, 삭제<br/>플레이리스트 수정<br/>플레이리스트 구독<br/>데이터베이스 구조 설계<br/>전체적인 기능 오류 수정              |                             공통 컴포넌트 개발 : Header, Tab, IconButton<br/>(리액트 기본 CRUD 적응)<br/>페이지 퍼블리싱: 설정 페이지 <br/> 페이지 기능 구현 및 퍼블리싱: 프로필 페이지, 프로필 수정 페이지, 팔로우 페이지 <br/>기타 기능 구현: 포스트 비디오 토스트 알림 추가 <br/>                          |
+
+
+
 ## 목차
 
 - [Toy_Project_3_team4](#toy_project_3_team4)
@@ -15,7 +26,6 @@
   - [설치 및 실행 방법](#설치-및-실행-방법)
   - [사용한 기술](#사용한-기술)
   - [핵심 기능](#핵심-기능)
-  - [기여자](#기여자)
 
 ## 🗓 개발 일정
 
@@ -170,11 +180,4 @@ npm run dev
 - 자신의 프로필 정보를 확인하고 수정할 수 있는 기능
 - 다른 사용자의 프로필 페이지에 접속 시 팔로우/언팔로우 할 수 있는 기능
 
-## 기여자
 
-| 이름 & 깃허브                                      | 담당       |
-| -------------------------------------------------- | ---------- |
-| [김다은 devdeun](https://github.com/devdeun)       | 프론트엔드 |
-| [고낙연 nakyeonko3](https://github.com/nakyeonko3) | 프론트엔드 |
-| [양해석 HSjjs98](https://github.com/HSjjs98)       | 프론트엔드 |
-| [최원지 wonjichoe](https://github.com/wonjichoe)   | 프론트엔드 |
