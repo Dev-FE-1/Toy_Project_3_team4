@@ -130,7 +130,11 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
             </FitButton>
           )}
           {isOwner && (
-            <HiEllipsisVertical css={verticalButtonStyle} onClick={handleOpenOptionsModal} />
+            <HiEllipsisVertical
+              css={verticalButtonStyle}
+              onClick={handleOpenOptionsModal}
+              data-testid="playlist-modal-open-button"
+            />
           )}
         </div>
         <div className="info-footer">
@@ -165,14 +169,14 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
       <Modal isOpen={isOptionsModalOpen} onClose={handleCloseOptionsModal} title={null}>
         <div css={optionsModalContentContainer}>
           <div onClick={handleAddVideo}>
-            <div className="icon-wrapper">
+            <div className="icon-wrapper" data-testid="playlist-add-video-button">
               <HiOutlineBookmark />
             </div>
             플리에 동영상 추가하기
           </div>
           {!isUnmodifiable && (
             <div onClick={handleDeletePlaylist}>
-              <div className="icon-wrapper">
+              <div className="icon-wrapper" data-testid="playlist-pli-delete-button">
                 <HiOutlineTrash />
               </div>
               플리 삭제하기

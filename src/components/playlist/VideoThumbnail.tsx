@@ -24,7 +24,9 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   return (
     <div css={[thumbnailStyle(url), customStyle]}>
       {type === 'stack' && <div className="stack" />}
-      <div className="image-container">{url && <img src={url} alt="" />}</div>
+      <div className="image-container" data-testid="video-thumbnail">
+        {url && <img src={url} alt="" />}
+      </div>
       {!isPublic && <PrivateLabel customStyle={customLabelStyle} />}
     </div>
   );

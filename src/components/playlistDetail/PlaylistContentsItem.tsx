@@ -87,7 +87,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
           <div className="video-info">
             <a href={`${isDraggable ? video.videoUrl : 'javascript:void(0)'}`}>
               <div className="info-container">
-                <h2>{videoData.title}</h2>
+                <h2 data-testid="video-title">{videoData.title}</h2>
                 <span>{videoData.creator}</span>
                 <span>
                   조회수 {videoData.views} · {formatRelativeDate(videoData.uploadDate)}

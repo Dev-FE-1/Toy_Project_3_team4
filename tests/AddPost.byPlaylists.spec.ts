@@ -5,7 +5,7 @@ import { generateRandomNumber } from '../src/utils/randomNumber';
 
 const POST_CONTENT = `새로운 테스트 포스트입니다-${generateRandomNumber()}`;
 
-authTest.describe('AddPost by playlists', () => {
+authTest.describe('포스트', () => {
   authTest.beforeEach(async ({ page, auth }) => {
     await page.goto('/signin');
     await auth.login(page);

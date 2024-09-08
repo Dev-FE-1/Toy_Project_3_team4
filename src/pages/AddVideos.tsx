@@ -96,7 +96,6 @@ const AddVideosPage: React.FC = () => {
         rightButtonText="완료"
         onRightButtonClick={handleOnAdd}
         rightButtonDisabled={isPending || videos.length === 0}
-        data-testid="add-video-header"
       />
       <div css={addPostContainer}>
         <div className="inputContainer">
@@ -104,11 +103,13 @@ const AddVideosPage: React.FC = () => {
             placeholder="YouTube 동영상 링크를 입력해주세요."
             onChange={handleInputChange}
             value={inputUrl}
+            data-testid="video-url-input"
           />
           <FitButton
             onClick={handleAddVideo}
             styleType={!videoId || isPending ? 'secondary' : 'primary'}
             customStyle={addButtonStyle}
+            data-testid="add-url-icon-button"
           >
             <HiOutlinePlus size={20} />
           </FitButton>

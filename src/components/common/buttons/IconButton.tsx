@@ -7,7 +7,11 @@ const IconButton: React.FC<{ icon: React.ReactNode; onClick: () => void; enabled
   onClick,
   enabled = false,
 }) => (
-  <button onClick={onClick} css={[iconButtonStyle, enabled && enabledStyle]}>
+  <button
+    onClick={onClick}
+    css={[iconButtonStyle, enabled && enabledStyle]}
+    data-testid="icon-button"
+  >
     {icon}
   </button>
 );
