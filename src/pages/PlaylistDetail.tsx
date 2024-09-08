@@ -78,6 +78,7 @@ const PlaylistDetailPage = () => {
         thumbnailUrl={videos[0] && `https://img.youtube.com/vi/${videos[0]?.videoId}/0.jpg`}
         user={userModel}
         isOwner={isOwner}
+        selectPli={state?.selectPli || false}
       />
       <PlaylistContents
         playlistId={playlist.playlistId}

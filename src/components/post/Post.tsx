@@ -100,12 +100,14 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const isUnknownPlaylist = playlist
     ? !playlist.videos.some((value) => value.videoId === videoObj.videoId)
     : true;
+  const isPublicPlaylist =
+    !(isPrivatePlaylist && currentUser?.uid !== post.userId) && !isUnknownPlaylist;
 
   const playlistLabel = isPlaylistLoading
     ? '플레이리스트 로딩 중...'
     : isUnknownPlaylist
       ? '알 수 없는 플레이리스트'
-      : isPrivatePlaylist
+      : isPrivatePlaylist && currentUser?.uid !== post.userId
         ? '비공개 플레이리스트'
         : playlist?.title;
 
@@ -128,7 +130,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
-          {!isSubscriptionLoading && currentUser?.uid !== post.userId && (
+          {!isSubscriptionLoading && isPublicPlaylist && (
             <IconButton
               icon={isSubscribed ? <HiBookmark size={20} /> : <HiOutlineBookmark size={20} />}
               onClick={toggleSubscription}
@@ -173,7 +175,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             style={{ cursor: isClickable ? 'pointer' : 'default' }}
           >
             {playlistLabel}
-            {!isPrivatePlaylist && !isUnknownPlaylist && <span>({playlist?.videos.length})</span>}
+            {isPublicPlaylist && <span>({playlist?.videos.length})</span>}
           </button>
         </div>
       </div>
