@@ -3,7 +3,7 @@ import { PiYoutubeLogo } from 'react-icons/pi';
 
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useAuth } from '@/hooks/useAuth';
-import { textEllipsis } from '@/styles/GlobalStyles';
+import { emptyMessageStyle, textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 
@@ -51,8 +51,8 @@ const Playlists: React.FC<PlaylistListProps> = ({
             ))}
       </div>
       {playlists.length === 0 && (
-        <div css={messageStyle}>
-          <PiYoutubeLogo size={48} />
+        <div css={[emptyMessageStyle]}>
+          <PiYoutubeLogo />
           <p>마음에 드는 플리를 구독해 보세요!</p>
         </div>
       )}
@@ -98,20 +98,6 @@ const itemStyle = (isColumn: boolean) => css`
         font-size: ${theme.fontSizes.small};
       }
     }
-  }
-`;
-
-const messageStyle = css`
-  text-align: center;
-  margin-top: 60px;
-  color: ${theme.colors.darkestGray};
-
-  svg {
-    stroke-width: 0.5px;
-  }
-
-  p {
-    margin-top: 4px;
   }
 `;
 

@@ -150,4 +150,19 @@ export const textEllipsis = (lineClamp: number) => css`
   }
 `;
 
+export const emptyMessageStyle = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 60px;
+  color: ${theme.colors.darkestGray};
+  font-size: 32px;
+
+  p {
+    font-size: ${theme.fontSizes.small};
+  }
+`;
+
 export default GlobalStyles;

@@ -16,3 +16,15 @@ export const validateVideoId = async (id: string): Promise<boolean> => {
     return false;
   }
 };
+
+const formatDecimal = (number: number): string => {
+  return number.toFixed(1).replace('.0', '');
+};
+
+export const formatVideoViewCount = (count: number): string => {
+  if (count < 1000) return `${count}회`;
+  if (count < 10000) return `${formatDecimal(count / 1000)}천회`;
+  if (count < 100000) return `${formatDecimal(count / 10000)}만회`;
+  if (count < 100000000) return `${Math.floor(count / 10000)}만회`;
+  return `${Math.floor(count / 100000000)}억회`;
+};
