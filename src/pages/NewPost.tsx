@@ -4,9 +4,9 @@ import { css } from '@emotion/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import CloseHeader from '@/components/layout/header/CloseHeader';
+import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useAuth } from '@/hooks/useAuth';
 import { useCreatePost } from '@/hooks/useCreatePost';
-import theme from '@/styles/theme';
 
 const NewPost = () => {
   const [searchParams] = useSearchParams();
@@ -57,13 +57,10 @@ const NewPost = () => {
       />
       <div>
         {videoId && (
-          <div css={thumbnailContainer}>
-            <img
-              src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-              alt="Video Thumbnail"
-              css={thumbnailStyle}
-            />
-          </div>
+          <VideoThumbnail
+            url={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+            isPublic={true}
+          />
         )}
         <textarea
           placeholder="동영상에 대한 이야기를 적어주세요"
@@ -77,28 +74,9 @@ const NewPost = () => {
   );
 };
 
-const thumbnailContainer = css`
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const thumbnailStyle = css`
-  width: 100%;
-  max-width: 400px;
-  height: 220px;
-  border-radius: 16px;
-`;
-
 const textareaStyle = css`
-  width: 100%;
   height: 100px;
-  padding: 0 8px;
-  font-size: ${theme.fontSizes.base};
-  resize: none;
-  box-sizing: border-box;
-  font-family: 'Pretendard', sans-serif;
+  padding: 16px 8px 0;
 `;
 
 export default NewPost;

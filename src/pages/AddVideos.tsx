@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { css } from '@emotion/react';
+import { HiOutlinePlus } from 'react-icons/hi2';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
@@ -107,8 +108,9 @@ const AddVideosPage: React.FC = () => {
           <FitButton
             onClick={handleAddVideo}
             styleType={!videoId || isPending ? 'secondary' : 'primary'}
+            customStyle={addButtonStyle}
           >
-            추가
+            <HiOutlinePlus size={20} />
           </FitButton>
         </div>
         {error && <div css={errorMessage}>{error}</div>}
@@ -131,7 +133,7 @@ const AddVideosPage: React.FC = () => {
 const addPostContainer = css`
   font-family: Pretendard;
   & .inputContainer {
-    margin-bottom: 4px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
 
@@ -147,6 +149,15 @@ const addPostContainer = css`
 
 const videosListStyle = css`
   list-style: none;
+  padding: 0;
+`;
+
+const addButtonStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
   padding: 0;
 `;
 

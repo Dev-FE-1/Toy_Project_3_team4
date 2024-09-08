@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
+import { HiOutlineLink } from 'react-icons/hi2';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import CloseHeader from '@/components/layout/header/CloseHeader';
+import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { errorMessageStyle } from '@/styles/input';
 import theme from '@/styles/theme';
@@ -89,7 +91,7 @@ const AddPostPage: React.FC = () => {
         rightButtonDisabled={!videoId || !playlistId}
       />
       <div css={addPostContainer}>
-        <div className="inputContainer">
+        <div className="input-container">
           <input
             placeholder="YouTube 동영상 링크를 입력해주세요."
             onChange={handleInputChange}
@@ -97,7 +99,7 @@ const AddPostPage: React.FC = () => {
           />
           {error && <div css={errorMessage}>{error}</div>}
         </div>
-        <p>플리 선택</p>
+        <p className="label">플리 선택</p>
         <button
           onClick={() =>
             navigate(`/post/add/selectpli?videoId=${videoId}`, { state: { type: 'byLink' } })
@@ -105,14 +107,17 @@ const AddPostPage: React.FC = () => {
         >
           {playlistTitle}
         </button>
-        <div className="thumbnailWrapper">
-          {videoId && videoId !== 'null' && (
-            <img
-              src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-              alt="Video Thumbnail"
-              css={thumbnailImage}
-            />
-          )}
+        <div className="thumbnail-wrapper">
+          <VideoThumbnail
+            url={
+              videoId && videoId !== 'null'
+                ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                : ''
+            }
+            isPublic={true}
+            customStyle={thumbnailStyle}
+          />
+          {(!videoId || videoId === 'null') && <HiOutlineLink size={32} />}
         </div>
       </div>
     </>
@@ -121,12 +126,14 @@ const AddPostPage: React.FC = () => {
 
 const addPostContainer = css`
   font-family: Pretendard;
-  & .inputContainer {
+  & .input-container {
     margin-bottom: 16px;
+    padding: 0 8px;
   }
   & > p {
     margin: 0;
     font-size: ${theme.fontSizes.micro};
+    padding-left: 8px;
   }
   & > button {
     font-size: ${theme.fontSizes.small};
@@ -144,22 +151,23 @@ const addPostContainer = css`
     color: #475569;
   }
 
-  & .thumbnailWrapper {
-    height: 190px;
-    flex-shrink: 0;
-    border-radius: 16px;
-    background: ${theme.colors.lightGray};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  & .thumbnail-wrapper {
+    position: relative;
+
+    svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 `;
 
-const thumbnailImage = css`
-  width: 100%;
-  height: auto;
-  border-radius: 16px;
+const thumbnailStyle = css`
+  .image-container {
+    position: relative;
+    background: ${theme.colors.lightGray};
+  }
 `;
 
 const errorMessage = errorMessageStyle;

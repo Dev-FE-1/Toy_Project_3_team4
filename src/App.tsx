@@ -7,6 +7,7 @@ import AddPostPage from '@/pages/AddPost';
 import FollowPage from '@/pages/Follow';
 import HomePage from '@/pages/Home';
 import NewPost from '@/pages/NewPost';
+import NotFoundPage from '@/pages/NotFound';
 import PlaylistPage from '@/pages/Playlist';
 import PlaylistDetailPage from '@/pages/PlaylistDetail';
 import PostDetailPage from '@/pages/PostDetail';
@@ -107,6 +108,16 @@ const router = createBrowserRouter([
             element: <PostDetailPage />,
           },
         ],
+      },
+    ],
+  },
+  {
+    path: '*',
+    element: <ContainerLayout />,
+    children: [
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },
