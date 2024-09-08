@@ -152,68 +152,6 @@ export const getPostsByFollowingUsers = async ({
   return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
 };
 
-export const getPosts = async ({
-  count = 10,
-  lastPostId,
-}: {
-  count?: number;
-  lastPostId?: string;
-}): Promise<PostModel[]> => {
-  let q = query(postsCollection, orderBy('createdAt', 'desc'), limit(count));
-
-  if (lastPostId) {
-    const lastPostDoc = await getDoc(doc(postsCollection, lastPostId));
-    if (lastPostDoc.exists()) {
-      q = query(q, startAfter(lastPostDoc));
-    }
-  }
-
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map((doc) => ({ postId: doc.id, ...doc.data() }) as PostModel);
-};
-
-export const fetchFilteredPostsTimelines = async ({
-  userId,
-  count = 10,
-  lastPostId,
-}: {
-  userId: string;
-  count?: number;
-  lastPostId?: string;
-}): Promise<PostModel[]> => {
-  const userDoc = await getDoc(doc(db, 'users', userId));
-  if (!userDoc.exists()) {
-    console.warn('User not found');
-    return [];
-  }
-
-  const followingUserIds = userDoc.data()?.following || [];
-  if (!followingUserIds || followingUserIds.length === 0) {
-    console.warn('No following users');
-  }
-
-  let followingPostsQuery = query(
-    postsCollection,
-    where('userId', 'in', [userId, ...followingUserIds]),
-    orderBy('createdAt', 'desc'),
-    limit(count),
-  );
-
-  if (lastPostId) {
-    const lastPostDoc = await getDoc(doc(postsCollection, lastPostId));
-    if (lastPostDoc.exists()) {
-      followingPostsQuery = query(followingPostsQuery, startAfter(lastPostDoc));
-    }
-  }
-
-  const followingPostsSnapshot = await getDocs(followingPostsQuery);
-  const followingPosts = followingPostsSnapshot.docs.map(
-    (doc) => ({ postId: doc.id, ...doc.data() }) as PostModel,
-  );
-
-  return followingPosts;
-};
-
 export const updatePostsLikes = async ({
   postId,
   userId,
