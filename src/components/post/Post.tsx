@@ -88,7 +88,6 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   };
 
   const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
-  console.log('postDetailPath', postDetailPath);
 
   return (
     <div css={postContainerStyle} data-testid="post">
