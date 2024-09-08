@@ -10,7 +10,11 @@ interface TabItemProps {
 }
 
 const TabItem: React.FC<TabItemProps> = ({ id, label, icon, isActive, onClick, customStyle }) => (
-  <button onClick={() => onClick(id)} css={[tabStyle(isActive), customStyle]}>
+  <button
+    onClick={() => onClick(id)}
+    css={[tabStyle(isActive), customStyle]}
+    data-testid="tab-item"
+  >
     {icon && <span css={iconStyle(isActive)}>{icon}</span>}
     {label}
   </button>

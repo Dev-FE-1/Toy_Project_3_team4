@@ -26,6 +26,7 @@ const FullButton: React.FC<FullButtonProps> = ({
         buttonStyle(theme)[styleType],
         customStyle || [],
       ]}
+      data-testid="full-button"
     >
       {children}
     </button>

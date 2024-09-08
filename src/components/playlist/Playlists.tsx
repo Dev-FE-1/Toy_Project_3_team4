@@ -25,7 +25,7 @@ const Playlists: React.FC<PlaylistListProps> = ({
 
   return (
     <>
-      <div css={[playlistStyle, customStyle]}>
+      <div css={[playlistStyle, customStyle]} data-testid="playlists-container">
         {playlists.length > 0 &&
           playlists
             .filter(({ isPublic, userId }) => isPublic || userId === currentUser?.uid)
