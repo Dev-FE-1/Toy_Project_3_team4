@@ -14,6 +14,7 @@ import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { PATH } from '@/constants/path';
 import { useRemoveVideoFromPlaylist } from '@/hooks/useRemoveVideoFromPlaylist';
 import { useYouTubeVideoData } from '@/hooks/useYouTubeVideoData';
+import { useToastStore } from '@/stores/toastStore';
 import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { VideoModel } from '@/types/playlist';
@@ -46,6 +47,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+  const addToast = useToastStore((state) => state.addToast);
 
   const handleClick = () => {
     if (selectPli) {
@@ -63,6 +65,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
       },
     });
     handleCloseModal();
+    addToast('플레이리스트에서 동영상이 삭제되었습니다.');
   };
 
   const modalOptions = [
