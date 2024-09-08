@@ -29,6 +29,8 @@ import { useUserData } from '@/hooks/useUserData';
 import theme from '@/styles/theme';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
+import { makeVideoObj } from '@/utils/video';
+import { extractVideoId } from '@/utils/youtubeUtils';
 
 interface PostProps {
   id: string;
@@ -43,9 +45,11 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const [isSubscribed, setIsSubscribed] = useState<boolean | undefined>(false);
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
-  const { data: playlist } = usePlaylistById(post.playlistId);
+  const { data: playlist, isLoading: isPlaylistLoading } = usePlaylistById(post.playlistId);
   const videoTitle = useFetchVideoTitle(post.video);
-  const { data: isPlaylistSubscribed, isLoading } = useCheckSubscription(post.playlistId);
+  const { data: isPlaylistSubscribed, isLoading: isSubscriptionLoading } = useCheckSubscription(
+    post.playlistId,
+  );
   const subscribeMutation = useSubscribePlaylist(post.playlistId);
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
   const { comments } = useComments(post.postId);
@@ -89,6 +93,23 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
 
   const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
 
+  const isPrivatePlaylist = playlist && !playlist.isPublic;
+  const videoId = extractVideoId(post.video) ?? '';
+  const videoObj = makeVideoObj(videoId);
+  const isUnknownPlaylist = playlist
+    ? !playlist.videos.some((value) => value.videoId === videoObj.videoId)
+    : true;
+
+  const playlistLabel = isPlaylistLoading
+    ? '플레이리스트 로딩 중...'
+    : isUnknownPlaylist
+      ? '알 수 없는 플레이리스트'
+      : isPrivatePlaylist
+        ? '비공개 플레이리스트'
+        : playlist?.title;
+
+  const isClickable = !isPrivatePlaylist && !isUnknownPlaylist && !isPlaylistLoading;
+
   return (
     <div css={postContainerStyle}>
       <VideoPlayer video={post.video} />
@@ -103,7 +124,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
-          {!isLoading && currentUser?.uid !== post.userId && (
+          {!isSubscriptionLoading && currentUser?.uid !== post.userId && (
             <IconButton
               icon={isSubscribed ? <HiBookmark size={20} /> : <HiOutlineBookmark size={20} />}
               onClick={toggleSubscription}
@@ -135,9 +156,16 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               {comments.length}
             </Link>
           </div>
-          <button css={pliStyle} onClick={handleButtonClick}>
-            {playlist?.title} (<span>{playlist?.videos.length}</span>)
-          </button>
+          {
+            <button
+              css={pliStyle}
+              onClick={isClickable ? handleButtonClick : undefined}
+              style={{ cursor: isClickable ? 'pointer' : 'default' }}
+            >
+              {playlistLabel}
+              {!isPrivatePlaylist && !isUnknownPlaylist && <span>({playlist?.videos.length})</span>}
+            </button>
+          }
         </div>
       </div>
     </div>
