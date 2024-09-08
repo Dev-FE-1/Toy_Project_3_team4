@@ -15,11 +15,9 @@ const PlaylistDetailPage = () => {
   const location = useLocation();
   const state = location.state as { selectPli?: boolean };
   const navigate = useNavigate();
-
   const { data: playlist, isLoading, isError } = usePlaylistById(playlistId);
   const { data: playlistUser } = useUserById(playlist?.userId || '');
   const user = useAuth();
-
   const [videos, setVideos] = useState(playlist?.videos || []);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
 
@@ -88,7 +86,7 @@ const PlaylistDetailPage = () => {
         onVideoSelect={handleVideoSelect}
         selectedVideoId={selectedVideoId}
         isDraggable={isOwner && !state?.selectPli}
-        isOwner={isOwner}
+        selectPli={state?.selectPli}
       />
     </>
   );

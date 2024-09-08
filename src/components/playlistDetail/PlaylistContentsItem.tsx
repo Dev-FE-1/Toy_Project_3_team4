@@ -25,6 +25,7 @@ interface PlaylistContentItemProps {
   isSelected?: boolean;
   onVideoSelect?: (videoId: string) => void;
   customStyle?: SerializedStyles;
+  selectPli?: boolean;
 }
 
 const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
@@ -33,6 +34,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
   onVideoSelect = () => {},
   isDraggable = false,
   customStyle,
+  selectPli = false,
 }) => {
   const playlistId = useParams<{ id: string }>().id || '';
   const { data: videoData, isLoading, isError } = useYouTubeVideoData(video.videoId);
@@ -50,7 +52,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
   };
 
   const handleClick = () => {
-    if (!isDraggable) {
+    if (selectPli) {
       onVideoSelect(video.videoId);
     }
   };
@@ -84,7 +86,10 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
         <div className="video-container">
           <VideoThumbnail url={video.thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
           <div className="video-info">
-            <a href={`${isDraggable ? video.videoUrl : 'javascript:void(0)'}`}>
+            <a
+              href={selectPli ? 'javascript:void(0)' : video.videoUrl}
+              target={selectPli ? '_self' : '_blank'}
+            >
               <div className="info-container">
                 <h2>{videoData.title}</h2>
                 <span>{videoData.creator}</span>

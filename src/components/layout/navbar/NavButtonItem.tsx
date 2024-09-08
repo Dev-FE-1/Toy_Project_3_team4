@@ -49,7 +49,7 @@ const NavButtonItem: React.FC<NavButtonItemProps> = ({ Icon, stroke, onClick }) 
           <div
             onClick={() => {
               handleCloseModal();
-              navigate(PATH.SELECT_PLI);
+              navigate(PATH.SELECT_PLI, { state: { type: 'fromPli' } });
             }}
           >
             <div className="icon-wrapper">
