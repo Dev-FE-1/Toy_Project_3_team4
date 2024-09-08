@@ -33,7 +33,7 @@ authTest.describe('플레이리스트 추가', () => {
       await page.click(`[data-testid="playlist-item"]:has-text("${PLAYLIST_TITLE}")`);
 
       await page.click('[data-testid="playlist-modal-open-button"]');
-      await page.click('[data-testid="playlist-pli-delete-button"]');
+      await page.click('div:has-text("플리 삭제하기")');
       await expect(page.locator('[data-testid="playlists-container"]')).not.toContainText(
         PLAYLIST_TITLE,
       );
@@ -68,7 +68,7 @@ authTest.describe('플레이리스트 추가', () => {
 
       await page.click(`[data-testid="playlist-item"]:has-text("${PLAYLIST_TITLE}")`);
       await page.click('[data-testid="playlist-modal-open-button"]');
-      await page.click('[data-testid="playlist-add-video-button"]');
+      await page.click('div:has-text("플리에 동영상 추가하기")');
       await page.fill('[data-testid="video-url-input"]', YOUTUBE_LINK);
       await page.waitForTimeout(1000);
       await page.click('[data-testid="fit-button"]');
@@ -81,7 +81,7 @@ authTest.describe('플레이리스트 추가', () => {
       await expect(page.locator(`[data-testid="video-title"]`)).toContainText(YOUTUBE_TITLE);
 
       await page.click('[data-testid="playlist-modal-open-button"]');
-      await page.click('[data-testid="playlist-pli-delete-button"]');
+      await page.click('div:has-text("플리 삭제하기")');
       await expect(page.locator('[data-testid="playlists-container"]')).not.toContainText(
         PLAYLIST_TITLE,
       );
