@@ -18,6 +18,7 @@ import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { VideoModel } from '@/types/playlist';
 import { formatRelativeDate } from '@/utils/date';
+import { formatVideoViewCount } from '@/utils/youtubeUtils';
 
 interface PlaylistContentItemProps {
   video: VideoModel;
@@ -93,6 +94,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
       <div
         css={[playlistItemStyle, isSelected && selectedStyle, customStyle]}
         onClick={handleClick}
+        data-testid="playlist-select-video-item"
       >
         {isDraggable && <HiOutlineBars2 className="drag-bar" />}
         <div className="video-container">
@@ -106,7 +108,8 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
                 <h2>{videoData.title}</h2>
                 <span>{videoData.creator}</span>
                 <span>
-                  조회수 {videoData.views} · {formatRelativeDate(videoData.uploadDate)}
+                  조회수 {formatVideoViewCount(videoData.views)} ·{' '}
+                  {formatRelativeDate(videoData.uploadDate)}
                 </span>
               </div>
             </a>
@@ -221,7 +224,7 @@ const playlistItemStyle = css`
 `;
 
 const selectedStyle = css`
-  background-color: #e0e0e0;
+  background-color: ${theme.colors.lightestGray};
   border-radius: 8px;
   transition: background-color 0.3s ease;
 `;

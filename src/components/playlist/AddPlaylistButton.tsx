@@ -64,7 +64,7 @@ const AddPlaylistButton: React.FC<{
   return (
     <>
       <div css={[buttonContainerStyle, customStyle]}>
-        <button id="add" onClick={onClick}>
+        <button id="add" onClick={onClick} data-testid="add-playlist-button">
           <HiOutlinePlus size={20} />
         </button>
         <label htmlFor="add">새로운 플리 추가</label>

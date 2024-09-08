@@ -27,6 +27,7 @@ const FullButton: React.FC<FullButtonProps> = ({
         customStyle || [],
       ]}
       disabled={styleType === 'disabled'}
+      data-testid="full-button"
     >
       {children}
     </button>

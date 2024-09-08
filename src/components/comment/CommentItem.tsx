@@ -53,7 +53,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           {comment.userId === currentUserId && (
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
-                <button css={menuTriggerStyle}>
+                <button css={menuTriggerStyle} data-testid="comment-dropdown-button">
                   <HiDotsVertical size={18} />
                 </button>
               </DropdownMenu.Trigger>
@@ -66,12 +66,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
                       setEditingCommentId(comment.id);
                       setEditingContent(comment.content);
                     }}
+                    data-testid="edit-comment-button"
                   >
                     <HiPencil /> 댓글 수정
                   </DropdownMenu.Item>
                   <DropdownMenu.Item
                     css={menuItemStyle}
                     onSelect={() => handleDeleteComment(comment.id)}
+                    data-testid="delete-comment-button"
                   >
                     <HiTrash /> 댓글 삭제
                   </DropdownMenu.Item>
@@ -99,7 +101,9 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </FitButton>
           </div>
         ) : (
-          <p css={commentTextStyle}>{comment.content}</p>
+          <p css={commentTextStyle} data-testid="comment-content">
+            {comment.content}
+          </p>
         )}
       </div>
     </div>
@@ -110,6 +114,7 @@ const commentStyle = css`
   display: flex;
   align-items: flex-start;
   padding: 8px 0;
+  transform: translateX(4px);
 `;
 
 const avatarStyle = css`

@@ -26,7 +26,7 @@ const Header: React.FC<BaseHeaderProps> = ({
   if (!headerRoot) return null;
 
   return createPortal(
-    <div css={[baseHeaderStyle, maxWidthStyle(true), customStyle]}>
+    <div css={[baseHeaderStyle, maxWidthStyle(true), customStyle]} data-testid="header">
       <div css={leftSectionStyle}>{leftSection}</div>
       <div css={centerSectionStyle}>{centerSection}</div>
       <div css={rightSectionStyle}>{rightSection}</div>

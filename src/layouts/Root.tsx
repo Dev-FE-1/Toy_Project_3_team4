@@ -5,7 +5,7 @@ import ContainerLayout from '@/layouts/Container';
 
 const RootLayout = () => (
   <>
-    <header id="header"></header>
+    <header id="header" />
     <Navbar />
     <ContainerLayout customStyle={mainStyle} />
   </>

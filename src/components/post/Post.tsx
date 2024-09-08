@@ -27,6 +27,7 @@ import {
   useCheckSubscription,
 } from '@/hooks/useSubscribePlaylist';
 import { useUserData } from '@/hooks/useUserData';
+import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
@@ -117,7 +118,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
       : !isPrivatePlaylist && !isUnknownPlaylist && !isPlaylistLoading;
 
   return (
-    <div css={postContainerStyle}>
+    <div css={postContainerStyle} data-testid="post">
       <VideoPlayer video={post.video} />
       <div className="contents-wrapper">
         <div css={metaInfoStyle}>
@@ -174,7 +175,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             onClick={isClickable ? handleButtonClick : undefined}
             style={{ cursor: isClickable ? 'pointer' : 'default' }}
           >
-            {playlistLabel}
+            <span css={textEllipsis(1)}>{playlistLabel}</span>
             {isPublicPlaylist && <span>({playlist?.videos.length})</span>}
           </button>
         </div>
@@ -280,11 +281,13 @@ const likeButtonStyle = (isLiked: boolean) => css`
 `;
 
 const pliStyle = css`
+  display: flex;
+  max-width: 200px;
   color: ${theme.colors.darkestGray};
   font-size: ${theme.fontSizes.small};
-  text-decoration: underline;
   background: none;
   cursor: pointer;
+  text-decoration: underline;
 `;
 
 export default Post;

@@ -42,7 +42,12 @@ const NavButtonItem: React.FC<NavButtonItemProps> = ({ Icon, stroke, onClick }) 
 
   return (
     <li>
-      <button css={buttonStyle} type="button" onClick={onClick || handleOpenModal}>
+      <button
+        css={buttonStyle}
+        type="button"
+        onClick={onClick || handleOpenModal}
+        data-testid="add-post-button"
+      >
         <Icon css={stroke ? iconStyle(stroke) : ''} />
       </button>
 

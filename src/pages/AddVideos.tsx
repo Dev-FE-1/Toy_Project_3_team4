@@ -96,6 +96,7 @@ const AddVideosPage: React.FC = () => {
         rightButtonText="완료"
         onRightButtonClick={handleOnAdd}
         rightButtonDisabled={isPending || videos.length === 0}
+        data-testid="add-video-header"
       />
       <div css={addPostContainer}>
         <div className="inputContainer">

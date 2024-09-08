@@ -5,7 +5,7 @@ import theme from '@/styles/theme';
 import { PostModel } from '@/types/post';
 export const PostsTimeLine = ({ posts }: { posts: PostModel[] }) => {
   return (
-    <div css={timelineStyles}>
+    <div css={timelineStyles} data-testid="timeline">
       {posts.map((post) => (
         <Post id={post.postId} key={post.postId} post={post} />
       ))}

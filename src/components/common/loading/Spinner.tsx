@@ -7,7 +7,7 @@ interface SpinnerProps {
 }
 
 const Spinner: React.FC<SpinnerProps> = ({ customStyle }) => (
-  <div css={[spinnerStyle, customStyle]} />
+  <div css={[spinnerStyle, customStyle]} data-testid="loading-indicator" />
 );
 
 const spin = keyframes`
