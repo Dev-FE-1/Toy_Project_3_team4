@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 import {
+  HiEllipsisVertical,
   HiOutlineHeart,
   HiOutlineChatBubbleOvalLeft,
   HiHeart,
@@ -108,7 +109,10 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
         ? '비공개 플레이리스트'
         : playlist?.title;
 
-  const isClickable = !isPrivatePlaylist && !isUnknownPlaylist && !isPlaylistLoading;
+  const isClickable =
+    currentUser?.uid === post.userId
+      ? !isUnknownPlaylist
+      : !isPrivatePlaylist && !isUnknownPlaylist && !isPlaylistLoading;
 
   return (
     <div css={postContainerStyle}>
@@ -131,15 +135,22 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               enabled={isSubscribed}
             />
           )}
+          {currentUser?.uid === post.userId && (
+            <IconButton icon={<HiEllipsisVertical size={20} />} onClick={() => {}} />
+          )}
         </div>
         <p css={contentStyle(isDetail)}>
           {isDetail ? post.content : <Link to={postDetailPath}>{post.content}</Link>}
         </p>
         <p css={playlistStyle}>
-          <Link to={post.video} target="_blank">
+          {isClickable ? (
+            <Link to={post.video} target="_blank">
+              <span>{videoTitle}</span>
+              <HiChevronRight />
+            </Link>
+          ) : (
             <span>{videoTitle}</span>
-            <HiChevronRight />
-          </Link>
+          )}
         </p>
         <div css={metaInfoStyle}>
           <div css={buttonWrapStyle}>
@@ -156,16 +167,14 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               {comments.length}
             </Link>
           </div>
-          {
-            <button
-              css={pliStyle}
-              onClick={isClickable ? handleButtonClick : undefined}
-              style={{ cursor: isClickable ? 'pointer' : 'default' }}
-            >
-              {playlistLabel}
-              {!isPrivatePlaylist && !isUnknownPlaylist && <span>({playlist?.videos.length})</span>}
-            </button>
-          }
+          <button
+            css={pliStyle}
+            onClick={isClickable ? handleButtonClick : undefined}
+            style={{ cursor: isClickable ? 'pointer' : 'default' }}
+          >
+            {playlistLabel}
+            {!isPrivatePlaylist && !isUnknownPlaylist && <span>({playlist?.videos.length})</span>}
+          </button>
         </div>
       </div>
     </div>
