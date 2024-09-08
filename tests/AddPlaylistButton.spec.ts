@@ -11,7 +11,6 @@ authTest.describe('플레이리스트 추가', () => {
     await auth.login(page);
     await page.goto('/');
 
-    // 2. 네비바에서 프로필 링크 클릭
     await page.click('nav a[href^="/profile"]');
   });
 
@@ -23,8 +22,8 @@ authTest.describe('플레이리스트 추가', () => {
       await page.click('[data-testid="add-playlist-button"]');
       await page.fill('[data-testid="playlist-title-input"]', PLAYLIST_TITLE);
 
-      //비공개로 설정
-      // await page.click('[data-testid="playlist-visibility-toggle"]');
+      await page.click('[data-testid="playlist-visibility-toggle"]');
+      await page.click('[data-testid="playlist-visibility-toggle"]');
 
       await page.click('[data-testid="full-button"]:has-text("추가하기")');
       await expect(page.locator('[data-testid="playlists-container"]')).toContainText(

@@ -3,12 +3,7 @@ import { expect } from '@playwright/test';
 import { test as authTest } from './auth.setup';
 import { generateRandomNumber } from '../src/utils/randomNumber';
 
-// const YOUTUBE_ID = 'dQw4w9WgXcQ';
-// const SECOND_YOUTUBE_ID = '9bZkp7q19';
 const POST_CONTENT = `새로운 테스트 포스트입니다-${generateRandomNumber()}`;
-
-// const YOUTUBE_LINK = `https://www.youtube.com/watch?v=${YOUTUBE_ID}`;
-// const SECOND_YOUTUBE_LINK = `https://www.youtube.com/watch?v=${SECOND_YOUTUBE_ID}`;
 
 authTest.describe('AddPost by playlists', () => {
   authTest.beforeEach(async ({ page, auth }) => {
