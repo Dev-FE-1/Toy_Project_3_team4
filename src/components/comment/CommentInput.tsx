@@ -73,7 +73,7 @@ const newCommentStyle = css`
     width: 100%;
     min-height: ${INPUT_MIN_HEIGHT}px;
     max-height: ${INPUT_MAX_HEIGHT}px;
-    padding: 12px 0 8px 16px;
+    padding: 10px 0 8px 16px;
     font-size: ${theme.fontSizes.small};
     background-color: transparent;
     overflow-y: auto;
