@@ -18,7 +18,7 @@ const ToggleButton = ({ enabled, setEnabled }: ToggleButtonProps) => {
       aria-checked={enabled}
       tabIndex={0}
     >
-      <div css={buttonStyle(enabled)}>
+      <div css={buttonStyle(enabled)} data-testid="toggle-item">
         <div css={buttonThumbStyle(enabled)} />
       </div>
     </div>

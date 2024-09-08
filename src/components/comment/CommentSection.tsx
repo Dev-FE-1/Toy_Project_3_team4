@@ -35,7 +35,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
   const { usersData } = useMultipleUsersData(userIds);
 
   return (
-    <div css={commentSectionStyle}>
+    <div css={commentSectionStyle} data-testid="comment-section">
       <div css={commentContainerStyle}>
         <Avatar url={currentUserData?.photoURL} customStyle={avatarStyle} />
         <CommentInput

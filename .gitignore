@@ -150,8 +150,16 @@ stats.html
 *.sln
 *.sw?
 
-
+# firebase
 .firebase
 
 premissions.json
 serviceAccountKey.json
+
+# playwright
+
+tests-examples
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
