@@ -168,7 +168,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             </Link>
           </div>
           <button
-            css={pliStyle}
+            css={pliStyle(isClickable)}
             onClick={isClickable ? handleButtonClick : undefined}
             style={{ cursor: isClickable ? 'pointer' : 'default' }}
           >
@@ -277,14 +277,14 @@ const likeButtonStyle = (isLiked: boolean) => css`
   color: ${isLiked ? theme.colors.red : 'inherit'};
 `;
 
-const pliStyle = css`
+const pliStyle = (isClickable: boolean) => css`
   display: flex;
   max-width: 200px;
   color: ${theme.colors.darkestGray};
   font-size: ${theme.fontSizes.small};
   background: none;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: ${isClickable ? 'underline' : 'none'};
 `;
 
 export default Post;
