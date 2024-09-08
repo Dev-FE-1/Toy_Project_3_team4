@@ -14,7 +14,7 @@ authTest.describe('플레이리스트에 유튜브 영상 추가', () => {
     await auth.login(page);
   });
 
-  authTest('플레이리스트에 비디오 추가 기능 테스트', async ({ page }) => {
+  authTest('플레이리스트에 있는 영상으로 포스트 추가', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveURL('/');
 
@@ -22,12 +22,18 @@ authTest.describe('플레이리스트에 유튜브 영상 추가', () => {
 
     await page.click('text=플리에서 동영상 선택');
     await expect(page).toHaveURL('/post/add/selectPli');
+    //   <div
+    //   data-testid="playlist-item"
+    //   key={`playlist-${playlistId}`}
+    //   css={itemStyle(isColumn)}
+    //   onClick={() => (onPlaylistClick ? onPlaylistClick(playlistId, title) : null)}
+    // >
 
-    await page.click('.playlist-item >> nth=0');
+    await page.click('[data-testid="playlist-item"]:nth-child(1)');
 
     await page.fill('input[placeholder="YouTube 동영상 링크를 입력해주세요."]', YOUTUBE_LINK);
 
-    await page.click('button:has-text("추가")');
+    await page.click('button:has-text("추가"):has-text("분류 되지 않은 목록")');
 
     const addedVideo = page.locator('.playlist-contents-item', { hasText: YOUTUBE_ID });
     await expect(addedVideo).toBeVisible();
