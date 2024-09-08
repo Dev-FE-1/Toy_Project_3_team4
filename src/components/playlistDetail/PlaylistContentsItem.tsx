@@ -125,7 +125,11 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
         </div>
       </div>
 
-      <OptionModal isOpen={isModalOpen} onClose={handleCloseModal} options={modalOptions} />
+      <OptionModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        options={isDraggable ? modalOptions : modalOptions.slice(0, 1)}
+      />
     </>
   );
 };
