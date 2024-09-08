@@ -79,6 +79,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
       <div
         css={[playlistItemStyle, isSelected && selectedStyle, customStyle]}
         onClick={handleClick}
+        data-testid="playlist-select-video-item"
       >
         {isDraggable && <HiOutlineBars2 className="drag-bar" />}
         <div className="video-container">

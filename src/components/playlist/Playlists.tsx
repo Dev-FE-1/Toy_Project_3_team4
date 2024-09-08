@@ -31,6 +31,7 @@ const Playlists: React.FC<PlaylistListProps> = ({
             .filter(({ isPublic, userId }) => isPublic || userId === currentUser?.uid)
             .map(({ playlistId, title, videos, isPublic }) => (
               <div
+                data-testid="playlist-item"
                 key={`playlist-${playlistId}`}
                 css={itemStyle(isColumn)}
                 onClick={() => (onPlaylistClick ? onPlaylistClick(playlistId, title) : null)}
