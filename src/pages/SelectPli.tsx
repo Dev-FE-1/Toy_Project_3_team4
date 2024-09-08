@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { css } from '@emotion/react';
 import { HiOutlineBookmark, HiOutlinePlay } from 'react-icons/hi2';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
@@ -13,6 +13,7 @@ import Playlists from '@/components/playlist/Playlists';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useAddPlaylist } from '@/hooks/usePostPlaylist';
+import { useSubscribedPlaylists } from '@/hooks/useSubscribedPlaylists';
 import { useAddVideosToMyPlaylist } from '@/hooks/useVideoToPlaylist';
 import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
@@ -27,11 +28,13 @@ const SelectPliPage = () => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const navigate = useNavigate();
   const location = useLocation();
-  const { videoId } = useParams();
+  const searchParams = new URLSearchParams(location.search);
+  const videoId = searchParams.get('videoId');
   const videoObject = makeVideoObj(videoId || '');
   const state = location.state as { type?: 'byLink' | 'fromPli' };
   const user = useAuth();
   const { data: myPlaylists, error } = useUserPlaylists();
+  const { data: subscribedPlaylists } = useSubscribedPlaylists();
   const addPlaylistMutation = useAddPlaylist();
 
   const addVideoToPlaylistMutation = useAddVideosToMyPlaylist();
@@ -43,13 +46,13 @@ const SelectPliPage = () => {
   };
 
   const handlePlaylistClick = (playlistId: string, title: string) => {
-    if (videoId) {
+    if (state?.type === 'byLink') {
+      navigate(`/post/add?pli=${playlistId}&title=${encodeURIComponent(title)}&videoId=${videoId}`);
+    } else if (state?.type === 'fromPli') {
+      navigate(`/playlist/${playlistId}`, { state: { selectPli: true } });
+    } else {
       addVideoToPlaylistMutation.mutate({ playlistId, videos: [videoObject] });
       navigate(`/playlist/${playlistId}`, { state: { selectPli: false } });
-    } else if (state?.type === 'byLink') {
-      navigate(`/post/add?pli=${playlistId}&title=${encodeURIComponent(title)}&videoId=${videoId}`);
-    } else {
-      navigate(`/playlist/${playlistId}`, { state: { selectPli: true } });
     }
   };
 
@@ -118,7 +121,7 @@ const SelectPliPage = () => {
           </TabContent>
           <TabContent id="subscribe" activeTabId={activeTab}>
             <Playlists
-              playlists={[]}
+              playlists={subscribedPlaylists || []}
               customStyle={playlistStyle}
               customVideoStyle={videoStyle}
               onPlaylistClick={handlePlaylistClick}

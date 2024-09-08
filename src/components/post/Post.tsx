@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 import {
+  HiEllipsisVertical,
   HiOutlineHeart,
   HiOutlineChatBubbleOvalLeft,
   HiHeart,
@@ -26,9 +27,12 @@ import {
   useCheckSubscription,
 } from '@/hooks/useSubscribePlaylist';
 import { useUserData } from '@/hooks/useUserData';
+import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
+import { makeVideoObj } from '@/utils/video';
+import { extractVideoId } from '@/utils/youtubeUtils';
 
 interface PostProps {
   id: string;
@@ -43,9 +47,9 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const [isSubscribed, setIsSubscribed] = useState<boolean | undefined>(false);
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
-  const { data: playlist } = usePlaylistById(post.playlistId);
+  const { data: playlist, isLoading: isPlaylistLoading } = usePlaylistById(post.playlistId);
   const videoTitle = useFetchVideoTitle(post.video);
-  const { data: isPlaylistSubscribed, isLoading } = useCheckSubscription(post.playlistId);
+  const { data: isPlaylistSubscribed } = useCheckSubscription(post.playlistId);
   const subscribeMutation = useSubscribePlaylist(post.playlistId);
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
   const { comments } = useComments(post.postId);
@@ -88,7 +92,31 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   };
 
   const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
-  console.log('postDetailPath', postDetailPath);
+
+  const isPrivatePlaylist = playlist && !playlist.isPublic;
+  const videoId = extractVideoId(post.video) ?? '';
+  const videoObj = makeVideoObj(videoId);
+  const isUnknownPlaylist = playlist
+    ? !playlist.videos.some((value) => value.videoId === videoObj.videoId)
+    : true;
+
+  const isPublicPlaylist =
+    !(isPrivatePlaylist && currentUser?.uid !== post.userId) && !isUnknownPlaylist;
+
+  const showBookmark = isPublicPlaylist && currentUser?.uid !== post.userId && !isUnknownPlaylist;
+
+  const playlistLabel = isPlaylistLoading
+    ? '플레이리스트 로딩 중...'
+    : isUnknownPlaylist
+      ? '알 수 없는 플레이리스트'
+      : isPrivatePlaylist && currentUser?.uid !== post.userId
+        ? '비공개 플레이리스트'
+        : playlist?.title;
+
+  const isClickable =
+    currentUser?.uid === post.userId
+      ? !isUnknownPlaylist
+      : !isPrivatePlaylist && !isUnknownPlaylist && !isPlaylistLoading;
 
   return (
     <div css={postContainerStyle} data-testid="post">
@@ -104,12 +132,15 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
-          {!isLoading && currentUser?.uid !== post.userId && (
+          {showBookmark && (
             <IconButton
               icon={isSubscribed ? <HiBookmark size={20} /> : <HiOutlineBookmark size={20} />}
               onClick={toggleSubscription}
               enabled={isSubscribed}
             />
+          )}
+          {currentUser?.uid === post.userId && (
+            <IconButton icon={<HiEllipsisVertical size={20} />} onClick={() => {}} />
           )}
         </div>
         <p css={contentStyle(isDetail)}>
@@ -136,8 +167,13 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
               {comments.length}
             </Link>
           </div>
-          <button css={pliStyle} onClick={handleButtonClick}>
-            {playlist?.title} (<span>{playlist?.videos.length}</span>)
+          <button
+            css={pliStyle}
+            onClick={isClickable ? handleButtonClick : undefined}
+            style={{ cursor: isClickable ? 'pointer' : 'default' }}
+          >
+            <span css={textEllipsis(1)}>{playlistLabel}</span>
+            {isPublicPlaylist && <span>({playlist?.videos.length})</span>}
           </button>
         </div>
       </div>
@@ -242,11 +278,13 @@ const likeButtonStyle = (isLiked: boolean) => css`
 `;
 
 const pliStyle = css`
+  display: flex;
+  max-width: 200px;
   color: ${theme.colors.darkestGray};
   font-size: ${theme.fontSizes.small};
-  text-decoration: underline;
   background: none;
   cursor: pointer;
+  text-decoration: underline;
 `;
 
 export default Post;

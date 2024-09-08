@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { HiOutlinePhoto } from 'react-icons/hi2';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import defaultImage from '@/assets/images/default-avatar.svg';
+import Avatar from '@/components/common/Avatar';
 import FullButton from '@/components/common/buttons/FullButton';
 import Input from '@/components/common/inputs/Input';
 import Textarea from '@/components/common/inputs/Textarea';
@@ -80,13 +80,7 @@ const ProfileEditPage: React.FC = () => {
       <BackHeader title="프로필 수정" />
       <div css={pageContentStyle}>
         <div css={imageContainerStyle}>
-          <div>
-            {photoURL ? (
-              <img src={photoURL} alt="Profile" />
-            ) : (
-              <img src={defaultImage} alt="" className="image-placeholder" />
-            )}
-          </div>
+          <Avatar size="extraLarge" url={photoURL} />
           <span onClick={handleImageClick}>
             <HiOutlinePhoto size={20} />
           </span>

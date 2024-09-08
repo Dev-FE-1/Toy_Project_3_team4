@@ -10,9 +10,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
-import FullButton from '@/components/common/buttons/FullButton';
-import ToggleButton from '@/components/common/buttons/ToggleButton';
-import Modal from '@/components/common/Modal';
+import AddFixModal from '@/components/common/modals/AddFixModal'; // AddFixModal 사용
+import OptionModal from '@/components/common/modals/OptionModal'; // OptionModal 사용
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
@@ -31,6 +30,7 @@ interface PlaylistInfoProps {
   thumbnailUrl: string;
   isOwner: boolean;
   customStyle?: SerializedStyles;
+  selectPli: boolean;
 }
 
 const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
@@ -39,6 +39,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
   thumbnailUrl,
   isOwner,
   customStyle,
+  selectPli,
 }) => {
   const { title, videos, isPublic } = playlist;
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -103,6 +104,19 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
 
   const isUnmodifiable = title === '분류되지 않은 목록';
 
+  const optionsModalOptions = [
+    {
+      label: '플리에 동영상 추가하기',
+      Icon: HiOutlineBookmark,
+      onClick: handleAddVideo,
+    },
+    {
+      label: '플리 삭제하기',
+      Icon: HiOutlineTrash,
+      onClick: handleDeletePlaylist,
+    },
+  ];
+
   return (
     <div css={[playlistInfoStyle, customStyle]}>
       <VideoThumbnail
@@ -114,7 +128,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
         <div className="title">
           <h1>
             {title}
-            {isOwner && !isUnmodifiable && (
+            {isOwner && !isUnmodifiable && !selectPli && (
               <FitButton
                 onClick={handleOpenEditModal}
                 styleType="secondary"
@@ -129,10 +143,10 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
               styleType={!isSubscribed ? 'primary' : 'secondary'}
               onClick={handleSubscribeToggle}
             >
-              {isSubscribed ? '구독 중' : '구독'}
+              {isSubscribed ? '구독중' : '구독'}
             </FitButton>
           )}
-          {isOwner && (
+          {isOwner && !selectPli && (
             <HiEllipsisVertical css={verticalButtonStyle} onClick={handleOpenOptionsModal} />
           )}
         </div>
@@ -143,46 +157,26 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
       </div>
 
       {!isUnmodifiable && (
-        <Modal isOpen={isEditModalOpen} onClose={handleCloseEditModal} title="플리 수정하기">
-          <div css={editModalContentContainer}>
-            <input
-              type="text"
-              value={newTitle}
-              onChange={handleTitleChange}
-              placeholder="플리 제목을 입력하세요"
-            />
-            <div className="toggleStyle">
-              전체 공개
-              <ToggleButton enabled={isPublicPlaylist} setEnabled={setIsPublicPlaylist} />
-            </div>
-            <FullButton styleType="primary" onClick={handleUpdatePlaylist}>
-              수정하기
-            </FullButton>
-            <FullButton styleType="cancel" onClick={handleCloseEditModal}>
-              취소하기
-            </FullButton>
-          </div>
-        </Modal>
+        <AddFixModal
+          isOpen={isEditModalOpen}
+          onClose={handleCloseEditModal}
+          title="플리 수정하기"
+          inputValue={newTitle}
+          onInputChange={handleTitleChange}
+          errorMessage={''}
+          isPublic={isPublicPlaylist}
+          setIsPublic={setIsPublicPlaylist}
+          isButtonEnabled={newTitle.trim() !== ''}
+          onSubmit={handleUpdatePlaylist}
+        />
       )}
 
-      <Modal isOpen={isOptionsModalOpen} onClose={handleCloseOptionsModal} title={null}>
-        <div css={optionsModalContentContainer}>
-          <div onClick={handleAddVideo}>
-            <div className="icon-wrapper">
-              <HiOutlineBookmark />
-            </div>
-            플리에 동영상 추가하기
-          </div>
-          {!isUnmodifiable && (
-            <div onClick={handleDeletePlaylist}>
-              <div className="icon-wrapper">
-                <HiOutlineTrash />
-              </div>
-              플리 삭제하기
-            </div>
-          )}
-        </div>
-      </Modal>
+      <OptionModal
+        isOpen={isOptionsModalOpen}
+        onClose={handleCloseOptionsModal}
+        title={null}
+        options={optionsModalOptions}
+      />
     </div>
   );
 };
@@ -243,73 +237,6 @@ const verticalButtonStyle = css`
   font-size: 24px;
   cursor: pointer;
   margin-top: 2px;
-`;
-
-const editModalContentContainer = css`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  align-self: stretch;
-  width: 343px;
-  margin: 24px 16px 32px;
-
-  & > div {
-    display: flex;
-    align-items: center;
-    height: 50px;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  & .titleStyle {
-    color: ${theme.colors.darkGray};
-    font-size: ${theme.fontSizes.base};
-    padding: 8px;
-    width: 100%;
-    border-radius: 4px;
-  }
-
-  & .toggleStyle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: space-between;
-  }
-`;
-
-const optionsModalContentContainer = css`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  align-self: stretch;
-  width: 343px;
-  margin: 24px 16px 32px;
-
-  & > div {
-    display: flex;
-    align-items: center;
-    height: 50px;
-    cursor: pointer;
-    width: 100%;
-
-    .icon-wrapper {
-      height: 50px;
-      width: 50px;
-      background-color: ${theme.colors.lightestGray};
-      border-radius: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-right: 12px;
-
-      svg {
-        height: 18px;
-        width: 18px;
-      }
-    }
-  }
 `;
 
 export default PlaylistInfo;

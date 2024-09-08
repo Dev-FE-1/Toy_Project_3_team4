@@ -9,7 +9,7 @@ import {
 } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import Modal from '@/components/common/Modal';
+import OptionModal from '@/components/common/modals/OptionModal';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { PATH } from '@/constants/path';
 import { useRemoveVideoFromPlaylist } from '@/hooks/useRemoveVideoFromPlaylist';
@@ -19,6 +19,7 @@ import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { VideoModel } from '@/types/playlist';
 import { formatRelativeDate } from '@/utils/date';
+import { formatVideoViewCount } from '@/utils/youtubeUtils';
 
 interface PlaylistContentItemProps {
   video: VideoModel;
@@ -26,6 +27,7 @@ interface PlaylistContentItemProps {
   isSelected?: boolean;
   onVideoSelect?: (videoId: string) => void;
   customStyle?: SerializedStyles;
+  selectPli?: boolean;
 }
 
 const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
@@ -34,6 +36,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
   onVideoSelect = () => {},
   isDraggable = false,
   customStyle,
+  selectPli = false,
 }) => {
   const playlistId = useParams<{ id: string }>().id || '';
   const { data: videoData, isLoading, isError } = useYouTubeVideoData(video.videoId);
@@ -41,18 +44,13 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
   const navigate = useNavigate();
 
   const removeVideoMutation = useRemoveVideoFromPlaylist();
+
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
   const addToast = useToastStore((state) => state.addToast);
 
-  const onClickOption = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    handleOpenModal();
-  };
-
   const handleClick = () => {
-    if (!isDraggable) {
+    if (selectPli) {
       onVideoSelect(video.videoId);
     }
   };
@@ -70,6 +68,22 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
     addToast('플레이리스트에서 동영상이 삭제되었습니다.');
   };
 
+  const modalOptions = [
+    {
+      label: '플리에 추가하기',
+      Icon: HiOutlineBookmark,
+      onClick: () => {
+        handleCloseModal();
+        navigate(`${PATH.ADD_VIDEO_SELECT_PLI}/${video.videoId}`);
+      },
+    },
+    {
+      label: '플리에서 삭제하기',
+      Icon: HiOutlineTrash,
+      onClick: handleRemoveVideo,
+    },
+  ];
+
   if (isLoading) {
     return <li>Loading...</li>;
   }
@@ -77,6 +91,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
   if (isError || !videoData) {
     return <li>Error loading video data</li>;
   }
+
   return (
     <>
       <div
@@ -88,45 +103,34 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
         <div className="video-container">
           <VideoThumbnail url={video.thumbnailUrl} isPublic={true} customStyle={thumbnailStyle} />
           <div className="video-info">
-            <a href={`${isDraggable ? video.videoUrl : 'javascript:void(0)'}`}>
+            <a
+              href={selectPli ? 'javascript:void(0)' : video.videoUrl}
+              target={selectPli ? '_self' : '_blank'}
+            >
               <div className="info-container">
                 <h2>{videoData.title}</h2>
                 <span>{videoData.creator}</span>
                 <span>
-                  조회수 {videoData.views} · {formatRelativeDate(videoData.uploadDate)}
+                  조회수 {formatVideoViewCount(videoData.views)} ·{' '}
+                  {formatRelativeDate(videoData.uploadDate)}
                 </span>
               </div>
             </a>
-            <button onClick={onClickOption} className="ellipsis-button">
-              <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
-            </button>
+            {!selectPli && (
+              <button onClick={handleOpenModal} className="ellipsis-button">
+                <HiOutlineEllipsisVertical aria-label="플리에 추가/삭제" />
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={null}>
-        <div css={modalContentContainer}>
-          <div
-            onClick={() => {
-              handleCloseModal();
-              navigate(`${PATH.ADD_VIDEO_SELECT_PLI}/${video.videoId}`);
-            }}
-          >
-            <div className="icon-wrapper">
-              <HiOutlineBookmark />
-            </div>
-            플리에 추가하기
-          </div>
-          {isDraggable && (
-            <div onClick={handleRemoveVideo}>
-              <div className="icon-wrapper">
-                <HiOutlineTrash />
-              </div>
-              플리에서 삭제하기
-            </div>
-          )}
-        </div>
-      </Modal>
+      <OptionModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title="옵션 선택"
+        options={modalOptions}
+      />
     </>
   );
 };
@@ -223,7 +227,7 @@ const playlistItemStyle = css`
 `;
 
 const selectedStyle = css`
-  background-color: #e0e0e0;
+  background-color: ${theme.colors.lightestGray};
   border-radius: 8px;
   transition: background-color 0.3s ease;
 `;
@@ -234,40 +238,6 @@ const thumbnailStyle = css`
 
   @media screen and (min-width: ${theme.width.max}) {
     flex: 1 1 40%;
-  }
-`;
-
-const modalContentContainer = css`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  align-self: stretch;
-  width: 343px;
-  margin: 24px 16px 32px;
-
-  & > div {
-    display: flex;
-    align-items: center;
-    height: 50px;
-    cursor: pointer;
-    width: 100%;
-
-    .icon-wrapper {
-      height: 50px;
-      width: 50px;
-      background-color: ${theme.colors.lightestGray};
-      border-radius: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-right: 12px;
-
-      svg {
-        height: 18px;
-        width: 18px;
-      }
-    }
   }
 `;
 

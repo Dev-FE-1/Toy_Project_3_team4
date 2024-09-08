@@ -49,7 +49,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         value={comment}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="답글을 작성해주세요"
+        placeholder="댓글을 작성해주세요"
         onCompositionStart={handleCompositionStart}
         onCompositionEnd={handleCompositionEnd}
         data-testid="comment-input"

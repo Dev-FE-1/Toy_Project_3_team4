@@ -138,10 +138,12 @@ const ProfilePage: React.FC = () => {
             )}
           </TabContent>
           <TabContent id="pli" activeTabId={activeTab}>
-            <AddPlaylistButton
-              customStyle={addPlaylistButtonStyle}
-              onAddPlaylist={handleAddPlaylist}
-            />
+            {isOwnProfile && (
+              <AddPlaylistButton
+                customStyle={addPlaylistButtonStyle}
+                onAddPlaylist={handleAddPlaylist}
+              />
+            )}
             {playlistsLoading ? (
               <div css={spinnerContainerStyle}>
                 <Spinner customStyle={spinnerStyle} />
