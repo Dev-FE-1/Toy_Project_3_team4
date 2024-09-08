@@ -79,7 +79,7 @@ const modalContainerStyle = (animated: boolean, fullScreen?: boolean) => {
   const borderRadius =
     fullScreen ||
     css`
-      border-radius: 20px;
+      border-radius: 20px 20px 0 0;
     `;
   const animatedStyle =
     animated &&
