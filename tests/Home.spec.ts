@@ -30,7 +30,7 @@ authTest.describe('HomePage - 로그인된 상태', () => {
   });
 
   authTest('LogoHeader가 표시되어야 한다', async ({ page }) => {
-    await expect(page.locator('header')).toBeVisible();
+    await expect(page.locator('[data-testid="header"]')).toBeVisible();
   });
 
   authTest('포스트가 있을 때 PostsTimeLine이 표시되어야 한다', async ({ page }) => {
