@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import FullButton from '@/components/common/buttons/FullButton';
 import ToggleButton from '@/components/common/buttons/ToggleButton';
 import Modal from '@/components/common/modals/Modal';
+import theme from '@/styles/theme';
 
 interface AddFixModalProps {
   isOpen: boolean;
@@ -43,12 +44,14 @@ const AddFixModal: React.FC<AddFixModalProps> = ({
           <span>전체 공개</span>
           <ToggleButton enabled={isPublic} setEnabled={setIsPublic} />
         </div>
-        <FullButton styleType={isButtonEnabled ? 'primary' : 'disabled'} onClick={onSubmit}>
-          추가하기
-        </FullButton>
-        <FullButton styleType="cancel" onClick={onClose}>
-          취소하기
-        </FullButton>
+        <div className="button-container">
+          <FullButton styleType={isButtonEnabled ? 'primary' : 'disabled'} onClick={onSubmit}>
+            추가하기
+          </FullButton>
+          <FullButton styleType="cancel" onClick={onClose}>
+            취소하기
+          </FullButton>
+        </div>
       </div>
     </Modal>
   );
@@ -58,9 +61,8 @@ const modalContentContainer = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 24px;
   align-self: stretch;
-  width: 343px;
   margin: 24px 16px 32px;
 
   & .toggleStyle {
@@ -70,10 +72,18 @@ const modalContentContainer = css`
     gap: 8px;
     justify-content: space-between;
   }
+
+  .button-container {
+    width: 100%;
+
+    button:first-child {
+      margin-bottom: 8px;
+    }
+  }
 `;
 
 const errorMessageStyles = css`
-  color: red;
+  color: ${theme.colors.alertRed};
   font-size: 12px;
 `;
 

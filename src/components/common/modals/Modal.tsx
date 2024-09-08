@@ -9,19 +9,11 @@ interface ModalProps {
   isOpen: boolean;
   title?: React.ReactNode;
   children: React.ReactNode;
-  fullScreen?: boolean;
   animated?: boolean;
   onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({
-  isOpen,
-  title,
-  children,
-  animated = true,
-  fullScreen = false,
-  onClose,
-}) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, title, children, animated = true, onClose }) => {
   const onEscapeKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (e.key === 'Escape') {
       onClose();
@@ -32,14 +24,14 @@ const Modal: React.FC<ModalProps> = ({
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay css={overlayStyle} onClick={onClose} />
-        <div css={modalContainerStyle(animated, fullScreen)} onKeyDown={onEscapeKeyDown}>
-          <Dialog.Content className="dialog__content">
-            {title && <Dialog.Title className="dialog__title">{title}</Dialog.Title>}
+        <div css={modalContainerStyle(animated)} onKeyDown={onEscapeKeyDown}>
+          <Dialog.Content className="dialog-content">
+            {title && <Dialog.Title className="dialog-title">{title}</Dialog.Title>}
             <VisuallyHidden>
               <Dialog.Title>{title}</Dialog.Title>
               <Dialog.Description>{title}</Dialog.Description>
             </VisuallyHidden>
-            <div className="dialog__body">{children}</div>
+            <div className="dialog-body">{children}</div>
           </Dialog.Content>
         </div>
       </Dialog.Portal>
@@ -70,17 +62,7 @@ const overlayStyle = css`
   animation: ${fadeIn} 0.2s ease-out;
 `;
 
-const modalContainerStyle = (animated: boolean, fullScreen?: boolean) => {
-  const fullScreenStyle =
-    fullScreen &&
-    css`
-      height: 100%;
-    `;
-  const borderRadius =
-    fullScreen ||
-    css`
-      border-radius: 20px;
-    `;
+const modalContainerStyle = (animated: boolean) => {
   const animatedStyle =
     animated &&
     css`
@@ -97,9 +79,8 @@ const modalContainerStyle = (animated: boolean, fullScreen?: boolean) => {
     height: 100vh;
     pointer-events: none;
 
-    .dialog__content {
+    .dialog-content {
       width: 100%;
-      ${fullScreenStyle}
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -110,11 +91,11 @@ const modalContainerStyle = (animated: boolean, fullScreen?: boolean) => {
 
       background-color: white;
 
-      ${borderRadius}
+      border-radius: 12px 12px 0 0;
       ${animatedStyle}
-    pointer-events: auto;
+      pointer-events: auto;
 
-      .dialog__title {
+      .dialog-title {
         width: 100%;
         display: flex;
         padding: 20px 0px;
@@ -127,6 +108,11 @@ const modalContainerStyle = (animated: boolean, fullScreen?: boolean) => {
         font-size: ${theme.fontSizes.small};
         font-weight: 700;
         line-height: 140%;
+      }
+
+      .dialog-body {
+        width: 100%;
+        max-width: 400px;
       }
     }
   `;

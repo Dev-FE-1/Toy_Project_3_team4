@@ -122,12 +122,7 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
         </div>
       </div>
 
-      <OptionModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        title="옵션 선택"
-        options={modalOptions}
-      />
+      <OptionModal isOpen={isModalOpen} onClose={handleCloseModal} options={modalOptions} />
     </>
   );
 };
