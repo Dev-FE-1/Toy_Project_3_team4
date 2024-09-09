@@ -1,12 +1,18 @@
+import { useState } from 'react';
+
 import { css } from '@emotion/react';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { HiDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
-import { HiXMark } from 'react-icons/hi2';
+import {
+  HiOutlineEllipsisVertical,
+  HiOutlineTrash,
+  HiXMark,
+  HiOutlinePencil,
+} from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
 import { CommentInput } from '@/components/comment/CommentInput';
 import Avatar from '@/components/common/Avatar';
 import FitButton from '@/components/common/buttons/FitButton';
+import OptionModal from '@/components/common/modals/OptionModal';
 import { PATH } from '@/constants/path';
 import theme from '@/styles/theme';
 import { CommentModel } from '@/types/comment';
@@ -39,6 +45,31 @@ const CommentItem: React.FC<CommentItemProps> = ({
   handleCompositionStart,
   handleCompositionEnd,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const modalOptions = [
+    {
+      label: '댓글 수정하기',
+      Icon: HiOutlinePencil,
+      onClick: () => {
+        setEditingCommentId(comment.id);
+        setEditingContent(comment.content);
+        handleCloseModal();
+      },
+    },
+    {
+      label: '댓글 삭제하기',
+      Icon: HiOutlineTrash,
+      onClick: () => {
+        handleDeleteComment(comment.id);
+        handleCloseModal();
+      },
+    },
+  ];
+
   return (
     <div css={commentStyle}>
       <Avatar url={userData?.photoURL} size="medium" customStyle={avatarStyle} />
@@ -51,35 +82,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <span css={timeStyle}>{formatCreatedAt(comment.createdAt)}</span>
           </div>
           {comment.userId === currentUserId && (
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild>
-                <button css={menuTriggerStyle} data-testid="comment-dropdown-button">
-                  <HiDotsVertical size={18} />
-                </button>
-              </DropdownMenu.Trigger>
-
-              <DropdownMenu.Portal>
-                <DropdownMenu.Content css={menuContentStyle}>
-                  <DropdownMenu.Item
-                    css={menuItemStyle}
-                    onSelect={() => {
-                      setEditingCommentId(comment.id);
-                      setEditingContent(comment.content);
-                    }}
-                    data-testid="edit-comment-button"
-                  >
-                    <HiPencil /> 댓글 수정
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    css={menuItemStyle}
-                    onSelect={() => handleDeleteComment(comment.id)}
-                    data-testid="delete-comment-button"
-                  >
-                    <HiTrash /> 댓글 삭제
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Portal>
-            </DropdownMenu.Root>
+            <>
+              <button
+                css={menuTriggerStyle}
+                onClick={handleOpenModal}
+                data-testid="comment-vertical-button"
+              >
+                <HiOutlineEllipsisVertical size={20} />
+              </button>
+              <OptionModal isOpen={isModalOpen} onClose={handleCloseModal} options={modalOptions} />
+            </>
           )}
         </div>
         {editingCommentId === comment.id ? (
@@ -164,7 +176,7 @@ const menuTriggerStyle = css`
   height: 18px;
   margin-left: 8px;
   border: none;
-  color: ${theme.colors.darkGray};
+  color: ${theme.colors.darkestGray};
   background: none;
   cursor: pointer;
 `;
@@ -186,42 +198,6 @@ const editCommentContainerStyle = css`
 
 const editInputStyle = css`
   background-color: ${theme.colors.white};
-`;
-
-const menuContentStyle = css`
-  min-width: 120px;
-  background-color: white;
-  border-radius: 6px;
-  padding: 5px;
-  box-shadow:
-    0px 10px 38px -10px rgba(22, 23, 24, 0.35),
-    0px 10px 20px -15px rgba(22, 23, 24, 0.2);
-`;
-
-const menuItemStyle = css`
-  all: unset;
-  font-size: 13px;
-  line-height: 1;
-  color: ${theme.colors.black};
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  height: 25px;
-  padding: 0 5px;
-  position: relative;
-  padding-left: 25px;
-  user-select: none;
-
-  &:hover {
-    background-color: ${theme.colors.lightGray};
-  }
-
-  svg {
-    position: absolute;
-    left: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
 `;
 
 const cancelButtonStyle = css`
