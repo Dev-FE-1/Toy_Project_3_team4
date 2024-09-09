@@ -128,7 +128,7 @@ export const getPostsByFollowingUsers = async ({
     return [];
   }
 
-  const followingUserIds = userDoc.data().following;
+  const followingUserIds = userDoc.data().following ?? [];
 
   let q = query(
     postsCollection,

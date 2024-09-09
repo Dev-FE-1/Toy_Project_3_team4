@@ -25,13 +25,15 @@ export const useFilteredPostsTimelinesQuery = ({ userId }: { userId: string }) =
         const noneFollowingUserPosts = await getPostsByNonFollowingUsers({
           userId,
           count: POSTS_FETCH_LIMIT,
-          lastPostId: pageParam as string | undefined,
+          lastPostId:
+            followingUserPosts[followingUserPosts.length - 1]?.postId ||
+            (pageParam as string | undefined),
         });
-        posts = noneFollowingUserPosts;
+        posts = [...noneFollowingUserPosts, ...followingUserPosts];
       }
       return {
         posts: posts,
-        nextCursor: posts.length === POSTS_FETCH_LIMIT ? posts[posts.length - 1].postId : null,
+        nextCursor: posts.length > 0 ? posts[posts.length - 1].postId : null,
       };
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor,
