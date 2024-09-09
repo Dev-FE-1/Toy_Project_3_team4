@@ -129,10 +129,6 @@ export const getPostsByFollowingUsers = async ({
   }
 
   const followingUserIds = userDoc.data().following;
-  if (!followingUserIds || followingUserIds.length === 0) {
-    console.warn('No following users');
-    return [];
-  }
 
   let q = query(
     postsCollection,

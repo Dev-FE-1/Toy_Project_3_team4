@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { css } from '@emotion/react';
 import { HiOutlineBookmark, HiOutlinePlay } from 'react-icons/hi2';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
@@ -28,8 +28,7 @@ const SelectPliPage = () => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const navigate = useNavigate();
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const videoId = searchParams.get('videoId');
+  const videoId = useParams<{ videoId: string }>().videoId;
   const videoObject = makeVideoObj(videoId || '');
   const state = location.state as { type?: 'byLink' | 'fromPli' };
   const user = useAuth();
@@ -56,7 +55,7 @@ const SelectPliPage = () => {
     }
   };
 
-  function handleBackClick() {
+  function handleCloseClick() {
     navigate(-1);
   }
 
@@ -73,7 +72,7 @@ const SelectPliPage = () => {
   if (videoId) {
     return (
       <>
-        <BackHeader onBackClick={handleBackClick} title="저장할 플리 선택" />
+        <BackHeader title="저장할 플리 선택" />
         <AddPlaylistButton customStyle={addPlaylistButtonStyle} onAddPlaylist={handleAddPlaylist} />
         <Playlists
           playlists={myPlaylists || []}
@@ -89,9 +88,9 @@ const SelectPliPage = () => {
   return (
     <>
       {state?.type === 'byLink' ? (
-        <BackHeader onBackClick={handleBackClick} title="저장할 플리 선택" />
+        <BackHeader title="저장할 플리 선택" />
       ) : (
-        <CloseHeader onCloseClick={handleBackClick} title="플리 선택" />
+        <CloseHeader onCloseClick={handleCloseClick} title="플리 선택" />
       )}
 
       {state?.type === 'byLink' ? (
