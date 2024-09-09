@@ -25,7 +25,8 @@ const AddVideosPage: React.FC = () => {
 
   const { mutate: addVideosToPlaylist, isPending } = useAddVideosToPlaylist(playlistId);
 
-  const handleOnClose = () => navigate(`/playlist/${playlistId}`);
+  const handleOnClose = () =>
+    navigate(`/playlist/${playlistId}`, { state: { from: '/addVideos' } });
 
   const handleOnAdd = () => {
     if (playlistId && videos.length > 0) {
