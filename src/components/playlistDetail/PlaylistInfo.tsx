@@ -168,6 +168,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
           setIsPublic={setIsPublicPlaylist}
           isButtonEnabled={newTitle.trim() !== ''}
           onSubmit={handleUpdatePlaylist}
+          isEditing={true}
         />
       )}
 
