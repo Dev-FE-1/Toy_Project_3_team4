@@ -113,7 +113,7 @@ const ProfileEditPage: React.FC = () => {
         />
       </div>
       <div css={buttonContainerStyle}>
-        <FullButton styleType="primary" onClick={handleSaveProfile}>
+        <FullButton styleType={name.trim() !== '' ? "primary" : "disabled"} onClick={handleSaveProfile}>
           수정하기
         </FullButton>
         <FullButton styleType="cancel" onClick={handleCancel}>
