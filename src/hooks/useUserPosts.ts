@@ -8,9 +8,9 @@ export const useUserPosts = (userId: string) => {
     isLoading: loadingPosts,
     error,
   } = useQuery({
-    queryKey: ['userPosts', userId], // 쿼리 키
-    queryFn: () => getPostsByUserId({ userId }), // API 호출
-    enabled: !!userId, // userId가 있을 때만 쿼리 실행
+    queryKey: ['posts'],
+    queryFn: () => getPostsByUserId({ userId }),
+    enabled: !!userId,
   });
 
   return { userPosts, loadingPosts, error };

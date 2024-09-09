@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { css } from '@emotion/react';
 import { HiOutlineBookmark, HiOutlinePlay } from 'react-icons/hi2';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
@@ -28,7 +28,8 @@ const SelectPliPage = () => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const navigate = useNavigate();
   const location = useLocation();
-  const videoId = useParams<{ videoId: string }>().videoId;
+  const [searchParams] = useSearchParams();
+  const videoId = searchParams.get('videoId');
   const videoObject = makeVideoObj(videoId || '');
   const state = location.state as { type?: 'byLink' | 'fromPli' };
   const user = useAuth();

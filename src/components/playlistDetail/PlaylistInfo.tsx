@@ -10,8 +10,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
-import AddFixModal from '@/components/common/modals/AddFixModal'; // AddFixModal 사용
-import OptionModal from '@/components/common/modals/OptionModal'; // OptionModal 사용
+import AddFixModal from '@/components/common/modals/AddFixModal';
+import OptionModal from '@/components/common/modals/OptionModal';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';

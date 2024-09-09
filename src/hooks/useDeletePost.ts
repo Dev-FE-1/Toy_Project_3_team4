@@ -13,9 +13,9 @@ export const useDeletePost = (userId: string) => {
       await deleteDoc(postDocRef);
     },
 
-    // 성공적으로 삭제되면 호출
     onSuccess: (_, postId) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['likedPosts', userId] });
       queryClient.invalidateQueries({ queryKey: ['filteredPostsTimelines', userId] });
 
       queryClient.setQueryData<PostModel[]>(['posts'], (oldPosts) => {
