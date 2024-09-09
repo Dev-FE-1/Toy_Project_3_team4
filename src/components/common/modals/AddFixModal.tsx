@@ -16,6 +16,7 @@ interface AddFixModalProps {
   setIsPublic: (enabled: boolean) => void;
   isButtonEnabled: boolean;
   onSubmit: () => void;
+  isEditing?: boolean;
 }
 
 const AddFixModal: React.FC<AddFixModalProps> = ({
@@ -29,6 +30,7 @@ const AddFixModal: React.FC<AddFixModalProps> = ({
   setIsPublic,
   isButtonEnabled,
   onSubmit,
+  isEditing = false,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
@@ -46,7 +48,7 @@ const AddFixModal: React.FC<AddFixModalProps> = ({
         </div>
         <div className="button-container">
           <FullButton styleType={isButtonEnabled ? 'primary' : 'disabled'} onClick={onSubmit}>
-            추가하기
+            {isEditing ? '수정하기' : '추가하기'}
           </FullButton>
           <FullButton styleType="cancel" onClick={onClose}>
             취소하기

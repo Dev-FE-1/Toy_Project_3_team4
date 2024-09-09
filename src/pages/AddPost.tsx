@@ -7,7 +7,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import CloseHeader from '@/components/layout/header/CloseHeader';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
-import { useToastStore } from '@/stores/toastStore';
 import { errorMessageStyle } from '@/styles/input';
 import theme from '@/styles/theme';
 import { extractVideoId, validateVideoId } from '@/utils/youtubeUtils';
@@ -24,7 +23,6 @@ const AddPostPage: React.FC = () => {
   const [inputUrl, setInputUrl] = useState<string>('');
   const [videoId, setVideoId] = useState<string | null>(initialVideoId || null);
   const [error, setError] = useState<string | null>(null);
-  const addToast = useToastStore((state) => state.addToast);
 
   useEffect(() => {
     if (!playlistId && myPlaylists) {
@@ -54,7 +52,6 @@ const AddPostPage: React.FC = () => {
     if (videoId && playlistId) {
       navigate(`/post/add/newPost?pli=${playlistId}&videoId=${videoId}`);
     }
-    addToast('동영상이 추가되었습니다.');
   };
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
