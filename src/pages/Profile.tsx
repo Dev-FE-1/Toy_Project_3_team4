@@ -8,6 +8,7 @@ import { getPostsByUserId, getPostsFilteredLikes } from '@/api/fetchPosts';
 import Spinner from '@/components/common/loading/Spinner';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
+import EmptyMessage from '@/components/EmptyMessage';
 import LogoHeader from '@/components/layout/header/LogoHeader';
 import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
@@ -136,6 +137,9 @@ const ProfilePage: React.FC = () => {
             ) : (
               userPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
             )}
+            {userPosts.length === 0 && (
+              <EmptyMessage Icon={HiOutlinePencil}>아직 포스트가 없습니다</EmptyMessage>
+            )}
           </TabContent>
           <TabContent id="pli" activeTabId={activeTab}>
             {isOwnProfile && (
@@ -151,6 +155,9 @@ const ProfilePage: React.FC = () => {
             ) : (
               <Playlists playlists={playlists || []} onPlaylistClick={handlePlaylistClick} />
             )}
+            {(!playlists || playlists.filter((playlist) => playlist.isPublic).length === 0) && (
+              <EmptyMessage Icon={HiOutlinePlay}>아직 공개된 플리가 없습니다</EmptyMessage>
+            )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
             {loadingLikedPosts ? (
@@ -161,6 +168,9 @@ const ProfilePage: React.FC = () => {
               <div>{error}</div>
             ) : (
               likedPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
+            )}
+            {likedPosts.length === 0 && (
+              <EmptyMessage Icon={HiOutlineHeart}>아직 좋아요 한 포스트가 없습니다</EmptyMessage>
             )}
           </TabContent>
         </TabMenu>

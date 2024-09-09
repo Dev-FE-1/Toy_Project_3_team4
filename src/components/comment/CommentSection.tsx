@@ -3,10 +3,10 @@ import { HiOutlineChatBubbleOvalLeft } from 'react-icons/hi2';
 
 import defaultProfile from '@/assets/images/default-avatar.svg';
 import Avatar from '@/components/common/Avatar';
+import EmptyMessage from '@/components/EmptyMessage';
 import { useComments } from '@/hooks/useComments';
 import { useMultipleUsersData } from '@/hooks/useMultipleUsersData';
 import { useUserData } from '@/hooks/useUserData';
-import { emptyMessageStyle } from '@/styles/GlobalStyles';
 
 import { CommentInput } from './CommentInput';
 import CommentItem from './CommentItem';
@@ -69,10 +69,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
           );
         })}
         {comments.length === 0 && (
-          <div css={emptyMessageStyle}>
-            <HiOutlineChatBubbleOvalLeft />
-            <p>첫 댓글을 달아주세요!</p>
-          </div>
+          <EmptyMessage Icon={HiOutlineChatBubbleOvalLeft}>첫 댓글을 달아주세요!</EmptyMessage>
         )}
       </div>
     </div>
