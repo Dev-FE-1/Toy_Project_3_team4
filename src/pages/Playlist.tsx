@@ -22,16 +22,8 @@ const PlaylistPage = () => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const navigate = useNavigate();
 
-  const {
-    data: myPlaylists,
-    isLoading: myPlaylistsLoading,
-    error: myPlaylistsError,
-  } = useUserPlaylists();
-  const {
-    data: subscribedPlaylists,
-    isLoading: subscribedPlaylistsLoading,
-    error: subscribedPlaylistsError,
-  } = useSubscribedPlaylists();
+  const { data: myPlaylists, error: myPlaylistsError } = useUserPlaylists();
+  const { data: subscribedPlaylists, error: subscribedPlaylistsError } = useSubscribedPlaylists();
 
   const addPlaylistMutation = useAddPlaylist();
 
@@ -42,10 +34,6 @@ const PlaylistPage = () => {
   const handleAddPlaylist = (title: string, isPublic: boolean) => {
     addPlaylistMutation.mutate({ title, isPublic });
   };
-
-  if (myPlaylistsLoading || subscribedPlaylistsLoading) {
-    return <p>Loading...</p>;
-  }
 
   if (myPlaylistsError || subscribedPlaylistsError) {
     return <p>Error loading playlists</p>;

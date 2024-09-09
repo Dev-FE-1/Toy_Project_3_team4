@@ -9,6 +9,7 @@ import {
 } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import Spinner from '@/components/common/loading/Spinner';
 import OptionModal from '@/components/common/modals/OptionModal';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { PATH } from '@/constants/path';
@@ -85,7 +86,11 @@ const PlaylistContentsItem: React.FC<PlaylistContentItemProps> = ({
   ];
 
   if (isLoading) {
-    return <li>Loading...</li>;
+    return (
+      <div css={spinnerContainerStyle}>
+        <Spinner />
+      </div>
+    );
   }
 
   if (isError || !videoData) {
@@ -238,6 +243,14 @@ const thumbnailStyle = css`
   @media screen and (min-width: ${theme.width.max}) {
     flex: 1 1 40%;
   }
+`;
+
+const spinnerContainerStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 120px;
 `;
 
 export default PlaylistContentsItem;
