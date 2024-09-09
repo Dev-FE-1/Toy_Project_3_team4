@@ -36,10 +36,6 @@ const PlaylistDetailPage = () => {
     return <p>플레이리스트를 찾을 수 없습니다.</p>;
   }
 
-  const handleBack = () => {
-    navigate(`/playlist`);
-  };
-
   const userModel: UserModel = {
     userId: playlistUser?.userId ?? '',
     displayName: playlistUser?.displayName ?? '',
@@ -65,7 +61,6 @@ const PlaylistDetailPage = () => {
       <BackHeader
         title={state?.selectPli ? '동영상 선택' : undefined}
         rightButtonText={'완료'}
-        onBackClick={handleBack}
         onRightButtonClick={state?.selectPli ? handleCompleteClick : undefined}
         rightButtonDisabled={!selectedVideoId}
       />

@@ -48,7 +48,7 @@ const AddPostPage: React.FC = () => {
     }
   }, [initialVideoId]);
 
-  const handleOnClose = () => navigate('/');
+  const handleOnClose = () => navigate(-1);
 
   const handleOnShare = () => {
     if (videoId && playlistId) {
