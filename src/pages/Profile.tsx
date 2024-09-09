@@ -4,7 +4,6 @@ import { css } from '@emotion/react';
 import { HiOutlinePencil, HiOutlinePlay, HiOutlineHeart } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getPostsByUserId, getPostsFilteredLikes } from '@/api/fetchPosts';
 import Spinner from '@/components/common/loading/Spinner';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
@@ -15,10 +14,11 @@ import Playlists from '@/components/playlist/Playlists';
 import Post from '@/components/post/Post';
 import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
+import { useLikedPosts } from '@/hooks/useLikedPosts'; // 좋아요한 포스트를 가져오는 훅
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useAddPlaylist } from '@/hooks/usePostPlaylist';
 import { useUserData } from '@/hooks/useUserData';
-import { PostModel } from '@/types/post';
+import { useUserPosts } from '@/hooks/useUserPosts'; // 사용자 포스트를 가져오는 훅
 
 import ProfileInfo from '../components/profile/ProfileInfo';
 
@@ -35,12 +35,9 @@ const ProfilePage: React.FC = () => {
   const currentUser = useAuth();
   const { userData, toggleFollow } = useUserData(userId || currentUser?.uid || null);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [userPosts, setUserPosts] = useState<PostModel[]>([]);
-  const [likedPosts, setLikedPosts] = useState<PostModel[]>([]);
-  const [loadingPosts, setLoadingPosts] = useState(true);
-  const [loadingLikedPosts, setLoadingLikedPosts] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists(userId);
+  const { userPosts, loadingPosts, error: userPostsError } = useUserPosts(userId || '');
+  const { likedPosts, loadingLikedPosts, error: likedPostsError } = useLikedPosts(userId || '');
   const addPlaylistMutation = useAddPlaylist();
 
   useEffect(() => {
@@ -48,40 +45,6 @@ const ProfilePage: React.FC = () => {
       setIsFollowing(userData.followers?.includes(currentUser.uid) || false);
     }
   }, [currentUser, userData]);
-
-  useEffect(() => {
-    const fetchUserPosts = async () => {
-      if (userId) {
-        try {
-          setLoadingPosts(true);
-          const posts = await getPostsByUserId({ userId });
-          setUserPosts(posts);
-        } catch (err) {
-          setError('Failed to load posts');
-          console.error(err);
-        } finally {
-          setLoadingPosts(false);
-        }
-      }
-    };
-    const fetchLikedPosts = async () => {
-      if (userId) {
-        try {
-          setLoadingLikedPosts(true);
-          const posts = await getPostsFilteredLikes({ userId });
-          setLikedPosts(posts);
-        } catch (err) {
-          setError('Failed to load liked posts');
-          console.error(err);
-        } finally {
-          setLoadingLikedPosts(false);
-        }
-      }
-    };
-
-    fetchUserPosts();
-    fetchLikedPosts();
-  }, [userId]);
 
   const handleSettingsClick = () => {
     navigate(PATH.SETTINGS);
@@ -132,8 +95,8 @@ const ProfilePage: React.FC = () => {
               <div css={spinnerContainerStyle}>
                 <Spinner customStyle={spinnerStyle} />
               </div>
-            ) : error ? (
-              <div>{error}</div>
+            ) : userPostsError ? (
+              <div>{userPostsError.toString()}</div>
             ) : (
               userPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
             )}
@@ -164,8 +127,8 @@ const ProfilePage: React.FC = () => {
               <div css={spinnerContainerStyle}>
                 <Spinner customStyle={spinnerStyle} />
               </div>
-            ) : error ? (
-              <div>{error}</div>
+            ) : likedPostsError ? (
+              <div>{likedPostsError.toString()}</div>
             ) : (
               likedPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
             )}
