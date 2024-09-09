@@ -10,8 +10,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
-import AddFixModal from '@/components/common/modals/AddFixModal'; // AddFixModal 사용
-import OptionModal from '@/components/common/modals/OptionModal'; // OptionModal 사용
+import AddFixModal from '@/components/common/modals/AddFixModal';
+import OptionModal from '@/components/common/modals/OptionModal';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
@@ -151,7 +151,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
           )}
         </div>
         <div className="info-footer">
-          <UserInfo name={user.displayName} url={user.photoURL} />
+          <UserInfo name={user.displayName} url={user.photoURL} userId={user.userId} />
           <span className="video-count">{videos.length}개의 동영상</span>
         </div>
       </div>

@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
 import CloseHeader from '@/components/layout/header/CloseHeader';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useAuth } from '@/hooks/useAuth';
 import { useCreatePost } from '@/hooks/useCreatePost';
+import { useModifyPost } from '@/hooks/useModifyPost';
+import { usePostById } from '@/hooks/usePostById';
 import { useToastStore } from '@/stores/toastStore';
 
 const NewPost = () => {
@@ -14,11 +16,23 @@ const NewPost = () => {
   const playlistId = searchParams.get('pli');
   const videoId = searchParams.get('videoId');
   const navigate = useNavigate();
+  const location = useLocation();
+  const isModifying = location.state?.isModifying || false;
+  const postId = location.state?.postId || null;
   const [isShareButtonEnabled, setIsShareButtonEnabled] = useState(false);
   const [description, setDescription] = useState('');
   const createPostMutation = useCreatePost();
+  const modifyPostMutation = useModifyPost();
   const user = useAuth();
   const addToast = useToastStore((state) => state.addToast);
+
+  const { data: existingPost } = usePostById(postId);
+
+  useEffect(() => {
+    if (isModifying && existingPost) {
+      setDescription(existingPost.content);
+    }
+  }, [isModifying, existingPost]);
 
   useEffect(() => {
     setIsShareButtonEnabled(!!description.trim());
@@ -30,19 +44,35 @@ const NewPost = () => {
 
   const handleOnShare = () => {
     if (isShareButtonEnabled && user && playlistId && videoId) {
-      createPostMutation.mutate(
-        { playlistId, videoId, description },
-        {
-          onSuccess: () => {
-            navigate(`/`);
-            addToast('새 포스트가 등록되었습니다.');
+      if (isModifying && postId) {
+        modifyPostMutation.mutate(
+          { postId, description },
+          {
+            onSuccess: () => {
+              navigate(`/`);
+              addToast('포스트가 수정되었습니다.');
+            },
+            onError: (error) => {
+              console.error('포스트 수정 실패: ', error);
+              addToast('포스트 수정에 실패했습니다.');
+            },
           },
-          onError: (error) => {
-            console.error('포스트 및 플레이리스트 업데이트 실패: ', error);
-            addToast('포스트 등록에 실패했습니다.');
+        );
+      } else {
+        createPostMutation.mutate(
+          { playlistId, videoId, description },
+          {
+            onSuccess: () => {
+              navigate(`/`);
+              addToast('새 포스트가 등록되었습니다.');
+            },
+            onError: (error) => {
+              console.error('포스트 및 플레이리스트 업데이트 실패: ', error);
+              addToast('포스트 등록에 실패했습니다.');
+            },
           },
-        },
-      );
+        );
+      }
     }
   };
 
@@ -54,8 +84,8 @@ const NewPost = () => {
     <>
       <CloseHeader
         onCloseClick={handleOnClose}
-        title="새 포스트"
-        rightButtonText="공유하기"
+        title={isModifying ? '포스트 수정' : '새 포스트'}
+        rightButtonText={isModifying ? '수정하기' : '공유하기'}
         onRightButtonClick={handleOnShare}
         rightButtonDisabled={!isShareButtonEnabled}
       />

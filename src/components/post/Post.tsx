@@ -9,6 +9,8 @@ import {
   HiChevronRight,
   HiOutlineBookmark,
   HiBookmark,
+  HiOutlinePencil,
+  HiOutlineTrash,
 } from 'react-icons/hi2';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -19,6 +21,7 @@ import UserInfo from '@/components/user/UserInfo';
 import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
 import { useComments } from '@/hooks/useComments';
+import { useDeletePost } from '@/hooks/useDeletePost';
 import { useFetchVideoTitle } from '@/hooks/useFetchVideoTitle';
 import { usePlaylistById } from '@/hooks/usePlaylists';
 import {
@@ -34,6 +37,8 @@ import { formatCreatedAt } from '@/utils/date';
 import { makeVideoObj } from '@/utils/video';
 import { extractVideoId } from '@/utils/youtubeUtils';
 
+import OptionModal from '../common/modals/OptionModal';
+
 interface PostProps {
   id: string;
   post: PostModel;
@@ -45,6 +50,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const [isSubscribed, setIsSubscribed] = useState<boolean | undefined>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
   const { data: playlist, isLoading: isPlaylistLoading } = usePlaylistById(post.playlistId);
@@ -54,6 +60,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
   const { comments } = useComments(post.postId);
   const navigate = useNavigate();
+  const { mutate: deletePost } = useDeletePost(post.userId);
 
   useEffect(() => {
     if (currentUser) {
@@ -89,6 +96,24 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
     setIsLiked(!isLiked);
     setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
     await updatePostsLikes({ postId: post.postId, userId: currentUser?.uid || '' });
+  };
+
+  const handleDeletePost = async () => {
+    deletePost(post.postId);
+    setIsModalOpen(false);
+  };
+
+  const handleEditPost = () => {
+    const pli = post.playlistId;
+    const videoId = extractVideoId(post.video);
+
+    navigate(`${PATH.ADD_POST}/newPost?pli=${pli}&videoId=${videoId}`, {
+      state: {
+        isModifying: true,
+        postId: post.postId,
+      },
+    });
+    setIsModalOpen(false);
   };
 
   const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
@@ -140,7 +165,20 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
           )}
           {currentUser?.uid === post.userId && (
-            <IconButton icon={<HiEllipsisVertical size={20} />} onClick={() => {}} />
+            <>
+              <IconButton
+                icon={<HiEllipsisVertical size={20} />}
+                onClick={() => setIsModalOpen(true)}
+              />
+              <OptionModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                options={[
+                  { label: '포스트 수정', onClick: handleEditPost, Icon: HiOutlinePencil },
+                  { label: '포스트 삭제', onClick: handleDeletePost, Icon: HiOutlineTrash },
+                ]}
+              />
+            </>
           )}
         </div>
         <p css={contentStyle(isDetail)}>
