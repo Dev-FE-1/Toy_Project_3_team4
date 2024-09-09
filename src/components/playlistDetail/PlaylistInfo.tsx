@@ -151,7 +151,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
           )}
         </div>
         <div className="info-footer">
-          <UserInfo name={user.displayName} url={user.photoURL} />
+          <UserInfo name={user.displayName} url={user.photoURL} userId={user.userId} />
           <span className="video-count">{videos.length}개의 동영상</span>
         </div>
       </div>
