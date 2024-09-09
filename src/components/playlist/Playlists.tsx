@@ -1,9 +1,10 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { PiYoutubeLogo } from 'react-icons/pi';
 
+import EmptyMessage from '@/components/EmptyMessage';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useAuth } from '@/hooks/useAuth';
-import { emptyMessageStyle, textEllipsis } from '@/styles/GlobalStyles';
+import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 
@@ -51,10 +52,7 @@ const Playlists: React.FC<PlaylistListProps> = ({
             ))}
       </div>
       {playlists.length === 0 && (
-        <div css={[emptyMessageStyle]}>
-          <PiYoutubeLogo />
-          <p>마음에 드는 플리를 구독해 보세요!</p>
-        </div>
+        <EmptyMessage Icon={PiYoutubeLogo}>마음에 드는 플리를 구독해 보세요!</EmptyMessage>
       )}
     </>
   );
