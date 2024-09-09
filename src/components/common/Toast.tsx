@@ -70,6 +70,7 @@ const Toast: React.FC = () => {
 const baseToastStyle = (theme: Theme) => css`
   display: flex;
   width: calc(100% - 32px);
+  max-width: calc(${theme.width.max} - 32px);
   padding: 12px 0px;
   justify-content: center;
   align-items: center;
@@ -90,10 +91,6 @@ const baseToastStyle = (theme: Theme) => css`
     bottom 0.3s ease-in-out,
     opacity 0.3s ease-in-out;
   z-index: 1000;
-
-  @media screen and (min-width: ${theme.width.max}) {
-    width: calc(100% - 64px);
-  }
 `;
 
 const initialToastStyle = (index: number) => css`

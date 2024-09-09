@@ -72,7 +72,11 @@ const ProfilePage: React.FC = () => {
   };
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
   const isOwnProfile = currentUser?.uid === userId;
@@ -100,7 +104,7 @@ const ProfilePage: React.FC = () => {
             ) : (
               userPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
             )}
-            {userPosts.length === 0 && (
+            {!loadingPosts && userPosts.length === 0 && (
               <EmptyMessage Icon={HiOutlinePencil}>아직 포스트가 없습니다</EmptyMessage>
             )}
           </TabContent>
@@ -118,9 +122,11 @@ const ProfilePage: React.FC = () => {
             ) : (
               <Playlists playlists={playlists || []} onPlaylistClick={handlePlaylistClick} />
             )}
-            {(!playlists || playlists.filter((playlist) => playlist.isPublic).length === 0) && (
-              <EmptyMessage Icon={HiOutlinePlay}>아직 공개된 플리가 없습니다</EmptyMessage>
-            )}
+            {!playlistsLoading &&
+              (!playlists || playlists.filter((playlist) => playlist.isPublic).length === 0) &&
+              currentUser?.uid !== userId && (
+                <EmptyMessage Icon={HiOutlinePlay}>아직 공개된 플리가 없습니다</EmptyMessage>
+              )}
           </TabContent>
           <TabContent id="likes" activeTabId={activeTab}>
             {loadingLikedPosts ? (
@@ -132,7 +138,7 @@ const ProfilePage: React.FC = () => {
             ) : (
               likedPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
             )}
-            {likedPosts.length === 0 && (
+            {!loadingLikedPosts && likedPosts.length === 0 && (
               <EmptyMessage Icon={HiOutlineHeart}>아직 좋아요 한 포스트가 없습니다</EmptyMessage>
             )}
           </TabContent>
