@@ -31,6 +31,16 @@ const PlaylistDetailPage = () => {
     return;
   }
 
+  const onBackClick = () => {
+    const previousPath = location.state?.from as string;
+
+    if (previousPath && previousPath.includes('addVideos')) {
+      navigate('/playlist');
+    } else {
+      navigate(-1);
+    }
+  };
+
   if (isError || !playlist) {
     console.warn('플레이리스트를 찾을 수 없습니다.');
     return <p>플레이리스트를 찾을 수 없습니다.</p>;
@@ -59,6 +69,7 @@ const PlaylistDetailPage = () => {
   return (
     <>
       <BackHeader
+        onBackClick={onBackClick}
         title={state?.selectPli ? '동영상 선택' : undefined}
         rightButtonText={'완료'}
         onRightButtonClick={state?.selectPli ? handleCompleteClick : undefined}
