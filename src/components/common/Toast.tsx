@@ -70,7 +70,7 @@ const Toast: React.FC = () => {
 const baseToastStyle = (theme: Theme) => css`
   display: flex;
   width: calc(100% - 32px);
-  max-width: calc(100% - 32px);
+  max-width: calc(${theme.width.max} - 32px);
   padding: 12px 0px;
   justify-content: center;
   align-items: center;
