@@ -8,6 +8,7 @@ import Avatar from '@/components/common/Avatar';
 import FullButton from '@/components/common/buttons/FullButton';
 import Input from '@/components/common/inputs/Input';
 import Textarea from '@/components/common/inputs/Textarea';
+import Spinner from '@/components/common/loading/Spinner';
 import BackHeader from '@/components/layout/header/BackHeader';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserData } from '@/hooks/useUserData';
@@ -72,7 +73,11 @@ const ProfileEditPage: React.FC = () => {
   };
 
   if (!initialUserData) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
   return (
@@ -113,7 +118,10 @@ const ProfileEditPage: React.FC = () => {
         />
       </div>
       <div css={buttonContainerStyle}>
-        <FullButton styleType="primary" onClick={handleSaveProfile}>
+        <FullButton
+          styleType={name.trim() !== '' ? 'primary' : 'disabled'}
+          onClick={handleSaveProfile}
+        >
           수정하기
         </FullButton>
         <FullButton styleType="cancel" onClick={handleCancel}>
