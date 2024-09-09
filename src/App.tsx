@@ -11,14 +11,14 @@ import NotFoundPage from '@/pages/NotFound';
 import PlaylistPage from '@/pages/Playlist';
 import PlaylistDetailPage from '@/pages/PlaylistDetail';
 import PostDetailPage from '@/pages/PostDetail';
-import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
+import PrivacyPolicyPage from '@/pages/PrivacyPolicy';
 import ProfilePage from '@/pages/Profile';
 import ProfileEditPage from '@/pages/ProfileEdit';
 import SearchPage from '@/pages/Search';
 import SelectPliPage from '@/pages/SelectPli';
 import SettingsPage from '@/pages/Settings';
 import SignInPage from '@/pages/SignIn';
-import TermsOfServicePage from '@/pages/TermsOfServicePage';
+import TermsOfServicePage from '@/pages/TermsOfService';
 import ProtectedRoute from '@/routes/ProtectedRoute';
 import PublicRoute from '@/routes/PublicRoute';
 
