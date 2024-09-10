@@ -6,7 +6,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
 import CloseHeader from '@/components/layout/header/CloseHeader';
-import PlaylistContentsItem from '@/components/playlistDetail/PlaylistContentsItem';
+import SelectablePlaylistItem from '@/components/playlistDetail/SelectablePlaylistItem';
 import { useAddVideosToPlaylist } from '@/hooks/useVideoToPlaylist';
 import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
@@ -120,12 +120,11 @@ const AddVideosPage: React.FC = () => {
         {error && <div css={errorMessage}>{error}</div>}
         <ul css={videosListStyle}>
           {videos.map((video) => (
-            <PlaylistContentsItem
+            <SelectablePlaylistItem
               key={video.videoId}
               video={video}
-              onVideoSelect={() => {}}
               isSelected={false}
-              isDraggable={false}
+              onVideoSelect={() => {}}
             />
           ))}
         </ul>
@@ -135,7 +134,6 @@ const AddVideosPage: React.FC = () => {
 };
 
 const addPostContainer = css`
-  font-family: Pretendard;
   & .inputContainer {
     margin-bottom: 12px;
     display: flex;
