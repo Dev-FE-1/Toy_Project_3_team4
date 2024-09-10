@@ -21,7 +21,7 @@ jobs:
           destination-github-username: nakyeonko3
           destination-repository-name: pli
           user-email: ${{ secrets.OFFICIAL_ACCOUNT_EMAIL }}
-          commit-message: ${{ github.event.commits[0].message }}
-          target-branch: main
+          commit-message: "Update from source repository"
+          target-branch: main      
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
