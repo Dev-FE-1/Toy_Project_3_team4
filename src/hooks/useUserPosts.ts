@@ -8,7 +8,7 @@ export const useUserPosts = (userId: string) => {
     isLoading: loadingPosts,
     error,
   } = useQuery({
-    queryKey: ['posts'],
+    queryKey: ['posts', userId],
     queryFn: () => getPostsByUserId({ userId }),
     enabled: !!userId,
   });
