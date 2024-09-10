@@ -63,8 +63,8 @@ const NewPost = () => {
           { playlistId, videoId, description },
           {
             onSuccess: () => {
-              navigate(`/`);
-              addToast('새 포스트가 등록되었습니다.');
+              addToast('포스트가 등록중입니다.');
+              navigate(`/`, { state: { isNewPostCreated: true } });
             },
             onError: (error) => {
               console.error('포스트 및 플레이리스트 업데이트 실패: ', error);
