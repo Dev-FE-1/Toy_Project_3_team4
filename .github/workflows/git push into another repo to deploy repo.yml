@@ -1,6 +1,9 @@
 name: git push into another repo to deploy repo
 
-on: pull_request
+on:
+  push:
+    branches: [main]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
           destination-github-username: nakyeonko3
           destination-repository-name: pli
           user-email: ${{ secrets.OFFICIAL_ACCOUNT_EMAIL }}
-          commit-message: "Update from source repository"
+          commit-message: ${{ github.event.head_commit.message }}
           target-branch: main      
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
