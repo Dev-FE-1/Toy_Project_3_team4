@@ -14,11 +14,11 @@ import Playlists from '@/components/playlist/Playlists';
 import Post from '@/components/post/Post';
 import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
-import { useLikedPosts } from '@/hooks/useLikedPosts'; // 좋아요한 포스트를 가져오는 훅
+import { useLikedPosts } from '@/hooks/useLikedPosts';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useAddPlaylist } from '@/hooks/usePostPlaylist';
 import { useUserData } from '@/hooks/useUserData';
-import { useUserPosts } from '@/hooks/useUserPosts'; // 사용자 포스트를 가져오는 훅
+import { useUserPosts } from '@/hooks/useUserPosts';
 
 import ProfileInfo from '../components/profile/ProfileInfo';
 
