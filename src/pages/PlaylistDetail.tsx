@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import BackHeader from '@/components/layout/header/BackHeader';
-import PlaylistContents from '@/components/playlistDetail/PlaylistContents';
+import DraggablePlaylist from '@/components/playlistDetail/DraggablePlaylist';
 import PlaylistInfo from '@/components/playlistDetail/PlaylistInfo';
 import { useAuth } from '@/hooks/useAuth';
 import { usePlaylistById } from '@/hooks/usePlaylists';
@@ -12,14 +12,10 @@ import { UserModel } from '@/types/user';
 
 const PlaylistDetailPage = () => {
   const { id: playlistId } = useParams<{ id: string }>();
-  const location = useLocation();
-  const state = location.state as { selectPli?: boolean };
-  const navigate = useNavigate();
   const { data: playlist, isLoading, isError } = usePlaylistById(playlistId);
   const { data: playlistUser } = useUserById(playlist?.userId || '');
   const user = useAuth();
   const [videos, setVideos] = useState(playlist?.videos || []);
-  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
 
   useEffect(() => {
     if (playlist && playlist.videos) {
@@ -30,16 +26,6 @@ const PlaylistDetailPage = () => {
   if (isLoading) {
     return;
   }
-
-  const onBackClick = () => {
-    const previousPath = location.state?.from as string;
-
-    if (previousPath && previousPath.includes('addVideos')) {
-      navigate('/playlist');
-    } else {
-      navigate(-1);
-    }
-  };
 
   if (isError || !playlist) {
     console.warn('플레이리스트를 찾을 수 없습니다.');
@@ -54,42 +40,22 @@ const PlaylistDetailPage = () => {
     subscriptions: playlistUser?.subscriptions ?? [],
   };
 
-  const handleVideoSelect = (videoId: string) => {
-    setSelectedVideoId(videoId);
-  };
-
-  const handleCompleteClick = () => {
-    if (selectedVideoId) {
-      navigate(`/post/add/newPost?pli=${playlistId}&videoId=${selectedVideoId}`);
-    }
-  };
-
   const isOwner = user?.uid === playlist?.userId;
 
   return (
     <>
-      <BackHeader
-        onBackClick={onBackClick}
-        title={state?.selectPli ? '동영상 선택' : undefined}
-        rightButtonText={'완료'}
-        onRightButtonClick={state?.selectPli ? handleCompleteClick : undefined}
-        rightButtonDisabled={!selectedVideoId}
-      />
+      <BackHeader />
       <PlaylistInfo
         playlist={playlist}
         thumbnailUrl={videos[0] && `https://img.youtube.com/vi/${videos[0]?.videoId}/0.jpg`}
         user={userModel}
         isOwner={isOwner}
-        selectPli={state?.selectPli || false}
       />
-      <PlaylistContents
+      <DraggablePlaylist
         playlistId={playlist.playlistId}
         videos={videos}
         setVideos={setVideos}
-        onVideoSelect={handleVideoSelect}
-        selectedVideoId={selectedVideoId}
-        isDraggable={isOwner && !state?.selectPli}
-        selectPli={state?.selectPli}
+        isDraggable={isOwner}
       />
     </>
   );

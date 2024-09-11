@@ -28,18 +28,18 @@ interface PlaylistInfoProps {
   playlist: PlaylistModel;
   user: UserModel;
   thumbnailUrl: string;
-  isOwner: boolean;
+  isOwner?: boolean;
   customStyle?: SerializedStyles;
-  selectPli: boolean;
+  selectPli?: boolean;
 }
 
 const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
   playlist,
   user,
   thumbnailUrl,
-  isOwner,
+  isOwner = false,
   customStyle,
-  selectPli,
+  selectPli = false,
 }) => {
   const { title, videos, isPublic } = playlist;
   const [isSubscribed, setIsSubscribed] = useState(false);
