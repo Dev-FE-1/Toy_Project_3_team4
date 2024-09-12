@@ -210,7 +210,9 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             onClick={isClickable ? handleButtonClick : undefined}
             style={{ cursor: isClickable ? 'pointer' : 'default' }}
           >
-            <span css={textEllipsis(1)}>{playlistLabel}</span>
+            <span css={textEllipsis(1)} data-testid="playlist-title">
+              {playlistLabel}
+            </span>
             {isPublicPlaylist && <span>({playlist?.videos.length})</span>}
           </button>
         </div>
