@@ -14,7 +14,6 @@ import {
 } from 'react-icons/hi2';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { updatePostsLikes } from '@/api/fetchPosts';
 import IconButton from '@/components/common/buttons/IconButton';
 import VideoPlayer from '@/components/post/VideoPlayer';
 import UserInfo from '@/components/user/UserInfo';
@@ -29,6 +28,7 @@ import {
   useUnsubscribePlaylist,
   useCheckSubscription,
 } from '@/hooks/useSubscribePlaylist';
+import { useToggleLikes } from '@/hooks/useToggleLikes';
 import { useUserData } from '@/hooks/useUserData';
 import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
@@ -61,6 +61,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const { comments } = useComments(post.postId);
   const navigate = useNavigate();
   const { mutate: deletePost } = useDeletePost(post.userId);
+  const { mutate: toggleLikesByFetch } = useToggleLikes(currentUser?.uid || '');
 
   useEffect(() => {
     if (currentUser) {
@@ -95,7 +96,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const toggleLike = async () => {
     setIsLiked(!isLiked);
     setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
-    await updatePostsLikes({ postId: post.postId, userId: currentUser?.uid || '' });
+    toggleLikesByFetch(post.postId);
   };
 
   const handleDeletePost = async () => {
