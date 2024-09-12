@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { getPostsByFollowingUsers, getPostsByNonFollowingUsers } from '@/api/fetchPosts';
 import { PostModel } from '@/types/post';
 
-interface UseFilteredPostsTimelinesProps {
+export interface UseFilteredPostsTimelinesProps {
   posts: PostModel[];
   nextCursor: string | null;
 }
