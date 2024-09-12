@@ -66,6 +66,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   useEffect(() => {
     if (currentUser) {
       setIsLiked(post.likes.includes(currentUser.uid));
+      setLikesCount(post.likes.length);
     }
   }, [currentUser, post.likes]);
 
