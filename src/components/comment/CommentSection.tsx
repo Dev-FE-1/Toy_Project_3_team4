@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { css } from '@emotion/react';
 import { HiOutlineChatBubbleOvalLeft } from 'react-icons/hi2';
 
@@ -32,7 +34,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
     handleCompositionEnd,
   } = useComments(postId || '');
 
-  const userIds = Array.from(new Set(comments.map((comment) => comment.userId)));
+  const userIds = useMemo(() => {
+    return Array.from(new Set(comments.map((comment) => comment.userId)));
+  }, [comments]);
+
   const { userData: currentUserData } = useUserData(currentUser?.uid || null);
   const { usersData } = useMultipleUsersData(userIds);
 
