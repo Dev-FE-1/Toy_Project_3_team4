@@ -16,6 +16,7 @@ export const commonInputContainerStyle = css`
   }
 
   .input-wrapper {
+    position: relative;
     flex: 1;
   }
 
