@@ -146,7 +146,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
               {isSubscribed ? '구독중' : '구독'}
             </FitButton>
           )}
-          {isOwner && !selectPli && (
+          {isOwner && !isUnmodifiable && !selectPli && (
             <HiEllipsisVertical css={verticalButtonStyle} onClick={handleOpenOptionsModal} />
           )}
         </div>
