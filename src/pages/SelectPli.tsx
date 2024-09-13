@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { css } from '@emotion/react';
 import { HiOutlineBookmark, HiOutlinePlay } from 'react-icons/hi2';
@@ -40,6 +40,16 @@ const SelectPliPage = () => {
   const addVideoToPlaylistMutation = useAddVideosToMyPlaylist();
   const addToast = useToastStore((state) => state.addToast);
 
+  const isAddVideoToPlaylist = location.pathname.startsWith('/playlist/selectPli');
+
+  const filteredPlaylists = useMemo(() => {
+    if (isAddVideoToPlaylist) {
+      return myPlaylists || [];
+    } else {
+      return myPlaylists?.filter((playlist) => playlist.videos.length > 0) || [];
+    }
+  }, [myPlaylists, isAddVideoToPlaylist]);
+
   const handleAddPlaylist = (title: string, isPublic: boolean) => {
     addPlaylistMutation.mutate({ title, isPublic });
     addToast('새로운 플리를 추가했습니다.');
@@ -68,7 +78,6 @@ const SelectPliPage = () => {
     return <p>{error.message}</p>;
   }
 
-  const filteredPlaylists = myPlaylists?.filter((playlist) => playlist.videos.length > 0) || [];
 
   if (videoId) {
     return (
@@ -76,7 +85,7 @@ const SelectPliPage = () => {
         <BackHeader title="저장할 플리 선택" />
         <AddPlaylistButton customStyle={addPlaylistButtonStyle} onAddPlaylist={handleAddPlaylist} />
         <Playlists
-          playlists={myPlaylists || []}
+          playlists={filteredPlaylists}
           customStyle={playlistStyle}
           customVideoStyle={videoStyle}
           onPlaylistClick={handlePlaylistClick}
@@ -101,7 +110,7 @@ const SelectPliPage = () => {
             onAddPlaylist={handleAddPlaylist}
           />
           <Playlists
-            playlists={myPlaylists || []}
+            playlists={filteredPlaylists}
             customStyle={playlistStyle}
             customVideoStyle={videoStyle}
             onPlaylistClick={handlePlaylistClick}
@@ -113,7 +122,6 @@ const SelectPliPage = () => {
           <TabContent id="my" activeTabId={activeTab}>
             <Playlists
               playlists={filteredPlaylists || []}
-              // playlists={myPlaylists || []}
               customStyle={playlistStyle}
               customVideoStyle={videoStyle}
               onPlaylistClick={handlePlaylistClick}
