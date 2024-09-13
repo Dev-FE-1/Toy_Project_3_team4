@@ -108,6 +108,7 @@ const ProfileEditPage: React.FC = () => {
           placeholder="닉네임을 입력해주세요"
           customStyle={inputStyle}
           label="닉네임"
+          maxLength={10}
         />
         <Textarea
           value={bio}
@@ -115,6 +116,7 @@ const ProfileEditPage: React.FC = () => {
           placeholder="소개를 입력해주세요"
           label="소개"
           customStyle={inputStyle}
+          maxLength={150}
         />
       </div>
       <div css={buttonContainerStyle}>
