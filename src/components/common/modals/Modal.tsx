@@ -51,7 +51,7 @@ const slideUp = keyframes`
 
 const overlayStyle = css`
   z-index: 400;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 50%;
   width: 100vw;
@@ -69,7 +69,7 @@ const modalContainerStyle = (animated: boolean) => {
       animation: ${slideUp} 0.3s ease-out;
     `;
   return css`
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
