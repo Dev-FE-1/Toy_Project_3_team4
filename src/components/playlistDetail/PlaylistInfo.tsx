@@ -110,12 +110,15 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
       Icon: HiOutlineBookmark,
       onClick: handleAddVideo,
     },
-    {
+  ];
+
+  if (!isUnmodifiable) {
+    optionsModalOptions.push({
       label: '플리 삭제하기',
       Icon: HiOutlineTrash,
       onClick: handleDeletePlaylist,
-    },
-  ];
+    });
+  }
 
   return (
     <div css={[playlistInfoStyle, customStyle]}>
@@ -146,7 +149,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
               {isSubscribed ? '구독중' : '구독'}
             </FitButton>
           )}
-          {isOwner && !isUnmodifiable && !selectPli && (
+          {isOwner && !selectPli && (
             <HiEllipsisVertical css={verticalButtonStyle} onClick={handleOpenOptionsModal} />
           )}
         </div>

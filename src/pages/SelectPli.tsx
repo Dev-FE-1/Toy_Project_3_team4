@@ -113,6 +113,7 @@ const SelectPliPage = () => {
           <TabContent id="my" activeTabId={activeTab}>
             <Playlists
               playlists={filteredPlaylists || []}
+              // playlists={myPlaylists || []}
               customStyle={playlistStyle}
               customVideoStyle={videoStyle}
               onPlaylistClick={handlePlaylistClick}
