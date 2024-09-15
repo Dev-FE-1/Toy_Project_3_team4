@@ -33,7 +33,9 @@ const ProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const currentUser = useAuth();
-  const { userData, toggleFollow } = useUserData(userId || currentUser?.uid || null);
+  const { userData, toggleFollow, refetchUserData } = useUserData(
+    userId || currentUser?.uid || null,
+  );
   const [isFollowing, setIsFollowing] = useState(false);
   const { data: playlists, isLoading: playlistsLoading } = useUserPlaylists(userId);
   const { userPosts, loadingPosts, error: userPostsError } = useUserPosts(userId || '');
@@ -91,6 +93,7 @@ const ProfilePage: React.FC = () => {
         isFollowing={isFollowing}
         onEditClick={handleEditClick}
         onFollowToggle={handleFollowToggle}
+        refetchUserData={refetchUserData}
       />
       <div>
         <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>

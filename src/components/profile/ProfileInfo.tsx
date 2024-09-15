@@ -16,6 +16,7 @@ interface ProfileInfoProps {
   isFollowing: boolean;
   onEditClick?: () => void;
   onFollowToggle: () => Promise<void>;
+  refetchUserData: () => Promise<void>;
 }
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({
