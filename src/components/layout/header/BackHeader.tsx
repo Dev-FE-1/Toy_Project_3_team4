@@ -1,35 +1,32 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles, useTheme, Theme } from '@emotion/react';
 import { HiArrowLeft } from 'react-icons/hi2';
-import { useNavigate } from 'react-router-dom';
 
 import IconButton from '@/components/common/buttons/IconButton';
 import Header from '@/components/layout/header/Header';
-import theme from '@/styles/theme';
 
 interface BackHeaderProps {
-  onBackClick?: () => void;
-  onCloseClick?: () => void;
-  title?: string;
+  onBackClick: () => void;
+  title: string;
   rightButtonText?: string;
   onRightButtonClick?: () => void;
+  customStyle?: SerializedStyles;
   rightButtonDisabled?: boolean;
+  usePortal?: boolean;
 }
 
 const BackHeader: React.FC<BackHeaderProps> = ({
-  onBackClick,
   title,
+  onBackClick,
   rightButtonText,
   onRightButtonClick,
+  customStyle,
   rightButtonDisabled = false,
+  usePortal = true,
 }) => {
-  const navigate = useNavigate();
-
-  const onClick = () => (onBackClick ? onBackClick() : navigate(-1));
-
   return (
     <Header
-      leftSection={<BackButton onClick={onClick} />}
-      centerSection={title ? <Title text={title} /> : null}
+      leftSection={<BackButton onClick={onBackClick} />}
+      centerSection={title && <Title text={title} />}
       rightSection={
         rightButtonText &&
         onRightButtonClick && (
@@ -40,7 +37,8 @@ const BackHeader: React.FC<BackHeaderProps> = ({
           />
         )
       }
-      customStyle={headerStyle}
+      customStyle={customStyle}
+      usePortal={usePortal}
     />
   );
 };
@@ -49,32 +47,32 @@ const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
   <IconButton icon={<HiArrowLeft />} onClick={onClick} />
 );
 
-const Title: React.FC<{ text: string }> = ({ text }) => <h1 css={titleStyle}>{text}</h1>;
+const Title: React.FC<{ text: string }> = ({ text }) => {
+  const theme = useTheme();
+  return <h1 css={titleStyle(theme)}>{text}</h1>;
+};
 
 const ActionButton: React.FC<{ text: string; onClick: () => void; disabled: boolean }> = ({
   text,
   onClick,
   disabled,
 }) => {
+  const theme = useTheme();
   return (
-    <button onClick={onClick} css={actionButtonStyle(disabled)} disabled={disabled}>
+    <button onClick={onClick} css={actionButtonStyle(theme, disabled)} disabled={disabled}>
       {text}
     </button>
   );
 };
 
-const headerStyle = css`
-  position: fixed;
-`;
-
-const titleStyle = css`
+const titleStyle = (theme: Theme) => css`
   margin: 0;
   font-size: ${theme.fontSizes.base};
   font-weight: 700;
   color: ${theme.colors.black};
 `;
 
-const actionButtonStyle = (disabled: boolean) => css`
+const actionButtonStyle = (theme: Theme, disabled: boolean) => css`
   color: ${disabled ? theme.colors.darkGray : theme.colors.primary};
   font-size: ${theme.fontSizes.small};
   font-weight: 700;

@@ -10,6 +10,7 @@ interface BaseHeaderProps {
   centerSection?: React.ReactNode;
   rightSection?: React.ReactNode;
   customStyle?: SerializedStyles;
+  usePortal?: boolean;
 }
 
 const Header: React.FC<BaseHeaderProps> = ({
@@ -17,25 +18,34 @@ const Header: React.FC<BaseHeaderProps> = ({
   centerSection,
   rightSection,
   customStyle,
+  usePortal = true,
 }) => {
   const [headerRoot, setHeaderRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    setHeaderRoot(document.getElementById('header'));
-  }, []);
-  if (!headerRoot) return null;
+    if (usePortal) {
+      setHeaderRoot(document.getElementById('header'));
+    }
+  }, [usePortal]);
 
-  return createPortal(
-    <div css={[baseHeaderStyle, maxWidthStyle(true), customStyle]} data-testid="header">
+  const headerContent = (
+    <div css={[baseHeaderStyle(usePortal), maxWidthStyle(true), customStyle]} data-testid="header">
       <div css={leftSectionStyle}>{leftSection}</div>
       <div css={centerSectionStyle}>{centerSection}</div>
       <div css={rightSectionStyle}>{rightSection}</div>
-    </div>,
-    headerRoot,
+    </div>
   );
+
+  if (usePortal && headerRoot) {
+    return createPortal(headerContent, headerRoot);
+  }
+
+  return headerContent;
 };
 
-const baseHeaderStyle = css`
+const baseHeaderStyle = (usePortal: boolean) => css`
+  ${!usePortal && 'border-radius: 12px 12px 0 0;'}
+  z-index: 300;
   display: flex;
   justify-content: space-between;
   align-items: center;
