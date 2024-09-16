@@ -53,6 +53,10 @@ const FollowPage: React.FC = () => {
     [navigate],
   );
 
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   const renderUserList = (users: UserData[]) => {
     return users.map((user) => (
       <div key={user.userId} css={userItemStyle}>
@@ -78,7 +82,7 @@ const FollowPage: React.FC = () => {
 
   return (
     <>
-      <BackHeader title={userData?.displayName} />
+      <BackHeader title={userData?.displayName ?? ''} onBackClick={handleBackClick} />
       <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
         <TabContent id="following" activeTabId={activeTab}>
           {renderUserList(followingUsers)}
