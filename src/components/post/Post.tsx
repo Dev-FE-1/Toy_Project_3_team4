@@ -16,6 +16,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { updatePostsLikes } from '@/api/fetchPosts';
 import IconButton from '@/components/common/buttons/IconButton';
+import FullModal from '@/components/common/modals/FullModal';
+import OptionModal from '@/components/common/modals/OptionModal';
 import VideoPlayer from '@/components/post/VideoPlayer';
 import UserInfo from '@/components/user/UserInfo';
 import { PATH } from '@/constants/path';
@@ -23,6 +25,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useComments } from '@/hooks/useComments';
 import { useDeletePost } from '@/hooks/useDeletePost';
 import { useFetchVideoTitle } from '@/hooks/useFetchVideoTitle';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import { usePlaylistById } from '@/hooks/usePlaylists';
 import {
   useSubscribePlaylist,
@@ -30,14 +33,14 @@ import {
   useCheckSubscription,
 } from '@/hooks/useSubscribePlaylist';
 import { useUserData } from '@/hooks/useUserData';
+import NewPost from '@/pages/NewPost';
+import { useToastStore } from '@/stores/toastStore';
 import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
 import { makeVideoObj } from '@/utils/video';
 import { extractVideoId } from '@/utils/youtubeUtils';
-
-import OptionModal from '../common/modals/OptionModal';
 
 interface PostProps {
   id: string;
@@ -50,7 +53,11 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const [isSubscribed, setIsSubscribed] = useState<boolean | undefined>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    isOpen: isOptionModalOpen,
+    open: openOptionModal,
+    close: closeOptionModal,
+  } = useModalWithOverlay('postOptionModal', post.postId);
   const currentUser = useAuth();
   const { userData } = useUserData(post.userId);
   const { data: playlist, isLoading: isPlaylistLoading } = usePlaylistById(post.playlistId);
@@ -60,7 +67,13 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
   const { comments } = useComments(post.postId);
   const navigate = useNavigate();
-  const { mutate: deletePost } = useDeletePost(post.userId);
+  const addToast = useToastStore((state) => state.addToast);
+  const deletePost = useDeletePost(post.userId);
+  const {
+    isOpen: isEditModalOpen,
+    open: openEditModal,
+    close: closeEditModal,
+  } = useModalWithOverlay('editPostModal', post.postId);
 
   useEffect(() => {
     if (currentUser) {
@@ -99,21 +112,21 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   };
 
   const handleDeletePost = async () => {
-    deletePost(post.postId);
-    setIsModalOpen(false);
+    deletePost.mutate(post.postId, {
+      onSuccess: () => {
+        addToast('포스트가 삭제되었습니다.');
+      },
+      onError: (error) => {
+        console.warn('포스트 삭제 실패:', error);
+        addToast('포스트 삭제에 실패했습니다.');
+      },
+    });
+    closeOptionModal();
   };
 
   const handleEditPost = () => {
-    const pli = post.playlistId;
-    const videoId = extractVideoId(post.video);
-
-    navigate(`${PATH.ADD_POST}/newPost?pli=${pli}&videoId=${videoId}`, {
-      state: {
-        isModifying: true,
-        postId: post.postId,
-      },
-    });
-    setIsModalOpen(false);
+    closeOptionModal();
+    openEditModal();
   };
 
   const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
@@ -166,18 +179,29 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
           )}
           {currentUser?.uid === post.userId && (
             <>
-              <IconButton
-                icon={<HiEllipsisVertical size={20} />}
-                onClick={() => setIsModalOpen(true)}
-              />
-              <OptionModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                options={[
-                  { label: '포스트 수정', onClick: handleEditPost, Icon: HiOutlinePencil },
-                  { label: '포스트 삭제', onClick: handleDeletePost, Icon: HiOutlineTrash },
-                ]}
-              />
+              <IconButton icon={<HiEllipsisVertical size={20} />} onClick={openOptionModal} />
+              {isOptionModalOpen && (
+                <OptionModal
+                  isOpen={isOptionModalOpen}
+                  onClose={closeOptionModal}
+                  options={[
+                    { label: '포스트 수정', onClick: handleEditPost, Icon: HiOutlinePencil },
+                    { label: '포스트 삭제', onClick: handleDeletePost, Icon: HiOutlineTrash },
+                  ]}
+                />
+              )}
+              {isEditModalOpen && (
+                <FullModal isOpen={isEditModalOpen} onClose={closeEditModal}>
+                  <NewPost
+                    playlistId={post.playlistId}
+                    videoId={extractVideoId(post.video) || ''}
+                    onClose={closeEditModal}
+                    initialDescription={post.content}
+                    isEditing={true}
+                    postId={post.postId}
+                  />
+                </FullModal>
+              )}
             </>
           )}
         </div>
