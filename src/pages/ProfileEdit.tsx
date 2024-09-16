@@ -72,6 +72,10 @@ const ProfileEditPage: React.FC = () => {
     navigate(`/profile/${currentUser?.uid}`);
   };
 
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   if (!initialUserData) {
     return (
       <div>
@@ -82,7 +86,7 @@ const ProfileEditPage: React.FC = () => {
 
   return (
     <>
-      <BackHeader title="프로필 수정" />
+      <BackHeader title="프로필 수정" onBackClick={handleBackClick} />
       <div css={pageContentStyle}>
         <div css={imageContainerStyle}>
           <Avatar size="extraLarge" url={photoURL} />
