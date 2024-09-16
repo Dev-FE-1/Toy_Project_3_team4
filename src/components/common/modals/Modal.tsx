@@ -1,32 +1,53 @@
-import { KeyboardEventHandler } from 'react';
+import { useState, useEffect, KeyboardEventHandler } from 'react';
 
 import { css, keyframes } from '@emotion/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 import theme from '@/styles/theme';
+
 interface ModalProps {
   isOpen: boolean;
   title?: React.ReactNode;
   children: React.ReactNode;
-  animated?: boolean;
   onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, title, children, animated = true, onClose }) => {
+const ANIMATION_DURATION = 300;
+
+const Modal: React.FC<ModalProps> = ({ isOpen, title, children, onClose }) => {
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsAnimating(true);
+    } else {
+      setIsAnimating(true);
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, ANIMATION_DURATION);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   const onEscapeKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (e.key === 'Escape') {
       onClose();
     }
   };
 
+  if (!isAnimating && !isOpen) return null;
+
   return (
-    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog.Root open={isOpen || isAnimating}>
       <Dialog.Portal>
-        <Dialog.Overlay css={overlayStyle} onClick={onClose} />
-        <div css={modalContainerStyle(animated)} onKeyDown={onEscapeKeyDown}>
-          <Dialog.Content className="dialog-content">
-            {title && <Dialog.Title className="dialog-title">{title}</Dialog.Title>}
+        <div css={modalContainerStyle} onKeyDown={onEscapeKeyDown}>
+          <Dialog.Content css={contentStyle(isOpen)} className="dialog-content">
+            {title && (
+              <Dialog.Title css={titleStyle} className="dialog-title">
+                {title}
+              </Dialog.Title>
+            )}
             <VisuallyHidden>
               <Dialog.Title>{title}</Dialog.Title>
               <Dialog.Description>{title}</Dialog.Description>
@@ -39,83 +60,51 @@ const Modal: React.FC<ModalProps> = ({ isOpen, title, children, animated = true,
   );
 };
 
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
-`;
-
 const slideUp = keyframes`
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 `;
 
-const overlayStyle = css`
-  z-index: 400;
-  position: fixed;
-  top: 0;
-  left: 50%;
-  width: 100vw;
-  max-width: ${theme.width.max};
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  transform: translateX(-50%);
-  animation: ${fadeIn} 0.2s ease-out;
+const slideDown = keyframes`
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
 `;
 
-const modalContainerStyle = (animated: boolean) => {
-  const animatedStyle =
-    animated &&
-    css`
-      animation: ${slideUp} 0.3s ease-out;
-    `;
-  return css`
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+const modalContainerStyle = css`
+  position: fixed;
+  z-index: 300;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+`;
+
+const contentStyle = (isOpen: boolean) => css`
+  background-color: white;
+  border-radius: 12px 12px 0 0;
+  width: 100%;
+  max-width: ${theme.width.max};
+  animation: ${isOpen ? slideUp : slideDown} ${ANIMATION_DURATION}ms ease-out;
+  animation-fill-mode: forwards;
+
+  .dialog-body {
     width: 100%;
-    z-index: 500;
-    max-width: ${theme.width.max};
-    height: 100vh;
-    pointer-events: none;
+    padding: 0 16px 8px;
+  }
+`;
 
-    .dialog-content {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+const titleStyle = css`
+  display: flex;
+  padding: 20px 0px;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
 
-      background-color: white;
-
-      border-radius: 12px 12px 0 0;
-      ${animatedStyle}
-      pointer-events: auto;
-
-      .dialog-title {
-        width: 100%;
-        display: flex;
-        padding: 20px 0px;
-        justify-content: center;
-        align-items: center;
-        font-weight: 500;
-
-        color: ${theme.colors.black};
-        border-bottom: 1px solid ${theme.colors.lightGray};
-        font-size: ${theme.fontSizes.small};
-        font-weight: 700;
-        line-height: 140%;
-      }
-
-      .dialog-body {
-        width: 100%;
-        max-width: 400px;
-      }
-    }
-  `;
-};
+  color: ${theme.colors.black};
+  border-bottom: 1px solid ${theme.colors.lightGray};
+  font-size: ${theme.fontSizes.small};
+  font-weight: 700;
+  line-height: 140%;
+`;
 
 export default Modal;
