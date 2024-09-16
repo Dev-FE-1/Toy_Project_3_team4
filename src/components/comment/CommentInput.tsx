@@ -3,10 +3,12 @@ import { useEffect, useRef } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 import { HiOutlinePaperAirplane } from 'react-icons/hi2';
 
+import InputCount from '@/components/common/inputs/InputCount';
 import theme from '@/styles/theme';
 
 const INPUT_MIN_HEIGHT = 40;
 const INPUT_MAX_HEIGHT = INPUT_MIN_HEIGHT * 2;
+const MAX_LENGTH = 300;
 
 interface CommentInputProps {
   comment: string;
@@ -17,7 +19,7 @@ interface CommentInputProps {
   handleCompositionEnd: () => void;
 }
 
-export const CommentInput: React.FC<CommentInputProps> = ({
+const CommentInput: React.FC<CommentInputProps> = ({
   comment,
   onChange,
   onSubmit,
@@ -42,18 +44,34 @@ export const CommentInput: React.FC<CommentInputProps> = ({
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const inputValue = e.target.value.slice(0, MAX_LENGTH);
+    onChange(inputValue);
+  };
+
   return (
     <div css={[newCommentStyle, customStyle]}>
-      <textarea
-        ref={textareaRef}
-        value={comment}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="댓글을 작성해주세요"
-        onCompositionStart={handleCompositionStart}
-        onCompositionEnd={handleCompositionEnd}
-        data-testid="comment-input"
-      />
+      <div className="textarea-container">
+        <textarea
+          ref={textareaRef}
+          value={comment}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder="댓글을 작성해주세요"
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
+          data-testid="comment-input"
+          maxLength={MAX_LENGTH}
+        />
+        {comment.length > 0 && (
+          <InputCount
+            currentLength={comment.length}
+            maxLength={MAX_LENGTH}
+            customStyle={countStyle}
+          />
+        )}
+      </div>
+
       <button onClick={onSubmit}>
         <HiOutlinePaperAirplane />
       </button>
@@ -69,7 +87,15 @@ const newCommentStyle = css`
   border-radius: 12px;
   background-color: ${theme.colors.bgGray};
 
+  .textarea-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+  }
+
   textarea {
+    flex-grow: 1;
     width: 100%;
     min-height: ${INPUT_MIN_HEIGHT}px;
     max-height: ${INPUT_MAX_HEIGHT}px;
@@ -83,6 +109,7 @@ const newCommentStyle = css`
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     padding: 8px 10px 12px;
     border: none;
     border-radius: 4px;
@@ -97,3 +124,10 @@ const newCommentStyle = css`
     }
   }
 `;
+
+const countStyle = css`
+  padding: 2px 0 8px;
+  text-align: right;
+`;
+
+export default CommentInput;

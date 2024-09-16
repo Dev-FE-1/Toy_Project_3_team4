@@ -7,7 +7,7 @@ import {
 } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
-import { CommentInput } from '@/components/comment/CommentInput';
+import CommentInput from '@/components/comment/CommentInput';
 import Avatar from '@/components/common/Avatar';
 import FitButton from '@/components/common/buttons/FitButton';
 import OptionModal from '@/components/common/modals/OptionModal';
