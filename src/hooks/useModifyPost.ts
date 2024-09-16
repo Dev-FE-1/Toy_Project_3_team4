@@ -3,12 +3,15 @@ import { doc, updateDoc } from 'firebase/firestore';
 
 import { db } from '@/api/firebaseApp';
 
+import { useAuth } from './useAuth';
+
 interface UpdatePostPayload {
   postId: string;
   description: string;
 }
 
 export const useModifyPost = () => {
+  const user = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -17,7 +20,8 @@ export const useModifyPost = () => {
       await updateDoc(postDocRef, { content: description });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['posts', user?.uid] });
+      queryClient.invalidateQueries({ queryKey: ['filteredPostsTimelines', user?.uid] });
     },
   });
 };

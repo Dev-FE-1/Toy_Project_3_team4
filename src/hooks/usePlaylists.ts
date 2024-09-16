@@ -29,7 +29,7 @@ export const useUserPlaylists = (userId?: string) => {
       const playlists = querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
-          playlistId: data.playlistId,
+          playlistId: doc.id,
           userId: data.userId,
           title: data.title,
           createdAt: data.createdAt,
@@ -41,6 +41,7 @@ export const useUserPlaylists = (userId?: string) => {
       return playlists;
     },
     enabled: !!currentUser || !!userId,
+    staleTime: 1000,
   });
 };
 
