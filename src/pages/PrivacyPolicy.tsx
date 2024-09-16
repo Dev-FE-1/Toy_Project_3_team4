@@ -1,10 +1,16 @@
+import { useNavigate } from 'react-router-dom';
+
 import BackHeader from '@/components/layout/header/BackHeader';
 import { legalPageStyle } from '@/styles/legal';
 
 const PrivacyPolicyPage: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    navigate(-1);
+  };
   return (
     <div css={legalPageStyle}>
-      <BackHeader />
+      <BackHeader title="" onBackClick={handleBackClick} />
       <h1>개인정보처리방침</h1>
       <p>
         본 서비스는 구글 로그인을 통해 사용자의 이름, email 주소, 프로필 이미지를 수집하며, 수집된

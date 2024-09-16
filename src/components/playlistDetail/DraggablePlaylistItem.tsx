@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { css } from '@emotion/react';
 import { HiOutlineBookmark, HiOutlineEllipsisVertical, HiOutlineTrash } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +6,7 @@ import OptionModal from '@/components/common/modals/OptionModal';
 import VideoInfo from '@/components/playlist/VideoInfo';
 import PlaylistItem from '@/components/playlistDetail/PlaylistItem';
 import { PATH } from '@/constants/path';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import { useRemoveVideoFromPlaylist } from '@/hooks/useRemoveVideoFromPlaylist';
 import { useYouTubeVideoData } from '@/hooks/useYouTubeVideoData';
 import { useToastStore } from '@/stores/toastStore';
@@ -25,15 +24,19 @@ const DraggablePlaylistItem: React.FC<DraggablePlaylistItemProps> = ({
   video,
   isDraggable = true,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    isOpen: isOptionModalOpen,
+    open: openOptionModal,
+    close: closeOptionModal,
+  } = useModalWithOverlay('optionModal', video.videoId);
 
   const navigate = useNavigate();
 
   const { data: videoData, isLoading, isError } = useYouTubeVideoData(video.videoId);
   const removeVideoMutation = useRemoveVideoFromPlaylist();
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  const handleOpenModal = () => openOptionModal();
+  const handleCloseModal = () => closeOptionModal();
   const addToast = useToastStore((state) => state.addToast);
 
   const handleRemoveVideo = () => {
@@ -81,7 +84,7 @@ const DraggablePlaylistItem: React.FC<DraggablePlaylistItemProps> = ({
       </button>
 
       <OptionModal
-        isOpen={isModalOpen}
+        isOpen={isOptionModalOpen}
         onClose={handleCloseModal}
         options={isDraggable ? modalOptions : modalOptions.slice(0, 1)}
       />

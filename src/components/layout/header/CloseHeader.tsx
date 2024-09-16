@@ -11,6 +11,7 @@ interface CloseHeaderProps {
   onRightButtonClick?: () => void;
   customStyle?: SerializedStyles;
   rightButtonDisabled?: boolean;
+  usePortal?: boolean;
 }
 
 const CloseHeader: React.FC<CloseHeaderProps> = ({
@@ -20,6 +21,7 @@ const CloseHeader: React.FC<CloseHeaderProps> = ({
   onRightButtonClick,
   customStyle,
   rightButtonDisabled = false,
+  usePortal = true,
 }) => {
   return (
     <Header
@@ -36,6 +38,7 @@ const CloseHeader: React.FC<CloseHeaderProps> = ({
         )
       }
       customStyle={customStyle}
+      usePortal={usePortal}
     />
   );
 };

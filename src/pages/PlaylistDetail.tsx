@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import BackHeader from '@/components/layout/header/BackHeader';
 import DraggablePlaylist from '@/components/playlistDetail/DraggablePlaylist';
@@ -16,6 +16,7 @@ const PlaylistDetailPage = () => {
   const { data: playlistUser } = useUserById(playlist?.userId || '');
   const user = useAuth();
   const [videos, setVideos] = useState(playlist?.videos || []);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (playlist && playlist.videos) {
@@ -29,7 +30,7 @@ const PlaylistDetailPage = () => {
 
   if (isError || !playlist) {
     console.warn('플레이리스트를 찾을 수 없습니다.');
-    return <p>플레이리스트를 찾을 수 없습니다.</p>;
+    return null;
   }
 
   const userModel: UserModel = {
@@ -39,12 +40,13 @@ const PlaylistDetailPage = () => {
     photoURL: playlistUser?.photoURL ?? '',
     subscriptions: playlistUser?.subscriptions ?? [],
   };
+  const handleBackClick = () => navigate('/playlist');
 
   const isOwner = user?.uid === playlist?.userId;
 
   return (
     <>
-      <BackHeader />
+      <BackHeader title="" onBackClick={handleBackClick} />
       <PlaylistInfo
         playlist={playlist}
         thumbnailUrl={videos[0] && `https://img.youtube.com/vi/${videos[0]?.videoId}/0.jpg`}

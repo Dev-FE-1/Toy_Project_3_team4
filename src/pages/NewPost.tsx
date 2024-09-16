@@ -1,70 +1,79 @@
 import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import CloseHeader from '@/components/layout/header/CloseHeader';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import { useAuth } from '@/hooks/useAuth';
 import { useCreatePost } from '@/hooks/useCreatePost';
 import { useModifyPost } from '@/hooks/useModifyPost';
-import { usePostById } from '@/hooks/usePostById';
+import { useAddVideosToMyPlaylist } from '@/hooks/useVideoToPlaylist';
 import { useToastStore } from '@/stores/toastStore';
+import { makeVideoObj } from '@/utils/video';
 
-const NewPost = () => {
-  const [searchParams] = useSearchParams();
-  const playlistId = searchParams.get('pli');
-  const videoId = searchParams.get('videoId');
+interface NewPostProps {
+  playlistId?: string;
+  videoId?: string;
+  onClose?: () => void;
+  initialDescription?: string;
+  isEditing?: boolean;
+  postId?: string;
+}
+
+const NewPost: React.FC<NewPostProps> = ({
+  playlistId,
+  videoId,
+  onClose,
+  initialDescription = '',
+  isEditing = false,
+  postId = '',
+}) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const isModifying = location.state?.isModifying || false;
-  const postId = location.state?.postId || null;
   const [isShareButtonEnabled, setIsShareButtonEnabled] = useState(false);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(initialDescription);
   const createPostMutation = useCreatePost();
-  const modifyPostMutation = useModifyPost();
+  const updatePostMutation = useModifyPost();
   const user = useAuth();
   const addToast = useToastStore((state) => state.addToast);
-
-  const { data: existingPost } = usePostById(postId);
-
-  useEffect(() => {
-    if (isModifying && existingPost) {
-      setDescription(existingPost.content);
-    }
-  }, [isModifying, existingPost]);
+  const videoObject = makeVideoObj(videoId || '');
+  const addVideoToPlaylistMutation = useAddVideosToMyPlaylist();
 
   useEffect(() => {
     setIsShareButtonEnabled(!!description.trim());
   }, [description]);
 
   const handleOnClose = () => {
-    navigate(-1);
+    if (onClose) {
+      onClose();
+    }
   };
 
-  const handleOnShare = () => {
+  const handleButtonClick = () => {
     if (isShareButtonEnabled && user && playlistId && videoId) {
-      if (isModifying && postId) {
-        modifyPostMutation.mutate(
+      if (isEditing) {
+        updatePostMutation.mutate(
           { postId, description },
           {
             onSuccess: () => {
-              navigate(`/`);
               addToast('포스트가 수정되었습니다.');
+              onClose ? onClose() : null;
             },
             onError: (error) => {
-              console.error('포스트 수정 실패: ', error);
+              console.error('포스트 수정 실패:', error);
               addToast('포스트 수정에 실패했습니다.');
             },
           },
         );
       } else {
+        addVideoToPlaylistMutation.mutate({ playlistId, videos: [videoObject] });
         createPostMutation.mutate(
           { playlistId, videoId, description },
           {
             onSuccess: () => {
-              addToast('포스트가 등록중입니다.');
-              navigate(`/`, { state: { isNewPostCreated: true } });
+              navigate(`/`);
+              addToast('새 포스트가 등록되었습니다.');
+              onClose ? onClose() : null;
             },
             onError: (error) => {
               console.error('포스트 및 플레이리스트 업데이트 실패: ', error);
@@ -81,13 +90,14 @@ const NewPost = () => {
   };
 
   return (
-    <>
+    <div css={newPostStyle}>
       <CloseHeader
         onCloseClick={handleOnClose}
-        title={isModifying ? '포스트 수정' : '새 포스트'}
-        rightButtonText={isModifying ? '수정하기' : '공유하기'}
-        onRightButtonClick={handleOnShare}
+        title={isEditing ? '포스트 수정' : '새 포스트'}
+        rightButtonText={isEditing ? '수정' : '공유'}
+        onRightButtonClick={handleButtonClick}
         rightButtonDisabled={!isShareButtonEnabled}
+        usePortal={false}
       />
       <div>
         {videoId && (
@@ -104,9 +114,13 @@ const NewPost = () => {
           data-testid="post-content-input"
         />
       </div>
-    </>
+    </div>
   );
 };
+
+const newPostStyle = css`
+  width: 100%;
+`;
 
 const textareaStyle = css`
   height: 100px;

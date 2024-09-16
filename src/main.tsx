@@ -7,6 +7,8 @@ import Toast from '@/components/common/Toast';
 import GlobalStyles from '@/styles/GlobalStyles';
 import theme from '@/styles/theme.ts';
 
+import Overlay from './components/common/modals/Overlay';
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
@@ -15,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <App />
       <Toast />
+      <Overlay />
     </QueryClientProvider>
   </ThemeProvider>,
 );

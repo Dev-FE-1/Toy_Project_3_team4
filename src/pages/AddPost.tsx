@@ -4,14 +4,22 @@ import { css } from '@emotion/react';
 import { HiOutlineLink } from 'react-icons/hi2';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import CloseHeader from '@/components/layout/header/CloseHeader';
+import FullModal from '@/components/common/modals/FullModal';
+import BackHeader from '@/components/layout/header/BackHeader';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
-import { useUserPlaylists } from '@/hooks/usePlaylists';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
+import NewPost from '@/pages/NewPost';
 import { errorMessageStyle } from '@/styles/input';
 import theme from '@/styles/theme';
 import { extractVideoId, validateVideoId } from '@/utils/youtubeUtils';
 
-const AddPostPage: React.FC = () => {
+import SelectPliPage from './SelectPli';
+
+interface AddPostPageProps {
+  onClose?: () => void;
+}
+
+const AddPostPage: React.FC<AddPostPageProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -19,23 +27,23 @@ const AddPostPage: React.FC = () => {
   const playlistTitle = searchParams.get('title') || '분류되지 않은 목록';
   const initialVideoId = searchParams.get('videoId');
 
-  const { data: myPlaylists } = useUserPlaylists();
   const [inputUrl, setInputUrl] = useState<string>('');
   const [videoId, setVideoId] = useState<string | null>(initialVideoId || null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<{ id: string; title: string } | null>(
+    null,
+  );
 
-  useEffect(() => {
-    if (!playlistId && myPlaylists) {
-      const defaultPlaylist = myPlaylists.find((pl) => pl.title === '분류되지 않은 목록');
-      if (defaultPlaylist) {
-        setSearchParams({
-          pli: defaultPlaylist.playlistId,
-          title: defaultPlaylist.title,
-          videoId: videoId || '',
-        });
-      }
-    }
-  }, [playlistId, myPlaylists, setSearchParams, videoId]);
+  const {
+    isOpen: isSelectPliByLinkModalOpen,
+    open: openSelectPliByLinkModal,
+    close: closeSelectPliByLinkModal,
+  } = useModalWithOverlay('selectPliByLinkModal', 'addPost');
+  const {
+    isOpen: isNewPostModalOpen,
+    open: openNewPostModal,
+    close: closeNewPostModal,
+  } = useModalWithOverlay('newPostModal', 'addPost');
 
   useEffect(() => {
     if (initialVideoId && initialVideoId !== 'null') {
@@ -47,12 +55,16 @@ const AddPostPage: React.FC = () => {
   }, [initialVideoId]);
 
   const handleOnClose = () => {
-    navigate('/');
+    if (onClose) {
+      onClose();
+    } else {
+      navigate(-1);
+    }
   };
 
   const handleOnShare = () => {
-    if (videoId && playlistId) {
-      navigate(`/post/add/newPost?pli=${playlistId}&videoId=${videoId}`);
+    if (videoId && selectedPlaylist) {
+      openNewPostModal();
     }
   };
 
@@ -83,14 +95,30 @@ const AddPostPage: React.FC = () => {
     }
   };
 
+  const handlePliSelectClick = () => {
+    openSelectPliByLinkModal();
+  };
+
+  const handlePlaylistSelect = (id: string, title: string) => {
+    setSelectedPlaylist({ id, title });
+    setSearchParams({ ...Object.fromEntries(searchParams.entries()), pli: id, title });
+    closeSelectPliByLinkModal();
+  };
+
+  const handleCloseNewPost = () => {
+    closeNewPostModal();
+    onClose && onClose();
+  };
+
   return (
     <>
-      <CloseHeader
-        onCloseClick={handleOnClose}
+      <BackHeader
+        onBackClick={handleOnClose}
         title="동영상 추가"
         rightButtonText="완료"
         onRightButtonClick={handleOnShare}
-        rightButtonDisabled={!videoId || !playlistId}
+        rightButtonDisabled={!videoId || !selectedPlaylist}
+        usePortal={false}
       />
       <div css={addPostContainer}>
         <div className="input-container">
@@ -102,13 +130,7 @@ const AddPostPage: React.FC = () => {
           {error && <div css={errorMessage}>{error}</div>}
         </div>
         <p className="label">플리 선택</p>
-        <button
-          onClick={() =>
-            navigate(`/post/add/selectpli?videoId=${videoId}`, { state: { type: 'byLink' } })
-          }
-        >
-          {playlistTitle}
-        </button>
+        <button onClick={handlePliSelectClick}>{selectedPlaylist?.title || playlistTitle}</button>
         <div className="thumbnail-wrapper">
           <VideoThumbnail
             url={
@@ -122,11 +144,26 @@ const AddPostPage: React.FC = () => {
           {(!videoId || videoId === 'null') && <HiOutlineLink size={32} />}
         </div>
       </div>
+      <FullModal isOpen={isSelectPliByLinkModalOpen} onClose={closeSelectPliByLinkModal}>
+        <SelectPliPage
+          onClose={closeSelectPliByLinkModal}
+          onSelectPlaylist={handlePlaylistSelect}
+          type="byLink"
+        />
+      </FullModal>
+      <FullModal isOpen={isNewPostModalOpen} onClose={closeNewPostModal}>
+        <NewPost
+          videoId={videoId || ''}
+          playlistId={playlistId || ''}
+          onClose={handleCloseNewPost}
+        />
+      </FullModal>
     </>
   );
 };
 
 const addPostContainer = css`
+  width: 100%;
   font-family: Pretendard;
   & .input-container {
     margin-bottom: 16px;
