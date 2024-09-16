@@ -8,6 +8,7 @@ import FullModal from '@/components/common/modals/FullModal';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import BackHeader from '@/components/layout/header/BackHeader';
+import CloseHeader from '@/components/layout/header/CloseHeader';
 import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
 import { PATH } from '@/constants/path';
@@ -31,12 +32,14 @@ interface SelectPliPageProps {
   onClose?: () => void;
   onSelectPlaylist?: (id: string, title: string) => void;
   type?: 'byLink' | 'fromPli';
+  onCompleteSelectVideo?: (playlistId: string, videoId: string) => void;
 }
 
 const SelectPliPage: React.FC<SelectPliPageProps> = ({
   onClose = () => {},
   onSelectPlaylist,
   type,
+  onCompleteSelectVideo,
 }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const navigate = useNavigate();
@@ -87,12 +90,18 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
     }
   };
 
-  const handleCloseClick = () => {
-    if (onClose) {
+  const handleCloseClick = (type?: string | undefined) => {
+    if (type) {
       onClose();
     } else {
       navigate(-1);
     }
+  };
+
+  const handleCompleteSelectVideo = (playlistId: string, videoId: string) => {
+    closeSelectVideoModal();
+    onClose();
+    onCompleteSelectVideo && onCompleteSelectVideo(playlistId, videoId);
   };
 
   if (!user) {
@@ -108,11 +117,20 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
   return (
     <>
       <div css={selectPliStyle}>
-        <BackHeader
-          title={type ? '플리 선택' : '저장할 플리 선택'}
-          onBackClick={handleCloseClick}
-          usePortal={false}
-        />
+        {type === 'fromPli' ? (
+          <CloseHeader
+            title="플리 선택"
+            onCloseClick={handleCloseClick}
+            rightButtonText=""
+            usePortal={false}
+          />
+        ) : (
+          <BackHeader
+            title={type ? '플리 선택' : '저장할 플리 선택'}
+            onBackClick={() => handleCloseClick(type)}
+            usePortal={false}
+          />
+        )}
         <div css={contentStyle}>
           {videoId || type === 'byLink' ? (
             <>
@@ -156,7 +174,8 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
         <SelectVideoPage
           playlistId={selectedPlaylistId || ''}
           onClose={closeSelectVideoModal}
-          handleSelectPliClose={onClose}
+          onCloseSelectPli={onClose}
+          onCompleteSelectVideo={handleCompleteSelectVideo}
         />
       </FullModal>
     </>

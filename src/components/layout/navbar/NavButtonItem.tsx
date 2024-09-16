@@ -1,3 +1,5 @@
+import { useState, useCallback } from 'react';
+
 import { css } from '@emotion/react';
 import { IconType } from 'react-icons';
 import { HiLink, HiOutlineRectangleStack } from 'react-icons/hi2';
@@ -6,6 +8,7 @@ import FullModal from '@/components/common/modals/FullModal';
 import OptionModal from '@/components/common/modals/OptionModal';
 import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import AddPostPage from '@/pages/AddPost';
+import NewPost from '@/pages/NewPost';
 import SelectPliPage from '@/pages/SelectPli';
 
 interface NavButtonItemProps {
@@ -17,6 +20,9 @@ interface NavButtonItemProps {
 const ANIMATION_DURATION = 300;
 
 const NavButtonItem: React.FC<NavButtonItemProps> = ({ Icon, stroke, onClick }) => {
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
+  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+
   const {
     isOpen: isOptionModalOpen,
     open: openOptionModal,
@@ -32,6 +38,11 @@ const NavButtonItem: React.FC<NavButtonItemProps> = ({ Icon, stroke, onClick }) 
     open: openSelectPliFromPliModal,
     close: closeSelectPliFromPliModal,
   } = useModalWithOverlay('selectPliFromPliModal', 'addPost');
+  const {
+    isOpen: isNewPostModalOpen,
+    open: openNewPostModal,
+    close: closeNewPostModal,
+  } = useModalWithOverlay('newPostModal', 'addPostFromPli');
 
   const handleOpenOptionModal = () => {
     openOptionModal();
@@ -49,6 +60,23 @@ const NavButtonItem: React.FC<NavButtonItemProps> = ({ Icon, stroke, onClick }) 
     setTimeout(() => {
       openSelectPliFromPliModal();
     }, ANIMATION_DURATION);
+  };
+
+  const handleCompleteSelectVideo = useCallback(
+    (playlistId: string, videoId: string) => {
+      setSelectedPlaylistId(playlistId);
+      setSelectedVideoId(videoId);
+      setTimeout(() => {
+        openNewPostModal();
+      }, ANIMATION_DURATION);
+    },
+    [openNewPostModal],
+  );
+
+  const handleCloseNewPost = () => {
+    closeNewPostModal();
+    setSelectedPlaylistId(null);
+    setSelectedVideoId(null);
   };
 
   const modalOptions = [
@@ -87,7 +115,19 @@ const NavButtonItem: React.FC<NavButtonItemProps> = ({ Icon, stroke, onClick }) 
       </FullModal>
 
       <FullModal isOpen={isSelectPliFromPliModalOpen} onClose={closeSelectPliFromPliModal}>
-        <SelectPliPage onClose={closeSelectPliFromPliModal} type="fromPli" />
+        <SelectPliPage
+          onClose={closeSelectPliFromPliModal}
+          type="fromPli"
+          onCompleteSelectVideo={handleCompleteSelectVideo}
+        />
+      </FullModal>
+
+      <FullModal isOpen={isNewPostModalOpen} onClose={handleCloseNewPost}>
+        <NewPost
+          playlistId={selectedPlaylistId || ''}
+          videoId={selectedVideoId || ''}
+          onClose={handleCloseNewPost}
+        />
       </FullModal>
     </li>
   );
