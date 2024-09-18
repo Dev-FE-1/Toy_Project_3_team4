@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { HiOutlinePencil, HiOutlinePlay, HiOutlineHeart } from 'react-icons/hi2';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -39,12 +40,25 @@ const ProfilePage: React.FC = () => {
   const { userPosts, loadingPosts, error: userPostsError } = useUserPosts(userId || '');
   const { likedPosts, loadingLikedPosts, error: likedPostsError } = useLikedPosts(userId || '');
   const addPlaylistMutation = useAddPlaylist();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (currentUser && userData) {
       setIsFollowing(userData.followers?.includes(currentUser.uid) || false);
     }
   }, [currentUser, userData]);
+
+  const handleTabChange = useCallback(
+    (tabId: string) => {
+      setActiveTab(tabId);
+      if (tabId === 'likes') {
+        queryClient.invalidateQueries({ queryKey: ['likedPosts', userId] });
+      } else if (tabId === 'post') {
+        queryClient.invalidateQueries({ queryKey: ['posts', userId] });
+      }
+    },
+    [userId, queryClient],
+  );
 
   const handleSettingsClick = () => {
     navigate(PATH.SETTINGS);
@@ -93,7 +107,7 @@ const ProfilePage: React.FC = () => {
         onFollowToggle={handleFollowToggle}
       />
       <div>
-        <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
+        <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={handleTabChange}>
           <TabContent id="post" activeTabId={activeTab}>
             {loadingPosts ? (
               <div css={spinnerContainerStyle}>
@@ -102,9 +116,9 @@ const ProfilePage: React.FC = () => {
             ) : userPostsError ? (
               <div>{userPostsError.toString()}</div>
             ) : (
-              userPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
+              userPosts?.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
             )}
-            {!loadingPosts && userPosts.length === 0 && (
+            {!loadingPosts && (!userPosts || userPosts.length === 0) && (
               <EmptyMessage Icon={HiOutlinePencil}>아직 포스트가 없습니다</EmptyMessage>
             )}
           </TabContent>
@@ -136,9 +150,9 @@ const ProfilePage: React.FC = () => {
             ) : likedPostsError ? (
               <div>{likedPostsError.toString()}</div>
             ) : (
-              likedPosts.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
+              likedPosts?.map((post) => <Post key={post.postId} post={post} id={post.postId} />)
             )}
-            {!loadingLikedPosts && likedPosts.length === 0 && (
+            {!loadingLikedPosts && (!likedPosts || likedPosts.length === 0) && (
               <EmptyMessage Icon={HiOutlineHeart}>아직 좋아요 한 포스트가 없습니다</EmptyMessage>
             )}
           </TabContent>
