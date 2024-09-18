@@ -24,7 +24,6 @@
     "@tanstack/react-query": "^5.53.3",
     "@types/react-router-dom": "^5.3.3",
     "algoliasearch": "^5.2.5",
-    "express": "^4.19.2",
     "firebase": "^10.13.0",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
