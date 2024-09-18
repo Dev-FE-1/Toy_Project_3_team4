@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import { css } from '@emotion/react';
 import { HiOutlineBookmark, HiOutlinePlay } from 'react-icons/hi2';
@@ -21,6 +21,7 @@ import { useAddVideosToMyPlaylist } from '@/hooks/useVideoToPlaylist';
 import SelectVideoPage from '@/pages/SelectVideo';
 import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
+import { PlaylistModel, VideoModel } from '@/types/playlist';
 import { makeVideoObj } from '@/utils/video';
 
 const tabs = [
@@ -59,12 +60,24 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
     close: closeSelectVideoModal,
   } = useModalWithOverlay('selectVideoModal', 'selectPli');
 
+  const isVideoInPlaylist = useMemo(() => {
+    return (playlist: PlaylistModel) =>
+      playlist.videos.some((video: VideoModel) => video.videoId === videoObj.videoId);
+  }, [videoObj.videoId]);
+
+  const filteredPlaylists = useMemo(() => {
+    return (myPlaylists || []).map((playlist) => ({
+      ...playlist,
+      containsVideo: isVideoInPlaylist(playlist),
+    }));
+  }, [myPlaylists, isVideoInPlaylist]);
+
   const handleAddPlaylist = (title: string, isPublic: boolean) => {
     addPlaylistMutation.mutate({ title, isPublic });
     addToast('새로운 플리를 추가했습니다.');
   };
 
-  const handlePlaylistClick = (playlistId: string, title: string) => {
+  const handlePlaylistClick = (playlistId: string, title: string, containsVideo: boolean) => {
     if (type === 'fromPli') {
       setSelectedPlaylistId(playlistId);
       openSelectVideoModal();
@@ -72,7 +85,7 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
       if (onSelectPlaylist) {
         onSelectPlaylist(playlistId, title);
       }
-    } else if (videoId) {
+    } else if (videoId && !containsVideo) {
       addVideoToPlaylistMutation.mutate(
         { playlistId, videos: [videoObj] },
         {
@@ -85,7 +98,7 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
           },
         },
       );
-    } else {
+    } else if (!containsVideo) {
       navigate(`${PATH.PLAYLIST}/${playlistId}`);
     }
   };
@@ -112,8 +125,6 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
     return <p>{error.message}</p>;
   }
 
-  const filteredPlaylists = myPlaylists?.filter((playlist) => playlist.videos.length > 0) || [];
-
   return (
     <>
       <div css={selectPliStyle}>
@@ -139,22 +150,28 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
                 onAddPlaylist={handleAddPlaylist}
               />
               <Playlists
-                playlists={myPlaylists || []}
+                playlists={filteredPlaylists}
                 customStyle={playlistStyle}
                 customVideoStyle={videoStyle}
-                onPlaylistClick={handlePlaylistClick}
+                onPlaylistClick={(id, title, containsVideo) =>
+                  handlePlaylistClick(id, title, containsVideo)
+                }
                 isColumn={false}
+                disabledPlaylists={!type && videoId ? true : false}
               />
             </>
           ) : (
             <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
               <TabContent id="my" activeTabId={activeTab}>
                 <Playlists
-                  playlists={filteredPlaylists || []}
+                  playlists={filteredPlaylists.filter((playlist) => playlist.videos.length > 0)}
                   customStyle={playlistStyle}
                   customVideoStyle={videoStyle}
-                  onPlaylistClick={handlePlaylistClick}
+                  onPlaylistClick={(id, title, containsVideo) =>
+                    handlePlaylistClick(id, title, containsVideo)
+                  }
                   isColumn={false}
+                  disabledPlaylists={false}
                 />
               </TabContent>
               <TabContent id="subscribe" activeTabId={activeTab}>
@@ -162,8 +179,9 @@ const SelectPliPage: React.FC<SelectPliPageProps> = ({
                   playlists={subscribedPlaylists || []}
                   customStyle={playlistStyle}
                   customVideoStyle={videoStyle}
-                  onPlaylistClick={handlePlaylistClick}
+                  onPlaylistClick={(id, title) => handlePlaylistClick(id, title, false)}
                   isColumn={false}
+                  disabledPlaylists={false}
                 />
               </TabContent>
             </TabMenu>
@@ -213,6 +231,11 @@ const playlistStyle = css`
     @media screen and (min-width: ${theme.width.large}) {
       margin-left: 12px;
     }
+  }
+
+  .disabled-playlist {
+    opacity: 0.5;
+    pointer-events: none;
   }
 `;
 

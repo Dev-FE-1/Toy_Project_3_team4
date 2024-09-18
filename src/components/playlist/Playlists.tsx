@@ -9,11 +9,12 @@ import theme from '@/styles/theme';
 import { PlaylistModel } from '@/types/playlist';
 
 interface PlaylistListProps {
-  playlists: PlaylistModel[];
+  playlists: (PlaylistModel & { containsVideo?: boolean })[];
   customStyle?: SerializedStyles;
   customVideoStyle?: SerializedStyles;
   isColumn?: boolean;
-  onPlaylistClick?: (playlistId: string, title: string) => void;
+  onPlaylistClick?: (playlistId: string, title: string, containsVideo: boolean) => void;
+  disabledPlaylists?: boolean;
 }
 
 const Playlists: React.FC<PlaylistListProps> = ({
@@ -22,6 +23,7 @@ const Playlists: React.FC<PlaylistListProps> = ({
   customVideoStyle,
   onPlaylistClick,
   isColumn = true,
+  disabledPlaylists = false,
 }) => {
   const currentUser = useAuth();
 
@@ -31,12 +33,19 @@ const Playlists: React.FC<PlaylistListProps> = ({
         {playlists.length > 0 &&
           playlists
             .filter(({ isPublic, userId }) => isPublic || userId === currentUser?.uid)
-            .map(({ playlistId, title, videos, isPublic }) => (
+            .map(({ playlistId, title, videos, isPublic, containsVideo }) => (
               <div
                 data-testid="playlist-item"
                 key={`playlist-${playlistId}`}
-                css={itemStyle(isColumn)}
-                onClick={() => (onPlaylistClick ? onPlaylistClick(playlistId, title) : null)}
+                css={[
+                  itemStyle(isColumn),
+                  disabledPlaylists && containsVideo && disabledPlaylistStyle,
+                ]}
+                onClick={() =>
+                  onPlaylistClick && !containsVideo
+                    ? onPlaylistClick(playlistId, title, !!containsVideo)
+                    : null
+                }
               >
                 <VideoThumbnail
                   url={videos[0]?.thumbnailUrl}
@@ -97,6 +106,11 @@ const itemStyle = (isColumn: boolean) => css`
       }
     }
   }
+`;
+
+const disabledPlaylistStyle = css`
+  opacity: 0.5;
+  pointer-events: none;
 `;
 
 export default Playlists;
