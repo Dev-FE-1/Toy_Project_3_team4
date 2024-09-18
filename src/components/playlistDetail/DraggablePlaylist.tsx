@@ -1,31 +1,25 @@
 import { useRef } from 'react';
 
 import { css } from '@emotion/react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 
 import { updatePlaylistOrder } from '@/api/fetchPlaylist';
-import PlaylistContentsItem from '@/components/playlistDetail/PlaylistContentsItem';
+import DraggablePlaylistItem from '@/components/playlistDetail/DraggablePlaylistItem';
 import theme from '@/styles/theme';
 import { VideoModel } from '@/types/playlist';
 
-interface PlaylistContentsProps {
+interface DraggablePlaylistProps {
   playlistId: string;
   videos: VideoModel[];
   setVideos: (videos: VideoModel[]) => void;
   isDraggable?: boolean;
-  onVideoSelect: (videoId: string) => void;
-  selectedVideoId: string | null;
-  selectPli?: boolean;
 }
 
-const PlaylistContents: React.FC<PlaylistContentsProps> = ({
+const DraggablePlaylist: React.FC<DraggablePlaylistProps> = ({
   playlistId,
   videos,
   setVideos,
-  onVideoSelect,
-  selectedVideoId,
-  isDraggable = false,
-  selectPli = false,
+  isDraggable = true,
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -44,13 +38,11 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
     return (
       <ul css={playlistStyle} ref={listRef}>
         {videos.map((video) => (
-          <PlaylistContentsItem
+          <DraggablePlaylistItem
             key={video.videoId}
+            playlistId={playlistId}
             video={video}
-            isSelected={video.videoId === selectedVideoId}
-            onVideoSelect={onVideoSelect}
-            isDraggable={isDraggable}
-            selectPli={selectPli}
+            isDraggable={false}
           />
         ))}
       </ul>
@@ -69,12 +61,7 @@ const PlaylistContents: React.FC<PlaylistContentsProps> = ({
             ${snapshot.isDragging && draggedItemStyle}
           `}
         >
-          <PlaylistContentsItem
-            video={video}
-            isSelected={video.videoId === selectedVideoId}
-            onVideoSelect={onVideoSelect}
-            isDraggable={isDraggable}
-          />
+          <DraggablePlaylistItem video={video} playlistId={playlistId} />
         </div>
       )}
     </Draggable>
@@ -120,4 +107,4 @@ const draggedItemStyle = css`
   background-color: ${theme.colors.bgGray};
 `;
 
-export default PlaylistContents;
+export default DraggablePlaylist;

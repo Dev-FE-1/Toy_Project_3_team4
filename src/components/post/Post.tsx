@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { css, SerializedStyles } from '@emotion/react';
 import {
@@ -14,8 +14,9 @@ import {
 } from 'react-icons/hi2';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { updatePostsLikes } from '@/api/fetchPosts';
 import IconButton from '@/components/common/buttons/IconButton';
+import FullModal from '@/components/common/modals/FullModal';
+import OptionModal from '@/components/common/modals/OptionModal';
 import VideoPlayer from '@/components/post/VideoPlayer';
 import UserInfo from '@/components/user/UserInfo';
 import { PATH } from '@/constants/path';
@@ -23,21 +24,22 @@ import { useAuth } from '@/hooks/useAuth';
 import { useComments } from '@/hooks/useComments';
 import { useDeletePost } from '@/hooks/useDeletePost';
 import { useFetchVideoTitle } from '@/hooks/useFetchVideoTitle';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import { usePlaylistById } from '@/hooks/usePlaylists';
 import {
   useSubscribePlaylist,
   useUnsubscribePlaylist,
   useCheckSubscription,
 } from '@/hooks/useSubscribePlaylist';
+import { useToggleLikes } from '@/hooks/useToggleLikes';
 import { useUserData } from '@/hooks/useUserData';
+import NewPost from '@/pages/NewPost';
+import { useToastStore } from '@/stores/toastStore';
 import { textEllipsis } from '@/styles/GlobalStyles';
 import theme from '@/styles/theme';
 import { PostModel } from '@/types/post';
 import { formatCreatedAt } from '@/utils/date';
-import { makeVideoObj } from '@/utils/video';
 import { extractVideoId } from '@/utils/youtubeUtils';
-
-import OptionModal from '../common/modals/OptionModal';
 
 interface PostProps {
   id: string;
@@ -47,24 +49,38 @@ interface PostProps {
 }
 
 const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(post.likes.length);
-  const [isSubscribed, setIsSubscribed] = useState<boolean | undefined>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const currentUser = useAuth();
-  const { userData } = useUserData(post.userId);
-  const { data: playlist, isLoading: isPlaylistLoading } = usePlaylistById(post.playlistId);
+  const navigate = useNavigate();
   const videoTitle = useFetchVideoTitle(post.video);
+  const videoId = useMemo(() => extractVideoId(post.video) ?? '', [post.video]);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState<boolean | undefined>(false);
+  const [likesCount, setLikesCount] = useState(post.likes.length);
+  const {
+    isOpen: isOptionModalOpen,
+    open: openOptionModal,
+    close: closeOptionModal,
+  } = useModalWithOverlay('postOptionModal', post.postId);
+  const currentUser = useAuth();
+  const { data: playlist, isLoading: isPlaylistLoading } = usePlaylistById(post.playlistId);
   const { data: isPlaylistSubscribed } = useCheckSubscription(post.playlistId);
   const subscribeMutation = useSubscribePlaylist(post.playlistId);
   const unsubscribeMutation = useUnsubscribePlaylist(post.playlistId);
   const { comments } = useComments(post.postId);
-  const navigate = useNavigate();
-  const { mutate: deletePost } = useDeletePost(post.userId);
+  const addToast = useToastStore((state) => state.addToast);
+  const deletePost = useDeletePost(post.userId);
+  const {
+    isOpen: isEditModalOpen,
+    open: openEditModal,
+    close: closeEditModal,
+  } = useModalWithOverlay('editPostModal', post.postId);
+  const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
+  const { userData } = useUserData(post.userId);
+  const toggleLikesMutation = useToggleLikes(currentUser?.uid || '');
 
   useEffect(() => {
     if (currentUser) {
       setIsLiked(post.likes.includes(currentUser.uid));
+      setLikesCount(post.likes.length);
     }
   }, [currentUser, post.likes]);
 
@@ -95,53 +111,61 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
   const toggleLike = async () => {
     setIsLiked(!isLiked);
     setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
-    await updatePostsLikes({ postId: post.postId, userId: currentUser?.uid || '' });
+    toggleLikesMutation.mutate(post.postId);
   };
 
   const handleDeletePost = async () => {
-    deletePost(post.postId);
-    setIsModalOpen(false);
+    deletePost.mutate(post.postId, {
+      onSuccess: () => {
+        addToast('포스트가 삭제되었습니다.');
+      },
+      onError: (error) => {
+        console.warn('포스트 삭제 실패:', error);
+        addToast('포스트 삭제에 실패했습니다.');
+      },
+    });
+    closeOptionModal();
   };
 
   const handleEditPost = () => {
-    const pli = post.playlistId;
-    const videoId = extractVideoId(post.video);
-
-    navigate(`${PATH.ADD_POST}/newPost?pli=${pli}&videoId=${videoId}`, {
-      state: {
-        isModifying: true,
-        postId: post.postId,
-      },
-    });
-    setIsModalOpen(false);
+    closeOptionModal();
+    openEditModal();
   };
 
-  const postDetailPath = `${PATH.POST_DETAIL.replace(':postId', '')}${post.postId}`;
+  const playlistObj = useMemo(() => {
+    if (!playlist) {
+      return {
+        bookMark: false,
+        isClickable: false,
+        label: '알 수 없는 플레이리스트',
+        isPublicPlaylist: false,
+      };
+    }
+    const isUnknownPlaylist = !playlist.videos.some((value) => value.videoId === videoId);
+    const isPublicPlaylist =
+      !(!playlist.isPublic && currentUser?.uid !== post.userId) && !isUnknownPlaylist;
+    const bookMark = isPublicPlaylist && currentUser?.uid !== post.userId && !isUnknownPlaylist;
 
-  const isPrivatePlaylist = playlist && !playlist.isPublic;
-  const videoId = extractVideoId(post.video) ?? '';
-  const videoObj = makeVideoObj(videoId);
-  const isUnknownPlaylist = playlist
-    ? !playlist.videos.some((value) => value.videoId === videoObj.videoId)
-    : true;
+    const label = isPlaylistLoading
+      ? '플레이리스트 로딩 중...'
+      : isUnknownPlaylist
+        ? '알 수 없는 플레이리스트'
+        : !playlist.isPublic && currentUser?.uid !== post.userId
+          ? '비공개 플레이리스트'
+          : playlist?.title;
 
-  const isPublicPlaylist =
-    !(isPrivatePlaylist && currentUser?.uid !== post.userId) && !isUnknownPlaylist;
+    const isClickable =
+      currentUser?.uid === post.userId
+        ? !isUnknownPlaylist
+        : !!playlist.isPublic && !isUnknownPlaylist && !isPlaylistLoading;
 
-  const showBookmark = isPublicPlaylist && currentUser?.uid !== post.userId && !isUnknownPlaylist;
-
-  const playlistLabel = isPlaylistLoading
-    ? '플레이리스트 로딩 중...'
-    : isUnknownPlaylist
-      ? '알 수 없는 플레이리스트'
-      : isPrivatePlaylist && currentUser?.uid !== post.userId
-        ? '비공개 플레이리스트'
-        : playlist?.title;
-
-  const isClickable =
-    currentUser?.uid === post.userId
-      ? !isUnknownPlaylist
-      : !isPrivatePlaylist && !isUnknownPlaylist && !isPlaylistLoading;
+    return {
+      bookMark,
+      isClickable,
+      label,
+      isPublicPlaylist,
+    };
+  }, [currentUser?.uid, isPlaylistLoading, playlist, post.userId, videoId]);
 
   return (
     <div css={postContainerStyle} data-testid="post">
@@ -157,7 +181,7 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             />
             <span css={createdAtStyle}>{formatCreatedAt(post.createdAt)}</span>
           </div>
-          {showBookmark && (
+          {playlistObj.bookMark && (
             <IconButton
               icon={isSubscribed ? <HiBookmark size={20} /> : <HiOutlineBookmark size={20} />}
               onClick={toggleSubscription}
@@ -166,18 +190,29 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
           )}
           {currentUser?.uid === post.userId && (
             <>
-              <IconButton
-                icon={<HiEllipsisVertical size={20} />}
-                onClick={() => setIsModalOpen(true)}
-              />
-              <OptionModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                options={[
-                  { label: '포스트 수정', onClick: handleEditPost, Icon: HiOutlinePencil },
-                  { label: '포스트 삭제', onClick: handleDeletePost, Icon: HiOutlineTrash },
-                ]}
-              />
+              <IconButton icon={<HiEllipsisVertical size={20} />} onClick={openOptionModal} />
+              {isOptionModalOpen && (
+                <OptionModal
+                  isOpen={isOptionModalOpen}
+                  onClose={closeOptionModal}
+                  options={[
+                    { label: '포스트 수정', onClick: handleEditPost, Icon: HiOutlinePencil },
+                    { label: '포스트 삭제', onClick: handleDeletePost, Icon: HiOutlineTrash },
+                  ]}
+                />
+              )}
+              {isEditModalOpen && (
+                <FullModal isOpen={isEditModalOpen} onClose={closeEditModal}>
+                  <NewPost
+                    playlistId={post.playlistId}
+                    videoId={extractVideoId(post.video) || ''}
+                    onClose={closeEditModal}
+                    initialDescription={post.content}
+                    isEditing={true}
+                    postId={post.postId}
+                  />
+                </FullModal>
+              )}
             </>
           )}
         </div>
@@ -206,12 +241,14 @@ const Post: React.FC<PostProps> = ({ post, isDetail = false }) => {
             </Link>
           </div>
           <button
-            css={pliStyle(isClickable)}
-            onClick={isClickable ? handleButtonClick : undefined}
-            style={{ cursor: isClickable ? 'pointer' : 'default' }}
+            css={pliStyle(playlistObj.isClickable)}
+            onClick={playlistObj.isClickable ? handleButtonClick : undefined}
+            style={{ cursor: playlistObj.isClickable ? 'pointer' : 'default' }}
           >
-            <span css={textEllipsis(1)}>{playlistLabel}</span>
-            {isPublicPlaylist && <span>({playlist?.videos.length})</span>}
+            <span css={textEllipsis(1)} data-testid="playlist-title">
+              {playlistObj.label}
+            </span>
+            {playlistObj.isPublicPlaylist && <span>({playlist?.videos.length})</span>}
           </button>
         </div>
       </div>

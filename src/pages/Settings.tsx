@@ -21,9 +21,13 @@ const SettingsPage = () => {
     await signOutWithGoogle(signOutHandler.onSuccess, signOutHandler.onError);
   };
 
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
     <>
-      <BackHeader title="설정" />
+      <BackHeader title="설정" onBackClick={handleBackClick} />
       <div>
         <p css={subTitleStyle}>지원</p>
         <ul css={listStyle}>

@@ -6,7 +6,8 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
 import CloseHeader from '@/components/layout/header/CloseHeader';
-import PlaylistContentsItem from '@/components/playlistDetail/PlaylistContentsItem';
+import SelectablePlaylistItem from '@/components/playlistDetail/SelectablePlaylistItem';
+import { usePlaylistById } from '@/hooks/usePlaylists';
 import { useAddVideosToPlaylist } from '@/hooks/useVideoToPlaylist';
 import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
@@ -22,9 +23,8 @@ const AddVideosPage: React.FC = () => {
   const [videos, setVideos] = useState<VideoModel[]>([]);
   const [error, setError] = useState<string | null>(null);
   const addToast = useToastStore((state) => state.addToast);
-
+  const { data: playlist } = usePlaylistById(playlistId);
   const { mutate: addVideosToPlaylist, isPending } = useAddVideosToPlaylist(playlistId);
-
   const handleOnClose = () =>
     navigate(`/playlist/${playlistId}`, { state: { from: '/addVideos' } });
 
@@ -75,7 +75,8 @@ const AddVideosPage: React.FC = () => {
   const handleAddVideo = () => {
     if (videoId) {
       const alreadyAdded = videos.some((video) => video.videoId === videoId);
-      if (alreadyAdded) {
+      const alreadyAddedInPlaylist = playlist?.videos.some((video) => video.videoId === videoId);
+      if (alreadyAdded || alreadyAddedInPlaylist) {
         setError('이미 추가된 비디오입니다.');
         return;
       }
@@ -120,12 +121,11 @@ const AddVideosPage: React.FC = () => {
         {error && <div css={errorMessage}>{error}</div>}
         <ul css={videosListStyle}>
           {videos.map((video) => (
-            <PlaylistContentsItem
+            <SelectablePlaylistItem
               key={video.videoId}
               video={video}
-              onVideoSelect={() => {}}
               isSelected={false}
-              isDraggable={false}
+              onVideoSelect={() => {}}
             />
           ))}
         </ul>
@@ -135,7 +135,6 @@ const AddVideosPage: React.FC = () => {
 };
 
 const addPostContainer = css`
-  font-family: Pretendard;
   & .inputContainer {
     margin-bottom: 12px;
     display: flex;

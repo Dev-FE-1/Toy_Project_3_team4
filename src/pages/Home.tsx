@@ -1,9 +1,10 @@
-import { useEffect, memo } from 'react';
+import { useEffect, memo, useState } from 'react';
 
 import { css } from '@emotion/react';
 import { HiArrowUturnUp } from 'react-icons/hi2';
 import { LuPartyPopper } from 'react-icons/lu';
 import { useInView } from 'react-intersection-observer';
+import { useLocation } from 'react-router-dom';
 
 import FitButton from '@/components/common/buttons/FitButton';
 import Spinner from '@/components/common/loading/Spinner';
@@ -11,6 +12,7 @@ import LogoHeader from '@/components/layout/header/LogoHeader';
 import { PostsTimeLine } from '@/components/post/PostsTimeline';
 import { useAuth } from '@/hooks/useAuth';
 import { useFilteredPostsTimelinesQuery } from '@/hooks/useFilteredPostsTimelines';
+import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
 
 const MemoizedPostsTimeLine = memo(PostsTimeLine);
@@ -52,10 +54,23 @@ const LoadingMessage = ({
 
 const HomePage = () => {
   const user = useAuth();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+  const location = useLocation();
+  const [isNewPostLoading, setIsNewPostLoading] = useState(false);
+  const addToast = useToastStore((state) => state.addToast);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, refetch } =
     useFilteredPostsTimelinesQuery({
       userId: user?.uid || '',
     });
+
+  useEffect(() => {
+    if (location.state?.isNewPostCreated) {
+      setIsNewPostLoading(true);
+      refetch().then(() => {
+        setIsNewPostLoading(false);
+        addToast('새 포스트가 등록되었습니다.');
+      });
+    }
+  }, [location.state, refetch, addToast]);
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
   const { ref, inView } = useInView();
@@ -66,7 +81,7 @@ const HomePage = () => {
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
-  if (isLoading) {
+  if (isLoading || isNewPostLoading) {
     return <Spinner customStyle={spinnerStyle} />;
   }
 

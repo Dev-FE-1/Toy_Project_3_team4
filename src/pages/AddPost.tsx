@@ -2,55 +2,67 @@ import { useState, useEffect } from 'react';
 
 import { css } from '@emotion/react';
 import { HiOutlineLink } from 'react-icons/hi2';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
+import FullModal from '@/components/common/modals/FullModal';
 import CloseHeader from '@/components/layout/header/CloseHeader';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
+import NewPost from '@/pages/NewPost';
+import SelectPliPage from '@/pages/SelectPli';
 import { errorMessageStyle } from '@/styles/input';
 import theme from '@/styles/theme';
 import { extractVideoId, validateVideoId } from '@/utils/youtubeUtils';
 
-const AddPostPage: React.FC = () => {
+interface AddPostPageProps {
+  onClose?: () => void;
+}
+
+const AddPostPage: React.FC<AddPostPageProps> = ({ onClose }) => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: userPlaylists } = useUserPlaylists();
 
-  const playlistId = searchParams.get('pli');
-  const playlistTitle = searchParams.get('title') || '분류되지 않은 목록';
-  const initialVideoId = searchParams.get('videoId');
-
-  const { data: myPlaylists } = useUserPlaylists();
   const [inputUrl, setInputUrl] = useState<string>('');
-  const [videoId, setVideoId] = useState<string | null>(initialVideoId || null);
+  const [videoId, setVideoId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<{ id: string; title: string } | null>(
+    null,
+  );
 
   useEffect(() => {
-    if (!playlistId && myPlaylists) {
-      const defaultPlaylist = myPlaylists.find((pl) => pl.title === '분류되지 않은 목록');
+    if (userPlaylists) {
+      const defaultPlaylist = userPlaylists.find(
+        (playlist) => playlist.title === '분류되지 않은 목록',
+      );
       if (defaultPlaylist) {
-        setSearchParams({
-          pli: defaultPlaylist.playlistId,
-          title: defaultPlaylist.title,
-          videoId: videoId || '',
-        });
+        setSelectedPlaylist({ id: defaultPlaylist.playlistId, title: defaultPlaylist.title });
       }
     }
-  }, [playlistId, myPlaylists, setSearchParams, videoId]);
+  }, [userPlaylists]);
 
-  useEffect(() => {
-    if (initialVideoId && initialVideoId !== 'null') {
-      setInputUrl(`https://www.youtube.com/watch?v=${initialVideoId}`);
+  const {
+    isOpen: isSelectPliModalOpen,
+    open: openSelectPliModal,
+    close: closeSelectPliModal,
+  } = useModalWithOverlay('selectPliModal', 'addPost');
+  const {
+    isOpen: isNewPostModalOpen,
+    open: openNewPostModal,
+    close: closeNewPostModal,
+  } = useModalWithOverlay('newPostModal', 'addPostByLink');
+
+  const handleOnClose = () => {
+    if (onClose) {
+      onClose();
     } else {
-      setInputUrl('');
-      setVideoId(null);
+      navigate(-1);
     }
-  }, [initialVideoId]);
-
-  const handleOnClose = () => navigate(-1);
+  };
 
   const handleOnShare = () => {
-    if (videoId && playlistId) {
-      navigate(`/post/add/newPost?pli=${playlistId}&videoId=${videoId}`);
+    if (videoId && selectedPlaylist) {
+      openNewPostModal();
     }
   };
 
@@ -70,7 +82,6 @@ const AddPostPage: React.FC = () => {
       if (isValid) {
         setVideoId(id);
         setError(null);
-        setSearchParams({ ...Object.fromEntries(searchParams.entries()), videoId: id });
       } else {
         setVideoId(null);
         setError('올바른 YouTube 링크가 아닙니다');
@@ -81,14 +92,29 @@ const AddPostPage: React.FC = () => {
     }
   };
 
+  const handlePliSelectClick = () => {
+    openSelectPliModal();
+  };
+
+  const handlePlaylistSelect = (id: string, title: string) => {
+    setSelectedPlaylist({ id, title });
+    closeSelectPliModal();
+  };
+
+  const handleCloseNewPost = () => {
+    closeNewPostModal();
+    handleOnClose();
+  };
+
   return (
     <>
       <CloseHeader
         onCloseClick={handleOnClose}
         title="동영상 추가"
-        rightButtonText="완료"
+        rightButtonText="다음"
         onRightButtonClick={handleOnShare}
-        rightButtonDisabled={!videoId || !playlistId}
+        rightButtonDisabled={!videoId}
+        usePortal={false}
       />
       <div css={addPostContainer}>
         <div className="input-container">
@@ -100,12 +126,8 @@ const AddPostPage: React.FC = () => {
           {error && <div css={errorMessage}>{error}</div>}
         </div>
         <p className="label">플리 선택</p>
-        <button
-          onClick={() =>
-            navigate(`/post/add/selectpli?videoId=${videoId}`, { state: { type: 'byLink' } })
-          }
-        >
-          {playlistTitle}
+        <button onClick={handlePliSelectClick}>
+          {selectedPlaylist?.title || '분류되지 않은 목록'}
         </button>
         <div className="thumbnail-wrapper">
           <VideoThumbnail
@@ -120,11 +142,26 @@ const AddPostPage: React.FC = () => {
           {(!videoId || videoId === 'null') && <HiOutlineLink size={32} />}
         </div>
       </div>
+      <FullModal isOpen={isSelectPliModalOpen} onClose={closeSelectPliModal}>
+        <SelectPliPage
+          onClose={closeSelectPliModal}
+          onSelectPlaylist={handlePlaylistSelect}
+          type="byLink"
+        />
+      </FullModal>
+      <FullModal isOpen={isNewPostModalOpen} onClose={closeNewPostModal}>
+        <NewPost
+          videoId={videoId || ''}
+          playlistId={selectedPlaylist?.id || ''}
+          onClose={handleCloseNewPost}
+        />
+      </FullModal>
     </>
   );
 };
 
 const addPostContainer = css`
+  width: 100%;
   font-family: Pretendard;
   & .input-container {
     margin-bottom: 16px;

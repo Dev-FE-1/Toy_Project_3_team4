@@ -4,6 +4,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { HiOutlinePlus } from 'react-icons/hi2';
 
 import { useAuth } from '@/hooks/useAuth';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import theme from '@/styles/theme';
 
@@ -14,12 +15,15 @@ const AddPlaylistButton: React.FC<{
   onAddPlaylist: (title: string, isPublic: boolean) => void;
 }> = ({ customStyle, onAddPlaylist }) => {
   const user = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPublic, setIsPublic] = useState(true);
   const [title, setTitle] = useState('');
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  const {
+    isOpen: isAddFixModalOpen,
+    open: openAddFixModal,
+    close: closeAddFixModal,
+  } = useModalWithOverlay('addFixModal', 'addPlaylist');
   const { data: playlists } = useUserPlaylists();
 
   useEffect(() => {
@@ -39,11 +43,11 @@ const AddPlaylistButton: React.FC<{
   }, [title, playlists]);
 
   const onClick = () => {
-    setIsModalOpen(true);
+    openAddFixModal();
   };
 
   const onClose = () => {
-    setIsModalOpen(false);
+    closeAddFixModal();
     setTitle('');
     setErrorMessage('');
     setIsButtonEnabled(false);
@@ -70,7 +74,7 @@ const AddPlaylistButton: React.FC<{
         <label htmlFor="add">새로운 플리 추가</label>
       </div>
       <AddFixModal
-        isOpen={isModalOpen}
+        isOpen={isAddFixModalOpen}
         onClose={onClose}
         title="플리 추가하기"
         inputValue={title}

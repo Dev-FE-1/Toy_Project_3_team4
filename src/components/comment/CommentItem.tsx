@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { css } from '@emotion/react';
 import {
   HiOutlineEllipsisVertical,
@@ -9,11 +7,12 @@ import {
 } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
-import { CommentInput } from '@/components/comment/CommentInput';
+import CommentInput from '@/components/comment/CommentInput';
 import Avatar from '@/components/common/Avatar';
 import FitButton from '@/components/common/buttons/FitButton';
 import OptionModal from '@/components/common/modals/OptionModal';
 import { PATH } from '@/constants/path';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import theme from '@/styles/theme';
 import { CommentModel } from '@/types/comment';
 import { formatCreatedAt } from '@/utils/date';
@@ -45,10 +44,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
   handleCompositionStart,
   handleCompositionEnd,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  const {
+    isOpen: isModalOpen,
+    open: openModal,
+    close: closeModal,
+  } = useModalWithOverlay('commentOptionModal', comment.id);
 
   const modalOptions = [
     {
@@ -57,7 +57,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       onClick: () => {
         setEditingCommentId(comment.id);
         setEditingContent(comment.content);
-        handleCloseModal();
+        closeModal();
       },
     },
     {
@@ -65,7 +65,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       Icon: HiOutlineTrash,
       onClick: () => {
         handleDeleteComment(comment.id);
-        handleCloseModal();
+        closeModal();
       },
     },
   ];
@@ -77,7 +77,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
         <div css={headerStyle}>
           <div css={userInfoStyle}>
             <Link to={PATH.PROFILE.replace(':userId', comment.userId)}>
-              <span css={nameStyle}>{userData?.displayName || 'Unknown User'}</span>
+              <span css={nameStyle}>{userData?.displayName || ''}</span>
             </Link>
             <span css={timeStyle}>{formatCreatedAt(comment.createdAt)}</span>
           </div>
@@ -85,12 +85,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <>
               <button
                 css={menuTriggerStyle}
-                onClick={handleOpenModal}
+                onClick={openModal}
                 data-testid="comment-vertical-button"
               >
                 <HiOutlineEllipsisVertical size={20} />
               </button>
-              <OptionModal isOpen={isModalOpen} onClose={handleCloseModal} options={modalOptions} />
+              <OptionModal isOpen={isModalOpen} onClose={closeModal} options={modalOptions} />
             </>
           )}
         </div>

@@ -8,9 +8,9 @@ export const useLikedPosts = (userId: string) => {
     isLoading: loadingLikedPosts,
     error,
   } = useQuery({
-    queryKey: ['likedPosts', userId], // 쿼리 키
-    queryFn: () => getPostsFilteredLikes({ userId }), // API 호출
-    enabled: !!userId, // userId가 있을 때만 쿼리 실행
+    queryKey: ['likedPosts', userId],
+    queryFn: () => getPostsFilteredLikes({ userId }),
+    enabled: !!userId,
   });
 
   return { likedPosts, loadingLikedPosts, error };

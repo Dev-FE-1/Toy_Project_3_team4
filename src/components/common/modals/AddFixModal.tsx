@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 import { css } from '@emotion/react';
 
 import FullButton from '@/components/common/buttons/FullButton';
@@ -32,6 +34,21 @@ const AddFixModal: React.FC<AddFixModalProps> = ({
   onSubmit,
   isEditing = false,
 }) => {
+  const [isRendered, setIsRendered] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsRendered(true);
+    } else {
+      const timer = setTimeout(() => {
+        setIsRendered(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  if (!isRendered && !isOpen) return null;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div css={modalContentContainer}>

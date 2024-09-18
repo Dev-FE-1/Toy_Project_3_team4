@@ -1,10 +1,18 @@
+import { useNavigate } from 'react-router-dom';
+
 import BackHeader from '@/components/layout/header/BackHeader';
 import { legalPageStyle } from '@/styles/legal';
 
 const TermsOfServicePage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
     <div css={legalPageStyle}>
-      <BackHeader />
+      <BackHeader title="" onBackClick={handleBackClick} />
       <h1>서비스 이용약관</h1>
       <p>
         본 서비스는 사용자가 유튜브 영상의 링크와 함께 게시글을 작성할 수 있는 소셜 네트워크

@@ -2,19 +2,23 @@ import { useState } from 'react';
 
 import { css } from '@emotion/react';
 import { HiOutlineBookmark, HiOutlinePlay } from 'react-icons/hi2';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import FullModal from '@/components/common/modals/FullModal';
 import TabContent from '@/components/common/tabs/TabContent';
 import TabMenu from '@/components/common/tabs/TabMenu';
 import BackHeader from '@/components/layout/header/BackHeader';
 import CloseHeader from '@/components/layout/header/CloseHeader';
 import AddPlaylistButton from '@/components/playlist/AddPlaylistButton';
 import Playlists from '@/components/playlist/Playlists';
+import { PATH } from '@/constants/path';
 import { useAuth } from '@/hooks/useAuth';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import { useUserPlaylists } from '@/hooks/usePlaylists';
 import { useAddPlaylist } from '@/hooks/usePostPlaylist';
 import { useSubscribedPlaylists } from '@/hooks/useSubscribedPlaylists';
 import { useAddVideosToMyPlaylist } from '@/hooks/useVideoToPlaylist';
+import SelectVideoPage from '@/pages/SelectVideo';
 import { useToastStore } from '@/stores/toastStore';
 import theme from '@/styles/theme';
 import { makeVideoObj } from '@/utils/video';
@@ -24,21 +28,36 @@ const tabs = [
   { id: 'subscribe', label: '구독한 플리', icon: <HiOutlinePlay /> },
 ];
 
-const SelectPliPage = () => {
+interface SelectPliPageProps {
+  onClose?: () => void;
+  onSelectPlaylist?: (id: string, title: string) => void;
+  type?: 'byLink' | 'fromPli';
+  onCompleteSelectVideo?: (playlistId: string, videoId: string) => void;
+}
+
+const SelectPliPage: React.FC<SelectPliPageProps> = ({
+  onClose = () => {},
+  onSelectPlaylist,
+  type,
+  onCompleteSelectVideo,
+}) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const navigate = useNavigate();
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const videoId = searchParams.get('videoId');
-  const videoObject = makeVideoObj(videoId || '');
-  const state = location.state as { type?: 'byLink' | 'fromPli' };
   const user = useAuth();
   const { data: myPlaylists, error } = useUserPlaylists();
   const { data: subscribedPlaylists } = useSubscribedPlaylists();
   const addPlaylistMutation = useAddPlaylist();
-
-  const addVideoToPlaylistMutation = useAddVideosToMyPlaylist();
+  const videoId = useParams<{ videoId: string }>().videoId;
+  const videoObj = makeVideoObj(videoId || '');
   const addToast = useToastStore((state) => state.addToast);
+  const addVideoToPlaylistMutation = useAddVideosToMyPlaylist();
+
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
+  const {
+    isOpen: isSelectVideoModalOpen,
+    open: openSelectVideoModal,
+    close: closeSelectVideoModal,
+  } = useModalWithOverlay('selectVideoModal', 'selectPli');
 
   const handleAddPlaylist = (title: string, isPublic: boolean) => {
     addPlaylistMutation.mutate({ title, isPublic });
@@ -46,19 +65,44 @@ const SelectPliPage = () => {
   };
 
   const handlePlaylistClick = (playlistId: string, title: string) => {
-    if (state?.type === 'byLink') {
-      navigate(`/post/add?pli=${playlistId}&title=${encodeURIComponent(title)}&videoId=${videoId}`);
-    } else if (state?.type === 'fromPli') {
-      navigate(`/playlist/${playlistId}`, { state: { selectPli: true } });
+    if (type === 'fromPli') {
+      setSelectedPlaylistId(playlistId);
+      openSelectVideoModal();
+    } else if (type === 'byLink') {
+      if (onSelectPlaylist) {
+        onSelectPlaylist(playlistId, title);
+      }
+    } else if (videoId) {
+      addVideoToPlaylistMutation.mutate(
+        { playlistId, videos: [videoObj] },
+        {
+          onSuccess: () => {
+            addToast('동영상이 플레이리스트에 추가되었습니다.');
+            navigate(`${PATH.PLAYLIST}/${playlistId}`);
+          },
+          onError: () => {
+            addToast('동영상 추가에 실패했습니다.');
+          },
+        },
+      );
     } else {
-      addVideoToPlaylistMutation.mutate({ playlistId, videos: [videoObject] });
-      navigate(`/playlist/${playlistId}`, { state: { selectPli: false } });
+      navigate(`${PATH.PLAYLIST}/${playlistId}`);
     }
   };
 
-  function handleCloseClick() {
-    navigate(-1);
-  }
+  const handleCloseClick = (type?: string | undefined) => {
+    if (type) {
+      onClose();
+    } else {
+      navigate(-1);
+    }
+  };
+
+  const handleCompleteSelectVideo = (playlistId: string, videoId: string) => {
+    closeSelectVideoModal();
+    onClose();
+    onCompleteSelectVideo && onCompleteSelectVideo(playlistId, videoId);
+  };
 
   if (!user) {
     return <p>Please log in to view your playlists.</p>;
@@ -70,69 +114,85 @@ const SelectPliPage = () => {
 
   const filteredPlaylists = myPlaylists?.filter((playlist) => playlist.videos.length > 0) || [];
 
-  if (videoId) {
-    return (
-      <>
-        <BackHeader title="저장할 플리 선택" />
-        <AddPlaylistButton customStyle={addPlaylistButtonStyle} onAddPlaylist={handleAddPlaylist} />
-        <Playlists
-          playlists={myPlaylists || []}
-          customStyle={playlistStyle}
-          customVideoStyle={videoStyle}
-          onPlaylistClick={handlePlaylistClick}
-          isColumn={false}
-        />
-      </>
-    );
-  }
-
   return (
     <>
-      {state?.type === 'byLink' ? (
-        <BackHeader title="저장할 플리 선택" />
-      ) : (
-        <CloseHeader onCloseClick={handleCloseClick} title="플리 선택" />
-      )}
-
-      {state?.type === 'byLink' ? (
-        <>
-          <AddPlaylistButton
-            customStyle={addPlaylistButtonStyle}
-            onAddPlaylist={handleAddPlaylist}
+      <div css={selectPliStyle}>
+        {type === 'fromPli' ? (
+          <CloseHeader
+            title="플리 선택"
+            onCloseClick={handleCloseClick}
+            rightButtonText=""
+            usePortal={false}
           />
-          <Playlists
-            playlists={myPlaylists || []}
-            customStyle={playlistStyle}
-            customVideoStyle={videoStyle}
-            onPlaylistClick={handlePlaylistClick}
-            isColumn={false}
+        ) : (
+          <BackHeader
+            title={type ? '플리 선택' : '저장할 플리 선택'}
+            onBackClick={() => handleCloseClick(type)}
+            usePortal={false}
           />
-        </>
-      ) : (
-        <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
-          <TabContent id="my" activeTabId={activeTab}>
-            <Playlists
-              playlists={filteredPlaylists || []}
-              customStyle={playlistStyle}
-              customVideoStyle={videoStyle}
-              onPlaylistClick={handlePlaylistClick}
-              isColumn={false}
-            />
-          </TabContent>
-          <TabContent id="subscribe" activeTabId={activeTab}>
-            <Playlists
-              playlists={subscribedPlaylists || []}
-              customStyle={playlistStyle}
-              customVideoStyle={videoStyle}
-              onPlaylistClick={handlePlaylistClick}
-              isColumn={false}
-            />
-          </TabContent>
-        </TabMenu>
-      )}
+        )}
+        <div css={contentStyle}>
+          {videoId || type === 'byLink' ? (
+            <>
+              <AddPlaylistButton
+                customStyle={addPlaylistButtonStyle}
+                onAddPlaylist={handleAddPlaylist}
+              />
+              <Playlists
+                playlists={myPlaylists || []}
+                customStyle={playlistStyle}
+                customVideoStyle={videoStyle}
+                onPlaylistClick={handlePlaylistClick}
+                isColumn={false}
+              />
+            </>
+          ) : (
+            <TabMenu tabs={tabs} activeTabId={activeTab} onTabChange={setActiveTab}>
+              <TabContent id="my" activeTabId={activeTab}>
+                <Playlists
+                  playlists={filteredPlaylists || []}
+                  customStyle={playlistStyle}
+                  customVideoStyle={videoStyle}
+                  onPlaylistClick={handlePlaylistClick}
+                  isColumn={false}
+                />
+              </TabContent>
+              <TabContent id="subscribe" activeTabId={activeTab}>
+                <Playlists
+                  playlists={subscribedPlaylists || []}
+                  customStyle={playlistStyle}
+                  customVideoStyle={videoStyle}
+                  onPlaylistClick={handlePlaylistClick}
+                  isColumn={false}
+                />
+              </TabContent>
+            </TabMenu>
+          )}
+        </div>
+      </div>
+      <FullModal isOpen={isSelectVideoModalOpen} onClose={closeSelectVideoModal}>
+        <SelectVideoPage
+          playlistId={selectedPlaylistId || ''}
+          onClose={closeSelectVideoModal}
+          onCloseSelectPli={onClose}
+          onCompleteSelectVideo={handleCompleteSelectVideo}
+        />
+      </FullModal>
     </>
   );
 };
+
+const selectPliStyle = css`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const contentStyle = css`
+  flex: 1;
+  overflow-y: auto;
+`;
 
 const addPlaylistButtonStyle = css`
   margin-bottom: 24px;

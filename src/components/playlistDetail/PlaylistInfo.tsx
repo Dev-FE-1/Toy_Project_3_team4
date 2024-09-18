@@ -15,6 +15,7 @@ import OptionModal from '@/components/common/modals/OptionModal';
 import VideoThumbnail from '@/components/playlist/VideoThumbnail';
 import UserInfo from '@/components/user/UserInfo';
 import { useAuth } from '@/hooks/useAuth';
+import { useModalWithOverlay } from '@/hooks/useModalWithOverlay';
 import { useUpdatePlaylist } from '@/hooks/usePostPlaylist';
 import { useSubscribePlaylist, useUnsubscribePlaylist } from '@/hooks/useSubscribePlaylist';
 import { useUserById } from '@/hooks/useUserById';
@@ -28,42 +29,50 @@ interface PlaylistInfoProps {
   playlist: PlaylistModel;
   user: UserModel;
   thumbnailUrl: string;
-  isOwner: boolean;
+  isOwner?: boolean;
   customStyle?: SerializedStyles;
-  selectPli: boolean;
+  selectPli?: boolean;
 }
 
 const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
   playlist,
   user,
   thumbnailUrl,
-  isOwner,
+  isOwner = false,
   customStyle,
-  selectPli,
+  selectPli = false,
 }) => {
   const { title, videos, isPublic } = playlist;
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
+  const {
+    isOpen: isAddFixModalOpen,
+    open: openAddFixModal,
+    close: closeAddFixModal,
+  } = useModalWithOverlay('addFixModal', playlist?.playlistId);
+  const {
+    isOpen: isOptionModalOpen,
+    open: openOptionModal,
+    close: closeOptionModal,
+  } = useModalWithOverlay('optionModal', playlist?.playlistId);
   const [newTitle, setNewTitle] = useState(title);
   const [isPublicPlaylist, setIsPublicPlaylist] = useState(isPublic);
 
   const navigate = useNavigate();
 
-  const subscribeMutation = useSubscribePlaylist(playlist.playlistId);
-  const unsubscribeMutation = useUnsubscribePlaylist(playlist.playlistId);
-  const deletePlaylistMutation = useDeletePlaylist(playlist.playlistId);
-  const updatePlaylistMutation = useUpdatePlaylist(playlist.playlistId);
+  const subscribeMutation = useSubscribePlaylist(playlist?.playlistId || '');
+  const unsubscribeMutation = useUnsubscribePlaylist(playlist?.playlistId || '');
+  const deletePlaylistMutation = useDeletePlaylist(playlist?.playlistId || '');
+  const updatePlaylistMutation = useUpdatePlaylist(playlist?.playlistId || '');
 
   const currentUser = useAuth();
   const currentUserData = useUserById(currentUser?.uid ?? null);
   const addToast = useToastStore((state) => state.addToast);
 
   useEffect(() => {
-    if (currentUserData.data?.subscriptions?.includes(playlist.playlistId)) {
+    if (playlist && currentUserData.data?.subscriptions?.includes(playlist.playlistId)) {
       setIsSubscribed(true);
     }
-  }, [currentUser, currentUserData.data, playlist.playlistId, user]);
+  }, [playlist, currentUserData.data]);
 
   const handleSubscribeToggle = () => {
     if (isSubscribed) {
@@ -75,29 +84,25 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
     }
   };
 
-  const handleOpenEditModal = () => setIsEditModalOpen(true);
-  const handleCloseEditModal = () => setIsEditModalOpen(false);
-
-  const handleOpenOptionsModal = () => setIsOptionsModalOpen(true);
-  const handleCloseOptionsModal = () => setIsOptionsModalOpen(false);
-
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewTitle(event.target.value);
   };
 
   const handleUpdatePlaylist = () => {
     updatePlaylistMutation.mutate({ title: newTitle, isPublic: isPublicPlaylist });
-    handleCloseEditModal();
+    closeAddFixModal();
   };
 
   const handleAddVideo = () => {
-    navigate(`/addVideos/${playlist.playlistId}`);
-    handleCloseOptionsModal();
+    if (playlist) {
+      navigate(`/addVideos/${playlist.playlistId}`);
+    }
+    closeOptionModal();
   };
 
   const handleDeletePlaylist = () => {
-    deletePlaylistMutation.mutate();
-    handleCloseOptionsModal();
+    deletePlaylistMutation.mutate({ previousPlaylists: undefined });
+    closeOptionModal();
     navigate('/playlist');
     addToast('플레이리스트가 삭제되었습니다.');
   };
@@ -130,7 +135,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
             {title}
             {isOwner && !isUnmodifiable && !selectPli && (
               <FitButton
-                onClick={handleOpenEditModal}
+                onClick={openAddFixModal}
                 styleType="secondary"
                 customStyle={editButtonStyle}
               >
@@ -147,7 +152,7 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
             </FitButton>
           )}
           {isOwner && !selectPli && (
-            <HiEllipsisVertical css={verticalButtonStyle} onClick={handleOpenOptionsModal} />
+            <HiEllipsisVertical css={verticalButtonStyle} onClick={openOptionModal} />
           )}
         </div>
         <div className="info-footer">
@@ -158,8 +163,8 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
 
       {!isUnmodifiable && (
         <AddFixModal
-          isOpen={isEditModalOpen}
-          onClose={handleCloseEditModal}
+          isOpen={isAddFixModalOpen}
+          onClose={closeAddFixModal}
           title="플리 수정하기"
           inputValue={newTitle}
           onInputChange={handleTitleChange}
@@ -173,9 +178,9 @@ const PlaylistInfo: React.FC<PlaylistInfoProps> = ({
       )}
 
       <OptionModal
-        isOpen={isOptionsModalOpen}
-        onClose={handleCloseOptionsModal}
-        options={optionsModalOptions}
+        isOpen={isOptionModalOpen}
+        onClose={closeOptionModal}
+        options={isUnmodifiable ? optionsModalOptions.slice(0, 1) : optionsModalOptions}
       />
     </div>
   );

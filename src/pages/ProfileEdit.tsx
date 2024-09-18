@@ -72,6 +72,10 @@ const ProfileEditPage: React.FC = () => {
     navigate(`/profile/${currentUser?.uid}`);
   };
 
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   if (!initialUserData) {
     return (
       <div>
@@ -82,7 +86,7 @@ const ProfileEditPage: React.FC = () => {
 
   return (
     <>
-      <BackHeader title="프로필 수정" />
+      <BackHeader title="프로필 수정" onBackClick={handleBackClick} />
       <div css={pageContentStyle}>
         <div css={imageContainerStyle}>
           <Avatar size="extraLarge" url={photoURL} />
@@ -108,6 +112,7 @@ const ProfileEditPage: React.FC = () => {
           placeholder="닉네임을 입력해주세요"
           customStyle={inputStyle}
           label="닉네임"
+          maxLength={10}
         />
         <Textarea
           value={bio}
@@ -115,6 +120,7 @@ const ProfileEditPage: React.FC = () => {
           placeholder="소개를 입력해주세요"
           label="소개"
           customStyle={inputStyle}
+          maxLength={150}
         />
       </div>
       <div css={buttonContainerStyle}>

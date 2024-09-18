@@ -13,3 +13,10 @@ export interface VideoModel {
   videoUrl: string;
   thumbnailUrl: string;
 }
+
+export interface YoutubeVideoModel {
+  title: string;
+  creator: string;
+  views: number;
+  uploadDate: string;
+}
