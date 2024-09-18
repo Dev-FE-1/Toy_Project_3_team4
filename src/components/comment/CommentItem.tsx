@@ -77,7 +77,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
         <div css={headerStyle}>
           <div css={userInfoStyle}>
             <Link to={PATH.PROFILE.replace(':userId', comment.userId)}>
-              <span css={nameStyle}>{userData?.displayName || 'Unknown User'}</span>
+              <span css={nameStyle}>{userData?.displayName || ''}</span>
             </Link>
             <span css={timeStyle}>{formatCreatedAt(comment.createdAt)}</span>
           </div>

@@ -159,7 +159,7 @@ export const useUserData = (userId: string | null): UseUserDataReturn => {
   }, [fetchUserData]);
 
   const defaultUserData: UserData = {
-    displayName: 'Unknown',
+    displayName: '',
     photoURL: defaultImage,
     bio: '',
     followers: [],
